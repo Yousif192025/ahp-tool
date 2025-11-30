@@ -196,3 +196,13 @@ class AHPEngine {
 }
 
 export default AHPEngine;
+// js/modules.js - الملف الرئيسي المحدث
+import './modules/main.js';
+
+// إعادة التصدير للتوافق مع الإصدار القديم
+export { default as SFactsApp } from './modules/main.js';
+export { default as AHPEngine } from './modules/core/AHPEngine.js';
+export { default as SensitivityAnalyzer } from './modules/core/SensitivityAnalyzer.js';
+export { default as DataValidator } from './modules/utils/DataValidator.js';
+
+console.log('✅ SFacts Enhanced 2.0.0 loaded successfully!');
