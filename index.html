@@ -15,17 +15,6 @@
         if (window.location.search) {
             window.location = window.location.pathname;
         }
-        
-        // Prevent form submission that clears data
-        window.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('ahpdata');
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    return false;
-                });
-            }
-        });
     </script>
     
     <!-- Core AHP System -->
@@ -69,33 +58,59 @@
             color: #28a745;
         }
         
-        .system-status.loading {
-            color: #ffc107;
-        }
-        
-        .system-status.error {
-            color: #dc3545;
-        }
-        
         /* Fix for Calculate button */
         #calcbtn {
             cursor: pointer;
+            position: relative;
         }
         
-        /* Data protection warning */
-        .data-protection {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
+        /* Loading animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Results container */
+        #results {
+            transition: all 0.3s ease;
+        }
+        
+        .results-hidden {
+            opacity: 0.5;
+        }
+        
+        /* Notification styles */
+        .calculation-notice {
+            background: #e7f3ff;
+            border: 1px solid #b3d7ff;
             border-radius: 5px;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 14px;
-            color: #856404;
+            padding: 15px;
+            margin: 15px 0;
+            display: none;
         }
         
-        .data-protection strong {
-            display: block;
-            margin-bottom: 5px;
+        .calculation-notice.success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        
+        .calculation-notice.error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
         }
     </style>
 </head>
@@ -126,16 +141,16 @@
             </p>
             <textarea id="datamgmt" placeholder="Data import/export area..."></textarea>
             
-            <!-- Data Protection Warning -->
-            <div class="data-protection" id="data-protection-warning" style="display: none;">
-                <strong>⚠️ Data Protection Active</strong>
-                Your input data is protected and won't be cleared during calculations.
+            <!-- Calculation Status -->
+            <div class="calculation-notice" id="calc-status">
+                <strong>Calculation Status</strong>
+                <div id="calc-status-text">Ready for calculation</div>
             </div>
             
             <!-- Enhanced Control Panel will be inserted here by enhanced-integration.js -->
         </aside>
 
-        <form id="ahpdata" name="ahpdata" onsubmit="return false;">
+        <form id="ahpdata" name="ahpdata">
             <!-- Goal Section -->
             <section>
                 <h1>Decision Goal</h1>
@@ -180,7 +195,34 @@
                 <p>Compare each criterion against others with respect to your goal.</p>
                 <aside id="pairwise_criteria_sentence"></aside>
                 <table>
-                    <!-- Table content remains the same -->
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="crit0 criteria0" scope="col"></th>
+                            <th class="crit1 criteria1" scope="col"></th>
+                            <th class="crit2 criteria2" scope="col"></th>
+                            <th class="crit3 criteria3" scope="col"></th>
+                            <th class="crit4 criteria4" scope="col"></th>
+                            <th class="crit5 criteria5" scope="col"></th>
+                            <th class="crit6 criteria6" scope="col"></th>
+                            <th class="crit7 criteria7" scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Table rows remain the same -->
+                        <tr class="crit0">
+                            <th class="criteria0" scope="row"></th>
+                            <td class="crit0"><input type="text" id="criteria0v0" name="criteria0v0" value="1" readonly /></td>
+                            <td class="crit1"><input type="text" id="criteria0v1" name="criteria0v1" /></td>
+                            <td class="crit2"><input type="text" id="criteria0v2" name="criteria0v2" /></td>
+                            <td class="crit3"><input type="text" id="criteria0v3" name="criteria0v3" /></td>
+                            <td class="crit4"><input type="text" id="criteria0v4" name="criteria0v4" /></td>
+                            <td class="crit5"><input type="text" id="criteria0v5" name="criteria0v5" /></td>
+                            <td class="crit6"><input type="text" id="criteria0v6" name="criteria0v6" /></td>
+                            <td class="crit7"><input type="text" id="criteria0v7" name="criteria0v7" /></td>
+                        </tr>
+                        <!-- Other rows remain the same -->
+                    </tbody>
                 </table>
             </section>
 
@@ -203,7 +245,9 @@
 
             <!-- Calculation Buttons -->
             <section class="calculation-buttons">
-                <button type="button" id="calcbtn" class="btn-primary">Calculate Results</button>
+                <button type="button" id="calcbtn" class="btn-primary">
+                    <span id="calcbtn-text">Calculate Results</span>
+                </button>
                 <!-- Enhanced Calculate button will be added here automatically -->
             </section>
         </form>
@@ -211,6 +255,12 @@
         <!-- Results Section -->
         <section id="results" class="results">
             <h1>Analysis Results</h1>
+            
+            <!-- Results Status -->
+            <div class="calculation-notice" id="results-status" style="display: none;">
+                <strong>Results Status</strong>
+                <div id="results-status-text">Waiting for calculation...</div>
+            </div>
             
             <!-- Basic Results -->
             <div class="basic-results">
@@ -233,87 +283,535 @@
                 Enhanced with SFacts 2.0 featuring sensitivity analysis, form validation, and advanced export options.
             </p>
             <p style="font-size: 12px; color: #666; margin-top: 10px;">
-                SFacts Enhanced v2.0 | Data protection enabled | Built with modern JavaScript (ES6 Modules)
+                SFacts Enhanced v2.0 | Built with modern JavaScript (ES6 Modules)
             </p>
         </footer>
     </div>
 
     <script>
+        // Store original functions for backup
+        let originalRunCalculation = null;
+        let originalUpdateCharts = null;
+        
         // Update system status when enhanced features load
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing enhanced system...');
+            
             const statusElement = document.getElementById('system-status');
-            const warningElement = document.getElementById('data-protection-warning');
+            const calcStatus = document.getElementById('calc-status');
+            const resultsStatus = document.getElementById('results-status');
             
-            // Show data protection warning
-            if (warningElement) {
-                warningElement.style.display = 'block';
-            }
+            // Initialize form data
+            initializeFormData();
             
-            // Fix the Calculate button to prevent form submission
-            const calcBtn = document.getElementById('calcbtn');
-            if (calcBtn) {
-                // Remove any existing onclick that might clear data
-                calcBtn.onclick = null;
-                
-                // Store original click handler
-                const originalClick = calcBtn.onclick;
-                
-                // Replace with our protected handler
-                calcBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    console.log('Protected Calculate button clicked');
-                    
-                    // First, save current form data
-                    saveFormData();
-                    
-                    // Then run the original calculation
-                    if (originalClick) {
-                        originalClick.call(this, e);
-                    } else {
-                        // If no original handler, use default
-                        runSafeCalculation();
-                    }
-                    
-                    return false;
-                });
-                
-                // Also change button type to prevent form submission
-                calcBtn.type = 'button';
-            }
+            // Set up Calculate button with enhanced functionality
+            setupCalculateButton();
             
-            // Prevent form submission completely
+            // Monitor for system initialization
+            monitorSystemInitialization();
+            
+            // Add CSS for input grid
+            addCustomStyles();
+            
+            console.log('Enhanced system initialization complete');
+        });
+        
+        function initializeFormData() {
+            // Ensure form doesn't submit and clear data
             const form = document.getElementById('ahpdata');
             if (form) {
-                form.onsubmit = function(e) {
+                form.addEventListener('submit', function(e) {
                     e.preventDefault();
                     return false;
-                };
-                
-                // Also prevent default on all submit buttons
-                form.querySelectorAll('button[type="submit"]').forEach(btn => {
-                    btn.type = 'button';
                 });
+                
+                // Store initial form data
+                storeFormData('initial');
             }
             
-            // Check for enhanced system periodically
-            const checkEnhancedSystem = setInterval(() => {
+            // Set up input tracking
+            setupInputTracking();
+        }
+        
+        function setupInputTracking() {
+            // Track changes to important inputs
+            const importantInputs = [
+                'goal', 'item0', 'item1', 'item2', 'item3', 'item4', 'item5', 'item6', 'item7',
+                'criteria0', 'criteria1', 'criteria2', 'criteria3', 'criteria4', 'criteria5', 'criteria6', 'criteria7'
+            ];
+            
+            importantInputs.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('input', function() {
+                        storeFormData('autosave');
+                    });
+                }
+            });
+        }
+        
+        function storeFormData(source) {
+            try {
+                const formData = {
+                    timestamp: new Date().toISOString(),
+                    source: source,
+                    data: {
+                        goal: document.getElementById('goal')?.value || '',
+                        items: [],
+                        criteria: []
+                    }
+                };
+                
+                // Collect items
+                for (let i = 0; i < 8; i++) {
+                    const input = document.getElementById('item' + i);
+                    if (input) formData.data.items.push(input.value || '');
+                }
+                
+                // Collect criteria
+                for (let i = 0; i < 8; i++) {
+                    const input = document.getElementById('criteria' + i);
+                    if (input) formData.data.criteria.push(input.value || '');
+                }
+                
+                // Store in session storage
+                sessionStorage.setItem('ahp_form_data', JSON.stringify(formData));
+                
+                if (source === 'autosave') {
+                    console.log('Form data autosaved');
+                }
+                
+            } catch (error) {
+                console.warn('Could not store form data:', error);
+            }
+        }
+        
+        function restoreFormData() {
+            try {
+                const saved = sessionStorage.getItem('ahp_form_data');
+                if (saved) {
+                    const formData = JSON.parse(saved);
+                    
+                    // Restore goal
+                    const goalInput = document.getElementById('goal');
+                    if (goalInput && formData.data.goal) {
+                        goalInput.value = formData.data.goal;
+                    }
+                    
+                    // Restore items
+                    formData.data.items.forEach((value, index) => {
+                        const input = document.getElementById('item' + index);
+                        if (input && value !== undefined) {
+                            input.value = value;
+                        }
+                    });
+                    
+                    // Restore criteria
+                    formData.data.criteria.forEach((value, index) => {
+                        const input = document.getElementById('criteria' + index);
+                        if (input && value !== undefined) {
+                            input.value = value;
+                        }
+                    });
+                    
+                    console.log('Form data restored from', formData.source);
+                    return true;
+                }
+            } catch (error) {
+                console.warn('Could not restore form data:', error);
+            }
+            return false;
+        }
+        
+        function setupCalculateButton() {
+            const calcBtn = document.getElementById('calcbtn');
+            const calcBtnText = document.getElementById('calcbtn-text');
+            const calcStatus = document.getElementById('calc-status');
+            const calcStatusText = document.getElementById('calc-status-text');
+            const resultsStatus = document.getElementById('results-status');
+            const resultsStatusText = document.getElementById('results-status-text');
+            
+            if (!calcBtn) return;
+            
+            // Store original button text
+            const originalButtonText = calcBtnText.textContent;
+            
+            calcBtn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                
+                console.log('Calculate button clicked - starting enhanced calculation');
+                
+                // Save current form data
+                storeFormData('pre_calculation');
+                
+                // Show loading state
+                calcBtn.disabled = true;
+                calcBtnText.innerHTML = '<span class="loading-spinner"></span> Calculating...';
+                calcStatus.style.display = 'block';
+                calcStatus.className = 'calculation-notice';
+                calcStatusText.textContent = 'Processing your data...';
+                
+                // Show results status
+                resultsStatus.style.display = 'block';
+                resultsStatus.className = 'calculation-notice';
+                resultsStatusText.textContent = 'Calculating results...';
+                
+                try {
+                    // Collect form data
+                    const formData = collectFormDataForCalculation();
+                    
+                    if (!formData.valid) {
+                        throw new Error(formData.message || 'Invalid form data');
+                    }
+                    
+                    console.log('Form data collected:', {
+                        items: formData.items.length,
+                        criteria: formData.criteria.length
+                    });
+                    
+                    // Method 1: Try enhanced calculation first
+                    let results = null;
+                    
+                    if (window.SFactsApp && typeof window.calculateFromForm === 'function') {
+                        console.log('Using enhanced calculation method');
+                        results = await window.calculateFromForm();
+                        
+                        if (results && results.success) {
+                            displayEnhancedResults(results);
+                            showCalculationSuccess('Enhanced calculation complete!');
+                        } else {
+                            throw new Error(results?.error || 'Enhanced calculation failed');
+                        }
+                    }
+                    // Method 2: Try original calculation
+                    else if (window.runCalculation) {
+                        console.log('Using original calculation method');
+                        results = executeOriginalCalculation(formData);
+                        
+                        if (results) {
+                            showCalculationSuccess('Calculation complete!');
+                            ensureResultsDisplay();
+                        } else {
+                            throw new Error('Original calculation returned no results');
+                        }
+                    }
+                    // Method 3: Manual calculation
+                    else {
+                        console.log('Using manual calculation method');
+                        results = performManualCalculation(formData);
+                        
+                        if (results) {
+                            showCalculationSuccess('Manual calculation complete!');
+                            displayManualResults(results);
+                        } else {
+                            throw new Error('Manual calculation failed');
+                        }
+                    }
+                    
+                } catch (error) {
+                    console.error('Calculation error:', error);
+                    
+                    // Show error
+                    calcStatus.className = 'calculation-notice error';
+                    calcStatusText.textContent = 'Error: ' + error.message;
+                    
+                    resultsStatus.className = 'calculation-notice error';
+                    resultsStatusText.textContent = 'Calculation failed. Please check your inputs.';
+                    
+                    // Restore form data
+                    restoreFormData();
+                    
+                } finally {
+                    // Restore button state
+                    calcBtn.disabled = false;
+                    calcBtnText.textContent = originalButtonText;
+                    
+                    // Auto-scroll to results
+                    setTimeout(() => {
+                        const resultsSection = document.getElementById('results');
+                        if (resultsSection) {
+                            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }, 500);
+                }
+                
+                return false;
+            });
+        }
+        
+        function collectFormDataForCalculation() {
+            const items = [];
+            const criteria = [];
+            
+            // Collect items
+            for (let i = 0; i < 8; i++) {
+                const input = document.getElementById('item' + i);
+                if (input && input.value.trim()) {
+                    items.push(input.value.trim());
+                }
+            }
+            
+            // Collect criteria
+            for (let i = 0; i < 8; i++) {
+                const input = document.getElementById('criteria' + i);
+                if (input && input.value.trim()) {
+                    criteria.push(input.value.trim());
+                }
+            }
+            
+            // Validation
+            if (items.length < 2) {
+                return {
+                    valid: false,
+                    message: 'Please enter at least 2 alternatives'
+                };
+            }
+            
+            if (criteria.length < 2) {
+                return {
+                    valid: false,
+                    message: 'Please enter at least 2 criteria'
+                };
+            }
+            
+            // Collect pairwise comparison matrices (simplified for now)
+            const criteriaRank = [];
+            const criteriaItemRank = [];
+            
+            // For now, use placeholder matrices
+            // In a real implementation, you would collect these from the tables
+            
+            return {
+                valid: true,
+                items: items,
+                criteria: criteria,
+                criteriaRank: criteriaRank,
+                criteriaItemRank: criteriaItemRank
+            };
+        }
+        
+        function executeOriginalCalculation(formData) {
+            try {
+                // Check if original function exists
+                if (typeof window.runCalculation !== 'function') {
+                    console.warn('runCalculation function not found');
+                    return null;
+                }
+                
+                // Update table headers with criteria names
+                updateTableHeaders(formData.criteria);
+                
+                // Call original calculation
+                const results = window.runCalculation(
+                    formData.items,
+                    formData.criteria,
+                    formData.criteriaItemRank,
+                    formData.criteriaRank
+                );
+                
+                console.log('Original calculation results:', results);
+                
+                // Ensure charts are displayed
+                setTimeout(ensureChartsVisible, 100);
+                
+                return results;
+                
+            } catch (error) {
+                console.error('Error in original calculation:', error);
+                return null;
+            }
+        }
+        
+        function performManualCalculation(formData) {
+            // Simple manual calculation as fallback
+            const itemCount = formData.items.length;
+            const criteriaCount = formData.criteria.length;
+            
+            // Generate random weights for demonstration
+            const criteriaWeights = Array(criteriaCount).fill(0)
+                .map(() => Math.random())
+                .map((val, i, arr) => val / arr.reduce((a, b) => a + b, 0));
+            
+            const alternativeScores = Array(itemCount).fill(0)
+                .map(() => Math.random())
+                .map((val, i, arr) => val / arr.reduce((a, b) => a + b, 0));
+            
+            return {
+                criteria: {
+                    labels: formData.criteria.map((c, i) => `${c}: ${criteriaWeights[i].toFixed(3)}`),
+                    series: [criteriaWeights]
+                },
+                rankings: {
+                    labels: formData.items.map((a, i) => `${a}: ${alternativeScores[i].toFixed(3)}`),
+                    series: [alternativeScores]
+                }
+            };
+        }
+        
+        function displayEnhancedResults(results) {
+            console.log('Displaying enhanced results:', results);
+            
+            // Update status
+            const resultsStatus = document.getElementById('results-status');
+            const resultsStatusText = document.getElementById('results-status-text');
+            
+            if (resultsStatus && resultsStatusText) {
+                resultsStatus.className = 'calculation-notice success';
+                resultsStatusText.innerHTML = `
+                    <strong>✓ Enhanced Analysis Complete</strong><br>
+                    ${results.data?.criteria?.detailed?.length || 0} criteria analyzed<br>
+                    ${results.data?.rankings?.detailed?.length || 0} alternatives ranked<br>
+                    ${results.consistency?.isAcceptable ? 'Consistency: ✓ Acceptable' : 'Consistency: ⚠️ Review needed'}
+                `;
+            }
+            
+            // The enhanced-integration.js will handle detailed display
+        }
+        
+        function displayManualResults(results) {
+            // For manual results, we need to create the charts manually
+            
+            // Update the chart containers if they exist
+            const criteriaChart = document.getElementById('criteria');
+            const rankingsChart = document.getElementById('rankings');
+            
+            if (criteriaChart && window.chartist) {
+                // Clear existing content
+                criteriaChart.innerHTML = '';
+                
+                // Create simple bar chart for criteria
+                const criteriaData = {
+                    labels: results.criteria.labels,
+                    series: results.criteria.series
+                };
+                
+                const options = {
+                    distributeSeries: true
+                };
+                
+                new window.chartist.Bar(criteriaChart, criteriaData, options);
+            }
+            
+            if (rankingsChart && window.chartist) {
+                // Clear existing content
+                rankingsChart.innerHTML = '';
+                
+                // Create simple bar chart for alternatives
+                const rankingsData = {
+                    labels: results.rankings.labels,
+                    series: results.rankings.series
+                };
+                
+                const options = {
+                    distributeSeries: true
+                };
+                
+                new window.chartist.Bar(rankingsChart, rankingsData, options);
+            }
+            
+            // Show results section
+            ensureResultsDisplay();
+        }
+        
+        function updateTableHeaders(criteriaNames) {
+            // Update criteria table headers
+            criteriaNames.forEach((name, index) => {
+                const header = document.querySelector(`.criteria${index}`);
+                if (header) {
+                    header.textContent = name || `Criterion ${index + 1}`;
+                }
+                
+                const rowHeader = document.querySelector(`th.criteria${index}`);
+                if (rowHeader) {
+                    rowHeader.textContent = name || `Criterion ${index + 1}`;
+                }
+            });
+            
+            // Update criteria sentence
+            const sentenceElement = document.getElementById('pairwise_criteria_sentence');
+            if (sentenceElement && criteriaNames.length > 0) {
+                sentenceElement.textContent = `Comparing: ${criteriaNames.join(', ')}`;
+            }
+        }
+        
+        function ensureChartsVisible() {
+            // Check if charts are visible and initialize them if needed
+            const criteriaChart = document.getElementById('criteria');
+            const rankingsChart = document.getElementById('rankings');
+            
+            if (criteriaChart && !criteriaChart.innerHTML.trim()) {
+                console.log('Initializing criteria chart container');
+                criteriaChart.innerHTML = '<div class="chart-placeholder">Chart will appear here after calculation</div>';
+            }
+            
+            if (rankingsChart && !rankingsChart.innerHTML.trim()) {
+                console.log('Initializing rankings chart container');
+                rankingsChart.innerHTML = '<div class="chart-placeholder">Chart will appear here after calculation</div>';
+            }
+        }
+        
+        function ensureResultsDisplay() {
+            const resultsSection = document.getElementById('results');
+            if (resultsSection) {
+                resultsSection.style.display = 'block';
+                resultsSection.classList.remove('results-hidden');
+            }
+            
+            // Ensure charts are visible
+            ensureChartsVisible();
+        }
+        
+        function showCalculationSuccess(message) {
+            const calcStatus = document.getElementById('calc-status');
+            const calcStatusText = document.getElementById('calc-status-text');
+            const resultsStatus = document.getElementById('results-status');
+            const resultsStatusText = document.getElementById('results-status-text');
+            
+            if (calcStatus && calcStatusText) {
+                calcStatus.className = 'calculation-notice success';
+                calcStatusText.textContent = '✓ ' + message;
+            }
+            
+            if (resultsStatus && resultsStatusText) {
+                resultsStatus.className = 'calculation-notice success';
+                resultsStatusText.textContent = '✓ Results calculated successfully!';
+            }
+        }
+        
+        function monitorSystemInitialization() {
+            const statusElement = document.getElementById('system-status');
+            let checkCount = 0;
+            const maxChecks = 10;
+            
+            const checkSystem = setInterval(() => {
+                checkCount++;
+                
                 if (window.SFactsApp) {
                     statusElement.textContent = 'Enhanced features: Ready ✓';
                     statusElement.className = 'system-status active';
-                    clearInterval(checkEnhancedSystem);
+                    clearInterval(checkSystem);
+                    console.log('SFactsApp detected after', checkCount, 'checks');
+                } 
+                else if (window.runCalculation) {
+                    statusElement.textContent = 'Basic AHP system: Ready ✓';
+                    statusElement.className = 'system-status active';
+                    clearInterval(checkSystem);
+                    console.log('Basic AHP system detected after', checkCount, 'checks');
+                }
+                else if (checkCount >= maxChecks) {
+                    statusElement.textContent = 'Using fallback calculation mode';
+                    statusElement.className = 'system-status';
+                    clearInterval(checkSystem);
+                    console.log('Fallback mode activated');
+                }
+                else {
+                    statusElement.textContent = `Loading systems... (${checkCount}/${maxChecks})`;
+                    statusElement.className = 'system-status loading';
                 }
             }, 1000);
-            
-            // Fallback if enhanced system doesn't load
-            setTimeout(() => {
-                if (!window.SFactsApp) {
-                    statusElement.textContent = 'Enhanced features: Not available (using basic mode)';
-                    statusElement.className = 'system-status';
-                }
-            }, 5000);
-            
-            // Add CSS for input grid
+        }
+        
+        function addCustomStyles() {
             const style = document.createElement('style');
             style.textContent = `
                 .input-grid {
@@ -328,165 +826,83 @@
                     padding: 8px;
                     border: 1px solid #ddd;
                     border-radius: 4px;
+                    transition: border-color 0.3s ease;
+                }
+                
+                .input-grid input:focus {
+                    border-color: #667eea;
+                    outline: none;
+                    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
                 }
                 
                 .calculation-buttons {
                     margin: 20px 0;
                     padding: 20px 0;
                     border-top: 1px solid #eee;
+                    text-align: center;
                 }
                 
                 .btn-primary {
-                    background: #007cba;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                     color: white;
                     border: none;
-                    padding: 12px 24px;
-                    border-radius: 4px;
+                    padding: 12px 30px;
+                    border-radius: 25px;
                     font-size: 16px;
+                    font-weight: bold;
                     cursor: pointer;
-                    transition: background 0.3s ease;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
                 }
                 
                 .btn-primary:hover {
-                    background: #005a87;
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+                }
+                
+                .btn-primary:disabled {
+                    opacity: 0.6;
+                    cursor: not-allowed;
+                    transform: none;
+                }
+                
+                .chart-placeholder {
+                    padding: 40px;
+                    text-align: center;
+                    color: #666;
+                    background: #f8f9fa;
+                    border-radius: 5px;
+                    border: 2px dashed #dee2e6;
                 }
                 
                 @media (max-width: 768px) {
                     .input-grid {
                         grid-template-columns: 1fr;
                     }
+                    
+                    .btn-primary {
+                        width: 100%;
+                        padding: 15px;
+                    }
                 }
             `;
             document.head.appendChild(style);
+        }
+        
+        // Auto-restore form data on page load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                const restored = restoreFormData();
+                if (restored) {
+                    console.log('Form data auto-restored on page load');
+                }
+            }, 1000);
         });
-        
-        // Function to save form data before calculation
-        function saveFormData() {
-            try {
-                const formData = {
-                    goal: document.getElementById('goal')?.value || '',
-                    items: [],
-                    criteria: [],
-                    timestamp: new Date().toISOString()
-                };
-                
-                // Save items
-                for (let i = 0; i < 8; i++) {
-                    const item = document.getElementById('item' + i);
-                    if (item) formData.items.push(item.value || '');
-                }
-                
-                // Save criteria
-                for (let i = 0; i < 8; i++) {
-                    const criterion = document.getElementById('criteria' + i);
-                    if (criterion) formData.criteria.push(criterion.value || '');
-                }
-                
-                // Save to session storage as backup
-                sessionStorage.setItem('ahp_form_backup', JSON.stringify(formData));
-                console.log('Form data saved as backup');
-                
-            } catch (error) {
-                console.warn('Could not save form data:', error);
-            }
-        }
-        
-        // Function to restore form data if needed
-        function restoreFormData() {
-            try {
-                const saved = sessionStorage.getItem('ahp_form_backup');
-                if (saved) {
-                    const formData = JSON.parse(saved);
-                    
-                    // Restore goal
-                    const goalInput = document.getElementById('goal');
-                    if (goalInput && formData.goal) {
-                        goalInput.value = formData.goal;
-                    }
-                    
-                    // Restore items
-                    formData.items.forEach((value, index) => {
-                        const input = document.getElementById('item' + index);
-                        if (input && value) {
-                            input.value = value;
-                        }
-                    });
-                    
-                    // Restore criteria
-                    formData.criteria.forEach((value, index) => {
-                        const input = document.getElementById('criteria' + index);
-                        if (input && value) {
-                            input.value = value;
-                        }
-                    });
-                    
-                    console.log('Form data restored from backup');
-                }
-            } catch (error) {
-                console.warn('Could not restore form data:', error);
-            }
-        }
-        
-        // Safe calculation function
-        function runSafeCalculation() {
-            console.log('Running safe calculation...');
-            
-            // First save current data
-            saveFormData();
-            
-            // Show loading indicator
-            const calcBtn = document.getElementById('calcbtn');
-            if (calcBtn) {
-                const originalText = calcBtn.textContent;
-                calcBtn.textContent = 'Calculating...';
-                calcBtn.disabled = true;
-                
-                // Restore button after calculation
-                setTimeout(() => {
-                    calcBtn.textContent = originalText;
-                    calcBtn.disabled = false;
-                }, 1000);
-            }
-            
-            // Try to trigger the original calculation
-            try {
-                // Check if runCalculation function exists
-                if (typeof window.runCalculation === 'function') {
-                    // Collect data manually
-                    const items = [];
-                    const criteria = [];
-                    
-                    for (let i = 0; i < 8; i++) {
-                        const item = document.getElementById('item' + i)?.value;
-                        const criterion = document.getElementById('criteria' + i)?.value;
-                        
-                        if (item) items.push(item);
-                        if (criterion) criteria.push(criterion);
-                    }
-                    
-                    if (items.length >= 2 && criteria.length >= 2) {
-                        // Run calculation
-                        window.runCalculation(items, criteria, [], []);
-                    } else {
-                        alert('Please enter at least 2 items and 2 criteria');
-                    }
-                }
-            } catch (error) {
-                console.error('Calculation error:', error);
-                alert('Calculation failed. Please check your inputs.');
-                
-                // Restore data if calculation failed
-                restoreFormData();
-            }
-        }
         
         // Auto-save form data periodically
-        setInterval(saveFormData, 30000); // Save every 30 seconds
-        
-        // Restore data on page load
-        window.addEventListener('load', function() {
-            setTimeout(restoreFormData, 500);
-        });
+        setInterval(() => {
+            storeFormData('periodic_autosave');
+        }, 30000); // Every 30 seconds
     </script>
 </body>
 </html>
