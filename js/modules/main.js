@@ -225,3 +225,74 @@ window.advancedCalculation = (items, criteria, itemRank, criteriaRank) => {
 // التصدير للاستخدام في الوحدات الأخرى
 export { AHPEngine, SensitivityAnalyzer, DataValidator };
 export default SFactsApp;
+
+// في ملف js/modules/main.js
+import AHPEngine from './core/AHPEngine.js';
+import SensitivityAnalyzer from './core/SensitivityAnalyzer.js';
+import DataValidator from './utils/DataValidator.js';
+import FormDataCollector from './formCollector.js'; // إضافة هذا السطر
+
+class SFactsApp {
+    constructor() {
+        this.ahpEngine = new AHPEngine();
+        this.sensitivityAnalyzer = new SensitivityAnalyzer();
+        this.dataValidator = DataValidator;
+        this.formCollector = new FormDataCollector(); // إضافة هذا
+        this.currentResults = null;
+        this.version = '2.0.0';
+    }
+
+    // تحديث دالة runCalculation
+    runCalculationFromForm() {
+        try {
+            // جمع البيانات من النموذج
+            const formData = this.formCollector.collectAllData();
+            
+            if (!formData) {
+                return {
+                    success: false,
+                    error: 'فشل في جمع البيانات من النموذج'
+                };
+            }
+            
+            // التحقق من الصحة
+            const validation = this.formCollector.validateCollectedData(formData);
+            if (!validation.isValid) {
+                return {
+                    success: false,
+                    error: 'أخطاء في البيانات المدخلة',
+                    validationErrors: validation.errors
+                };
+            }
+            
+            // تنفيذ الحساب
+            return this.runCalculation(
+                formData.items,
+                formData.criteria,
+                formData.criteriaItemRank,
+                formData.criteriaRank
+            );
+            
+        } catch (error) {
+            return {
+                success: false,
+                error: 'خطأ في معالجة النموذج',
+                details: error.message
+            };
+        }
+    }
+    
+    // باقي الكود كما هو...
+}
+
+// إضافة دالة مساعدة للاستخدام المباشر
+window.collectAHPFormData = function() {
+    const collector = new FormDataCollector();
+    return collector.collectAllData();
+};
+
+window.validateAHPFormData = function() {
+    const collector = new FormDataCollector();
+    const data = collector.collectAllData();
+    return collector.validateCollectedData(data);
+};
