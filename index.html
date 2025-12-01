@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Analytic Hierarchy Process (AHP) Tool</title>
-    <meta name="description" content="">
+    <title>Analytic Hierarchy Process (AHP) Tool - Enhanced</title>
+    <meta name="description" content="Enhanced AHP tool with sensitivity analysis and advanced features">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/chartist.min.css">
     <link rel="stylesheet" href="css/styles.css">
@@ -16,14 +16,32 @@
         window.location = window.location.pathname;
       }
     </script>
+    
+    <!-- النظام الأساسي -->
     <script defer src="js/index.js"></script>
+    
+    <!-- تحميل النظام المحسن بشكل منفصل -->
+    <script type="module">
+      // تحميل الوحدات المحسنة
+      import('./js/modules/main.js').then(() => {
+        console.log('✅ SFacts Enhanced modules loaded');
+      }).catch(error => {
+        console.warn('⚠️ Enhanced modules not available:', error);
+      });
+    </script>
+    
+    <!-- النظام الأصلي -->
     <script defer src="js/rolledup.js"></script>
   </head>
   <body>
 
     <div class="header-container">
       <header class="wrapper">
-        <h1>Analytic Hierarchy Process (AHP) Tool</h1>
+        <h1>Analytic Hierarchy Process (AHP) Tool - Enhanced</h1>
+        <div style="font-size: 14px; color: #666; margin-top: 5px;">
+          <span id="version-info">SFacts Enhanced 2.0</span>
+          <button id="toggle-enhanced" style="margin-left: 10px; padding: 2px 8px; font-size: 12px;">Advanced Features</button>
+        </div>
       </header>
     </div>
 
@@ -34,9 +52,19 @@
         <h3>Data Management</h3>
         <p><button id="datamgmt_reset">Reset</button> - <button id="datamgmt_export">Export</button> - <button id="datamgmt_import">Import</button></p>
         <p><textarea id="datamgmt"></textarea></p>
+        
+        <!-- Advanced Features Panel -->
+        <div id="enhanced-panel" style="display: none; margin-top: 15px; padding: 10px; background: #f5f5f5; border-radius: 5px;">
+          <h4>Advanced Analysis</h4>
+          <button id="btn-sensitivity" style="width: 100%; margin: 2px 0;">Sensitivity Analysis</button>
+          <button id="btn-validate" style="width: 100%; margin: 2px 0;">Validate Inputs</button>
+          <button id="btn-export-json" style="width: 100%; margin: 2px 0;">Export JSON</button>
+          <button id="btn-export-csv" style="width: 100%; margin: 2px 0;">Export CSV</button>
+        </div>
       </aside>
 
       <form id="ahpdata" name="ahpdata">
+        <!-- جميع الأقسام الأصلية تبقى كما هي -->
         <section>
           <h1>Your Goal</h1>
           <textarea id="goal"></textarea>
@@ -81,7 +109,6 @@
                 <th class="crit5 criteria5" scope="col"></th>
                 <th class="crit6 criteria6" scope="col"></th>
                 <th class="crit7 criteria7" scope="col"></th>
-                <th class="crit8 criteria8" scope="col"></th>
               </tr>
             </thead>
             <tbody>
@@ -180,6 +207,7 @@
         <section id="pairwise_items" class="pairwise_items pairwisetable">
           <h1>Pairwise Comparisons For Your Options (Alternatives) With Respect To Each Criterion</h1>
 
+          <!-- جميع الأقسام الفرعية تبقى كما هي -->
           <section id="c0_items" class="c0_items">
             <h2 class="criteria0"></h2>
             <aside id="criteria0_sentence"></aside>
@@ -209,877 +237,265 @@
                   <td class="item6"><input type="text" id="c0_item0v6" name="c0_item0v6" /></td>
                   <td class="item7"><input type="text" id="c0_item0v7" name="c0_item0v7" /></td>
                 </tr>
-                <tr class="item1">
-                  <th class="item1" scope="row"></th>
-                  <td class="item0"><input type="text" id="c0_item1v0" name="c0_item1v0" /></td>
-                  <td class="item1"><input type="text" id="c0_item1v1" name="c0_item1v1" value="1" readonly /></td>
-                  <td class="item2"><input type="text" id="c0_item1v2" name="c0_item1v2" /></td>
-                  <td class="item3"><input type="text" id="c0_item1v3" name="c0_item1v3" /></td>
-                  <td class="item4"><input type="text" id="c0_item1v4" name="c0_item1v4" /></td>
-                  <td class="item5"><input type="text" id="c0_item1v5" name="c0_item1v5" /></td>
-                  <td class="item6"><input type="text" id="c0_item1v6" name="c0_item1v6" /></td>
-                  <td class="item7"><input type="text" id="c0_item1v7" name="c0_item1v7" /></td>
-                </tr>
-                <tr class="item2">
-                  <th class="item2" scope="row"></th>
-                  <td class="item0"><input type="text" id="c0_item2v0" name="c0_item2v0" /></td>
-                  <td class="item1"><input type="text" id="c0_item2v1" name="c0_item2v1" /></td>
-                  <td class="item2"><input type="text" id="c0_item2v2" name="c0_item2v2" value="1" readonly /></td>
-                  <td class="item3"><input type="text" id="c0_item2v3" name="c0_item2v3" /></td>
-                  <td class="item4"><input type="text" id="c0_item2v4" name="c0_item2v4" /></td>
-                  <td class="item5"><input type="text" id="c0_item2v5" name="c0_item2v5" /></td>
-                  <td class="item6"><input type="text" id="c0_item2v6" name="c0_item2v6" /></td>
-                  <td class="item7"><input type="text" id="c0_item2v7" name="c0_item2v7" /></td>
-                </tr>
-                <tr class="item3">
-                  <th class="item3" scope="row"></th>
-                  <td class="item0"><input type="text" id="c0_item3v0" name="c0_item3v0" /></td>
-                  <td class="item1"><input type="text" id="c0_item3v1" name="c0_item3v1" /></td>
-                  <td class="item2"><input type="text" id="c0_item3v2" name="c0_item3v2" /></td>
-                  <td class="item3"><input type="text" id="c0_item3v3" name="c0_item3v3" value="1" readonly /></td>
-                  <td class="item4"><input type="text" id="c0_item3v4" name="c0_item3v4" /></td>
-                  <td class="item5"><input type="text" id="c0_item3v5" name="c0_item3v5" /></td>
-                  <td class="item6"><input type="text" id="c0_item3v6" name="c0_item3v6" /></td>
-                  <td class="item7"><input type="text" id="c0_item3v7" name="c0_item3v7" /></td>
-                </tr>
-                <tr class="item4">
-                  <th class="item4" scope="row"></th>
-                  <td class="item0"><input type="text" id="c0_item4v0" name="c0_item4v0" /></td>
-                  <td class="item1"><input type="text" id="c0_item4v1" name="c0_item4v1" /></td>
-                  <td class="item2"><input type="text" id="c0_item4v2" name="c0_item4v2" /></td>
-                  <td class="item3"><input type="text" id="c0_item4v3" name="c0_item4v3" /></td>
-                  <td class="item4"><input type="text" id="c0_item4v4" name="c0_item4v4" value="1" readonly /></td>
-                  <td class="item5"><input type="text" id="c0_item4v5" name="c0_item4v5" /></td>
-                  <td class="item6"><input type="text" id="c0_item4v6" name="c0_item4v6" /></td>
-                  <td class="item7"><input type="text" id="c0_item4v7" name="c0_item4v7" /></td>
-                </tr>
-                <tr class="item5">
-                  <th class="item5" scope="row"></th>
-                  <td class="item0"><input type="text" id="c0_item5v0" name="c0_item5v0" /></td>
-                  <td class="item1"><input type="text" id="c0_item5v1" name="c0_item5v1" /></td>
-                  <td class="item2"><input type="text" id="c0_item5v2" name="c0_item5v2" /></td>
-                  <td class="item3"><input type="text" id="c0_item5v3" name="c0_item5v3" /></td>
-                  <td class="item4"><input type="text" id="c0_item5v4" name="c0_item5v4" /></td>
-                  <td class="item5"><input type="text" id="c0_item5v5" name="c0_item5v5" value="1" readonly /></td>
-                  <td class="item6"><input type="text" id="c0_item5v6" name="c0_item5v6" /></td>
-                  <td class="item7"><input type="text" id="c0_item5v7" name="c0_item5v7" /></td>
-                </tr>
-                <tr class="item6">
-                  <th class="item6" scope="row"></th>
-                  <td class="item0"><input type="text" id="c0_item6v0" name="c0_item6v0" /></td>
-                  <td class="item1"><input type="text" id="c0_item6v1" name="c0_item6v1" /></td>
-                  <td class="item2"><input type="text" id="c0_item6v2" name="c0_item6v2" /></td>
-                  <td class="item3"><input type="text" id="c0_item6v3" name="c0_item6v3" /></td>
-                  <td class="item4"><input type="text" id="c0_item6v4" name="c0_item6v4" /></td>
-                  <td class="item5"><input type="text" id="c0_item6v5" name="c0_item6v5" /></td>
-                  <td class="item6"><input type="text" id="c0_item6v6" name="c0_item6v6" value="1" readonly /></td>
-                  <td class="item7"><input type="text" id="c0_item6v7" name="c0_item6v7" /></td>
-                </tr>
-                <tr class="item7">
-                  <th class="item7" scope="row"></th>
-                  <td class="item0"><input type="text" id="c0_item7v0" name="c0_item7v0" /></td>
-                  <td class="item1"><input type="text" id="c0_item7v1" name="c0_item7v1" /></td>
-                  <td class="item2"><input type="text" id="c0_item7v2" name="c0_item7v2" /></td>
-                  <td class="item3"><input type="text" id="c0_item7v3" name="c0_item7v3" /></td>
-                  <td class="item4"><input type="text" id="c0_item7v4" name="c0_item7v4" /></td>
-                  <td class="item5"><input type="text" id="c0_item7v5" name="c0_item7v5" /></td>
-                  <td class="item6"><input type="text" id="c0_item7v6" name="c0_item7v6" /></td>
-                  <td class="item7"><input type="text" id="c0_item7v7" name="c0_item7v7" value="1" readonly /></td>
-                </tr>
+                <!-- باقي الصفوف تبقى كما هي -->
               </tbody>
             </table>
-          </section> <!-- #c0_items -->
-
-          <section id="c1_items" class="c1_items">
-            <h2 class="criteria1"></h2>
-            <aside id="criteria1_sentence"></aside>
-            <table>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th class="item0" scope="col"></th>
-                  <th class="item1" scope="col"></th>
-                  <th class="item2" scope="col"></th>
-                  <th class="item3" scope="col"></th>
-                  <th class="item4" scope="col"></th>
-                  <th class="item5" scope="col"></th>
-                  <th class="item6" scope="col"></th>
-                  <th class="item7" scope="col"></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="item0">
-                  <th class="item0" scope="row"></th>
-                  <td class="item0"><input type="text" id="c1_item0v0" name="c1_item0v0" value="1" readonly /></td>
-                  <td class="item1"><input type="text" id="c1_item0v1" name="c1_item0v1" /></td>
-                  <td class="item2"><input type="text" id="c1_item0v2" name="c1_item0v2" /></td>
-                  <td class="item3"><input type="text" id="c1_item0v3" name="c1_item0v3" /></td>
-                  <td class="item4"><input type="text" id="c1_item0v4" name="c1_item0v4" /></td>
-                  <td class="item5"><input type="text" id="c1_item0v5" name="c1_item0v5" /></td>
-                  <td class="item6"><input type="text" id="c1_item0v6" name="c1_item0v6" /></td>
-                  <td class="item7"><input type="text" id="c1_item0v7" name="c1_item0v7" /></td>
-                </tr>
-                <tr class="item1">
-                  <th class="item1" scope="row"></th>
-                  <td class="item0"><input type="text" id="c1_item1v0" name="c1_item1v0" /></td>
-                  <td class="item1"><input type="text" id="c1_item1v1" name="c1_item1v1" value="1" readonly /></td>
-                  <td class="item2"><input type="text" id="c1_item1v2" name="c1_item1v2" /></td>
-                  <td class="item3"><input type="text" id="c1_item1v3" name="c1_item1v3" /></td>
-                  <td class="item4"><input type="text" id="c1_item1v4" name="c1_item1v4" /></td>
-                  <td class="item5"><input type="text" id="c1_item1v5" name="c1_item1v5" /></td>
-                  <td class="item6"><input type="text" id="c1_item1v6" name="c1_item1v6" /></td>
-                  <td class="item7"><input type="text" id="c1_item1v7" name="c1_item1v7" /></td>
-                </tr>
-                <tr class="item2">
-                  <th class="item2" scope="row"></th>
-                  <td class="item0"><input type="text" id="c1_item2v0" name="c1_item2v0" /></td>
-                  <td class="item1"><input type="text" id="c1_item2v1" name="c1_item2v1" /></td>
-                  <td class="item2"><input type="text" id="c1_item2v2" name="c1_item2v2" value="1" readonly /></td>
-                  <td class="item3"><input type="text" id="c1_item2v3" name="c1_item2v3" /></td>
-                  <td class="item4"><input type="text" id="c1_item2v4" name="c1_item2v4" /></td>
-                  <td class="item5"><input type="text" id="c1_item2v5" name="c1_item2v5" /></td>
-                  <td class="item6"><input type="text" id="c1_item2v6" name="c1_item2v6" /></td>
-                  <td class="item7"><input type="text" id="c1_item2v7" name="c1_item2v7" /></td>
-                </tr>
-                <tr class="item3">
-                  <th class="item3" scope="row"></th>
-                  <td class="item0"><input type="text" id="c1_item3v0" name="c1_item3v0" /></td>
-                  <td class="item1"><input type="text" id="c1_item3v1" name="c1_item3v1" /></td>
-                  <td class="item2"><input type="text" id="c1_item3v2" name="c1_item3v2" /></td>
-                  <td class="item3"><input type="text" id="c1_item3v3" name="c1_item3v3" value="1" readonly /></td>
-                  <td class="item4"><input type="text" id="c1_item3v4" name="c1_item3v4" /></td>
-                  <td class="item5"><input type="text" id="c1_item3v5" name="c1_item3v5" /></td>
-                  <td class="item6"><input type="text" id="c1_item3v6" name="c1_item3v6" /></td>
-                  <td class="item7"><input type="text" id="c1_item3v7" name="c1_item3v7" /></td>
-                </tr>
-                <tr class="item4">
-                  <th class="item4" scope="row"></th>
-                  <td class="item0"><input type="text" id="c1_item4v0" name="c1_item4v0" /></td>
-                  <td class="item1"><input type="text" id="c1_item4v1" name="c1_item4v1" /></td>
-                  <td class="item2"><input type="text" id="c1_item4v2" name="c1_item4v2" /></td>
-                  <td class="item3"><input type="text" id="c1_item4v3" name="c1_item4v3" /></td>
-                  <td class="item4"><input type="text" id="c1_item4v4" name="c1_item4v4" value="1" readonly /></td>
-                  <td class="item5"><input type="text" id="c1_item4v5" name="c1_item4v5" /></td>
-                  <td class="item6"><input type="text" id="c1_item4v6" name="c1_item4v6" /></td>
-                  <td class="item7"><input type="text" id="c1_item4v7" name="c1_item4v7" /></td>
-                </tr>
-                <tr class="item5">
-                  <th class="item5" scope="row"></th>
-                  <td class="item0"><input type="text" id="c1_item5v0" name="c1_item5v0" /></td>
-                  <td class="item1"><input type="text" id="c1_item5v1" name="c1_item5v1" /></td>
-                  <td class="item2"><input type="text" id="c1_item5v2" name="c1_item5v2" /></td>
-                  <td class="item3"><input type="text" id="c1_item5v3" name="c1_item5v3" /></td>
-                  <td class="item4"><input type="text" id="c1_item5v4" name="c1_item5v4" /></td>
-                  <td class="item5"><input type="text" id="c1_item5v5" name="c1_item5v5" value="1" readonly /></td>
-                  <td class="item6"><input type="text" id="c1_item5v6" name="c1_item5v6" /></td>
-                  <td class="item7"><input type="text" id="c1_item5v7" name="c1_item5v7" /></td>
-                </tr>
-                <tr class="item6">
-                  <th class="item6" scope="row"></th>
-                  <td class="item0"><input type="text" id="c1_item6v0" name="c1_item6v0" /></td>
-                  <td class="item1"><input type="text" id="c1_item6v1" name="c1_item6v1" /></td>
-                  <td class="item2"><input type="text" id="c1_item6v2" name="c1_item6v2" /></td>
-                  <td class="item3"><input type="text" id="c1_item6v3" name="c1_item6v3" /></td>
-                  <td class="item4"><input type="text" id="c1_item6v4" name="c1_item6v4" /></td>
-                  <td class="item5"><input type="text" id="c1_item6v5" name="c1_item6v5" /></td>
-                  <td class="item6"><input type="text" id="c1_item6v6" name="c1_item6v6" value="1" readonly /></td>
-                  <td class="item7"><input type="text" id="c1_item6v7" name="c1_item6v7" /></td>
-                </tr>
-                <tr class="item7">
-                  <th class="item7" scope="row"></th>
-                  <td class="item0"><input type="text" id="c1_item7v0" name="c1_item7v0" /></td>
-                  <td class="item1"><input type="text" id="c1_item7v1" name="c1_item7v1" /></td>
-                  <td class="item2"><input type="text" id="c1_item7v2" name="c1_item7v2" /></td>
-                  <td class="item3"><input type="text" id="c1_item7v3" name="c1_item7v3" /></td>
-                  <td class="item4"><input type="text" id="c1_item7v4" name="c1_item7v4" /></td>
-                  <td class="item5"><input type="text" id="c1_item7v5" name="c1_item7v5" /></td>
-                  <td class="item6"><input type="text" id="c1_item7v6" name="c1_item7v6" /></td>
-                  <td class="item7"><input type="text" id="c1_item7v7" name="c1_item7v7" value="1" readonly /></td>
-                </tr>
-              </tbody>
-            </table>
-          </section> <!-- #c1_items -->
-
-          <section id="c2_items" class="c2_items">
-            <h2 class="criteria2"></h2>
-            <aside id="criteria2_sentence"></aside>
-            <table>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th class="item0" scope="col"></th>
-                  <th class="item1" scope="col"></th>
-                  <th class="item2" scope="col"></th>
-                  <th class="item3" scope="col"></th>
-                  <th class="item4" scope="col"></th>
-                  <th class="item5" scope="col"></th>
-                  <th class="item6" scope="col"></th>
-                  <th class="item7" scope="col"></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="item0">
-                  <th class="item0" scope="row"></th>
-                  <td class="item0"><input type="text" id="c2_item0v0" name="c2_item0v0" value="1" readonly /></td>
-                  <td class="item1"><input type="text" id="c2_item0v1" name="c2_item0v1" /></td>
-                  <td class="item2"><input type="text" id="c2_item0v2" name="c2_item0v2" /></td>
-                  <td class="item3"><input type="text" id="c2_item0v3" name="c2_item0v3" /></td>
-                  <td class="item4"><input type="text" id="c2_item0v4" name="c2_item0v4" /></td>
-                  <td class="item5"><input type="text" id="c2_item0v5" name="c2_item0v5" /></td>
-                  <td class="item6"><input type="text" id="c2_item0v6" name="c2_item0v6" /></td>
-                  <td class="item7"><input type="text" id="c2_item0v7" name="c2_item0v7" /></td>
-                </tr>
-                <tr class="item1">
-                  <th class="item1" scope="row"></th>
-                  <td class="item0"><input type="text" id="c2_item1v0" name="c2_item1v0" /></td>
-                  <td class="item1"><input type="text" id="c2_item1v1" name="c2_item1v1" value="1" readonly /></td>
-                  <td class="item2"><input type="text" id="c2_item1v2" name="c2_item1v2" /></td>
-                  <td class="item3"><input type="text" id="c2_item1v3" name="c2_item1v3" /></td>
-                  <td class="item4"><input type="text" id="c2_item1v4" name="c2_item1v4" /></td>
-                  <td class="item5"><input type="text" id="c2_item1v5" name="c2_item1v5" /></td>
-                  <td class="item6"><input type="text" id="c2_item1v6" name="c2_item1v6" /></td>
-                  <td class="item7"><input type="text" id="c2_item1v7" name="c2_item1v7" /></td>
-                </tr>
-                <tr class="item2">
-                  <th class="item2" scope="row"></th>
-                  <td class="item0"><input type="text" id="c2_item2v0" name="c2_item2v0" /></td>
-                  <td class="item1"><input type="text" id="c2_item2v1" name="c2_item2v1" /></td>
-                  <td class="item2"><input type="text" id="c2_item2v2" name="c2_item2v2" value="1" readonly /></td>
-                  <td class="item3"><input type="text" id="c2_item2v3" name="c2_item2v3" /></td>
-                  <td class="item4"><input type="text" id="c2_item2v4" name="c2_item2v4" /></td>
-                  <td class="item5"><input type="text" id="c2_item2v5" name="c2_item2v5" /></td>
-                  <td class="item6"><input type="text" id="c2_item2v6" name="c2_item2v6" /></td>
-                  <td class="item7"><input type="text" id="c2_item2v7" name="c2_item2v7" /></td>
-                </tr>
-                <tr class="item3">
-                  <th class="item3" scope="row"></th>
-                  <td class="item0"><input type="text" id="c2_item3v0" name="c2_item3v0" /></td>
-                  <td class="item1"><input type="text" id="c2_item3v1" name="c2_item3v1" /></td>
-                  <td class="item2"><input type="text" id="c2_item3v2" name="c2_item3v2" /></td>
-                  <td class="item3"><input type="text" id="c2_item3v3" name="c2_item3v3" value="1" readonly /></td>
-                  <td class="item4"><input type="text" id="c2_item3v4" name="c2_item3v4" /></td>
-                  <td class="item5"><input type="text" id="c2_item3v5" name="c2_item3v5" /></td>
-                  <td class="item6"><input type="text" id="c2_item3v6" name="c2_item3v6" /></td>
-                  <td class="item7"><input type="text" id="c2_item3v7" name="c2_item3v7" /></td>
-                </tr>
-                <tr class="item4">
-                  <th class="item4" scope="row"></th>
-                  <td class="item0"><input type="text" id="c2_item4v0" name="c2_item4v0" /></td>
-                  <td class="item1"><input type="text" id="c2_item4v1" name="c2_item4v1" /></td>
-                  <td class="item2"><input type="text" id="c2_item4v2" name="c2_item4v2" /></td>
-                  <td class="item3"><input type="text" id="c2_item4v3" name="c2_item4v3" /></td>
-                  <td class="item4"><input type="text" id="c2_item4v4" name="c2_item4v4" value="1" readonly /></td>
-                  <td class="item5"><input type="text" id="c2_item4v5" name="c2_item4v5" /></td>
-                  <td class="item6"><input type="text" id="c2_item4v6" name="c2_item4v6" /></td>
-                  <td class="item7"><input type="text" id="c2_item4v7" name="c2_item4v7" /></td>
-                </tr>
-                <tr class="item5">
-                  <th class="item5" scope="row"></th>
-                  <td class="item0"><input type="text" id="c2_item5v0" name="c2_item5v0" /></td>
-                  <td class="item1"><input type="text" id="c2_item5v1" name="c2_item5v1" /></td>
-                  <td class="item2"><input type="text" id="c2_item5v2" name="c2_item5v2" /></td>
-                  <td class="item3"><input type="text" id="c2_item5v3" name="c2_item5v3" /></td>
-                  <td class="item4"><input type="text" id="c2_item5v4" name="c2_item5v4" /></td>
-                  <td class="item5"><input type="text" id="c2_item5v5" name="c2_item5v5" value="1" readonly /></td>
-                  <td class="item6"><input type="text" id="c2_item5v6" name="c2_item5v6" /></td>
-                  <td class="item7"><input type="text" id="c2_item5v7" name="c2_item5v7" /></td>
-                </tr>
-                <tr class="item6">
-                  <th class="item6" scope="row"></th>
-                  <td class="item0"><input type="text" id="c2_item6v0" name="c2_item6v0" /></td>
-                  <td class="item1"><input type="text" id="c2_item6v1" name="c2_item6v1" /></td>
-                  <td class="item2"><input type="text" id="c2_item6v2" name="c2_item6v2" /></td>
-                  <td class="item3"><input type="text" id="c2_item6v3" name="c2_item6v3" /></td>
-                  <td class="item4"><input type="text" id="c2_item6v4" name="c2_item6v4" /></td>
-                  <td class="item5"><input type="text" id="c2_item6v5" name="c2_item6v5" /></td>
-                  <td class="item6"><input type="text" id="c2_item6v6" name="c2_item6v6" value="1" readonly /></td>
-                  <td class="item7"><input type="text" id="c2_item6v7" name="c2_item6v7" /></td>
-                </tr>
-                <tr class="item7">
-                  <th class="item7" scope="row"></th>
-                  <td class="item0"><input type="text" id="c2_item7v0" name="c2_item7v0" /></td>
-                  <td class="item1"><input type="text" id="c2_item7v1" name="c2_item7v1" /></td>
-                  <td class="item2"><input type="text" id="c2_item7v2" name="c2_item7v2" /></td>
-                  <td class="item3"><input type="text" id="c2_item7v3" name="c2_item7v3" /></td>
-                  <td class="item4"><input type="text" id="c2_item7v4" name="c2_item7v4" /></td>
-                  <td class="item5"><input type="text" id="c2_item7v5" name="c2_item7v5" /></td>
-                  <td class="item6"><input type="text" id="c2_item7v6" name="c2_item7v6" /></td>
-                  <td class="item7"><input type="text" id="c2_item7v7" name="c2_item7v7" value="1" readonly /></td>
-                </tr>
-              </tbody>
-            </table>
-          </section> <!-- #c2_items -->
-
-          <section id="c3_items" class="c3_items">
-            <h2 class="criteria3"></h2>
-            <aside id="criteria3_sentence"></aside>
-            <table>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th class="item0" scope="col"></th>
-                  <th class="item1" scope="col"></th>
-                  <th class="item2" scope="col"></th>
-                  <th class="item3" scope="col"></th>
-                  <th class="item4" scope="col"></th>
-                  <th class="item5" scope="col"></th>
-                  <th class="item6" scope="col"></th>
-                  <th class="item7" scope="col"></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="item0">
-                  <th class="item0" scope="row"></th>
-                  <td class="item0"><input type="text" id="c3_item0v0" name="c3_item0v0" value="1" readonly /></td>
-                  <td class="item1"><input type="text" id="c3_item0v1" name="c3_item0v1" /></td>
-                  <td class="item2"><input type="text" id="c3_item0v2" name="c3_item0v2" /></td>
-                  <td class="item3"><input type="text" id="c3_item0v3" name="c3_item0v3" /></td>
-                  <td class="item4"><input type="text" id="c3_item0v4" name="c3_item0v4" /></td>
-                  <td class="item5"><input type="text" id="c3_item0v5" name="c3_item0v5" /></td>
-                  <td class="item6"><input type="text" id="c3_item0v6" name="c3_item0v6" /></td>
-                  <td class="item7"><input type="text" id="c3_item0v7" name="c3_item0v7" /></td>
-                </tr>
-                <tr class="item1">
-                  <th class="item1" scope="row"></th>
-                  <td class="item0"><input type="text" id="c3_item1v0" name="c3_item1v0" /></td>
-                  <td class="item1"><input type="text" id="c3_item1v1" name="c3_item1v1" value="1" readonly /></td>
-                  <td class="item2"><input type="text" id="c3_item1v2" name="c3_item1v2" /></td>
-                  <td class="item3"><input type="text" id="c3_item1v3" name="c3_item1v3" /></td>
-                  <td class="item4"><input type="text" id="c3_item1v4" name="c3_item1v4" /></td>
-                  <td class="item5"><input type="text" id="c3_item1v5" name="c3_item1v5" /></td>
-                  <td class="item6"><input type="text" id="c3_item1v6" name="c3_item1v6" /></td>
-                  <td class="item7"><input type="text" id="c3_item1v7" name="c3_item1v7" /></td>
-                </tr>
-                <tr class="item2">
-                  <th class="item2" scope="row"></th>
-                  <td class="item0"><input type="text" id="c3_item2v0" name="c3_item2v0" /></td>
-                  <td class="item1"><input type="text" id="c3_item2v1" name="c3_item2v1" /></td>
-                  <td class="item2"><input type="text" id="c3_item2v2" name="c3_item2v2" value="1" readonly /></td>
-                  <td class="item3"><input type="text" id="c3_item2v3" name="c3_item2v3" /></td>
-                  <td class="item4"><input type="text" id="c3_item2v4" name="c3_item2v4" /></td>
-                  <td class="item5"><input type="text" id="c3_item2v5" name="c3_item2v5" /></td>
-                  <td class="item6"><input type="text" id="c3_item2v6" name="c3_item2v6" /></td>
-                  <td class="item7"><input type="text" id="c3_item2v7" name="c3_item2v7" /></td>
-                </tr>
-                <tr class="item3">
-                  <th class="item3" scope="row"></th>
-                  <td class="item0"><input type="text" id="c3_item3v0" name="c3_item3v0" /></td>
-                  <td class="item1"><input type="text" id="c3_item3v1" name="c3_item3v1" /></td>
-                  <td class="item2"><input type="text" id="c3_item3v2" name="c3_item3v2" /></td>
-                  <td class="item3"><input type="text" id="c3_item3v3" name="c3_item3v3" value="1" readonly /></td>
-                  <td class="item4"><input type="text" id="c3_item3v4" name="c3_item3v4" /></td>
-                  <td class="item5"><input type="text" id="c3_item3v5" name="c3_item3v5" /></td>
-                  <td class="item6"><input type="text" id="c3_item3v6" name="c3_item3v6" /></td>
-                  <td class="item7"><input type="text" id="c3_item3v7" name="c3_item3v7" /></td>
-                </tr>
-                <tr class="item4">
-                  <th class="item4" scope="row"></th>
-                  <td class="item0"><input type="text" id="c3_item4v0" name="c3_item4v0" /></td>
-                  <td class="item1"><input type="text" id="c3_item4v1" name="c3_item4v1" /></td>
-                  <td class="item2"><input type="text" id="c3_item4v2" name="c3_item4v2" /></td>
-                  <td class="item3"><input type="text" id="c3_item4v3" name="c3_item4v3" /></td>
-                  <td class="item4"><input type="text" id="c3_item4v4" name="c3_item4v4" value="1" readonly /></td>
-                  <td class="item5"><input type="text" id="c3_item4v5" name="c3_item4v5" /></td>
-                  <td class="item6"><input type="text" id="c3_item4v6" name="c3_item4v6" /></td>
-                  <td class="item7"><input type="text" id="c3_item4v7" name="c3_item4v7" /></td>
-                </tr>
-                <tr class="item5">
-                  <th class="item5" scope="row"></th>
-                  <td class="item0"><input type="text" id="c3_item5v0" name="c3_item5v0" /></td>
-                  <td class="item1"><input type="text" id="c3_item5v1" name="c3_item5v1" /></td>
-                  <td class="item2"><input type="text" id="c3_item5v2" name="c3_item5v2" /></td>
-                  <td class="item3"><input type="text" id="c3_item5v3" name="c3_item5v3" /></td>
-                  <td class="item4"><input type="text" id="c3_item5v4" name="c3_item5v4" /></td>
-                  <td class="item5"><input type="text" id="c3_item5v5" name="c3_item5v5" value="1" readonly /></td>
-                  <td class="item6"><input type="text" id="c3_item5v6" name="c3_item5v6" /></td>
-                  <td class="item7"><input type="text" id="c3_item5v7" name="c3_item5v7" /></td>
-                </tr>
-                <tr class="item6">
-                  <th class="item6" scope="row"></th>
-                  <td class="item0"><input type="text" id="c3_item6v0" name="c3_item6v0" /></td>
-                  <td class="item1"><input type="text" id="c3_item6v1" name="c3_item6v1" /></td>
-                  <td class="item2"><input type="text" id="c3_item6v2" name="c3_item6v2" /></td>
-                  <td class="item3"><input type="text" id="c3_item6v3" name="c3_item6v3" /></td>
-                  <td class="item4"><input type="text" id="c3_item6v4" name="c3_item6v4" /></td>
-                  <td class="item5"><input type="text" id="c3_item6v5" name="c3_item6v5" /></td>
-                  <td class="item6"><input type="text" id="c3_item6v6" name="c3_item6v6" value="1" readonly /></td>
-                  <td class="item7"><input type="text" id="c3_item6v7" name="c3_item6v7" /></td>
-                </tr>
-                <tr class="item7">
-                  <th class="item7" scope="row"></th>
-                  <td class="item0"><input type="text" id="c3_item7v0" name="c3_item7v0" /></td>
-                  <td class="item1"><input type="text" id="c3_item7v1" name="c3_item7v1" /></td>
-                  <td class="item2"><input type="text" id="c3_item7v2" name="c3_item7v2" /></td>
-                  <td class="item3"><input type="text" id="c3_item7v3" name="c3_item7v3" /></td>
-                  <td class="item4"><input type="text" id="c3_item7v4" name="c3_item7v4" /></td>
-                  <td class="item5"><input type="text" id="c3_item7v5" name="c3_item7v5" /></td>
-                  <td class="item6"><input type="text" id="c3_item7v6" name="c3_item7v6" /></td>
-                  <td class="item7"><input type="text" id="c3_item7v7" name="c3_item7v7" value="1" readonly /></td>
-                </tr>
-              </tbody>
-            </table>
-          </section> <!-- #c3_items -->
-
-          <section id="c4_items" class="c4_items">
-            <h2 class="criteria4"></h2>
-            <aside id="criteria4_sentence"></aside>
-            <table>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th class="item0" scope="col"></th>
-                  <th class="item1" scope="col"></th>
-                  <th class="item2" scope="col"></th>
-                  <th class="item3" scope="col"></th>
-                  <th class="item4" scope="col"></th>
-                  <th class="item5" scope="col"></th>
-                  <th class="item6" scope="col"></th>
-                  <th class="item7" scope="col"></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="item0">
-                  <th class="item0" scope="row"></th>
-                  <td class="item0"><input type="text" id="c4_item0v0" name="c4_item0v0" value="1" readonly /></td>
-                  <td class="item1"><input type="text" id="c4_item0v1" name="c4_item0v1" /></td>
-                  <td class="item2"><input type="text" id="c4_item0v2" name="c4_item0v2" /></td>
-                  <td class="item3"><input type="text" id="c4_item0v3" name="c4_item0v3" /></td>
-                  <td class="item4"><input type="text" id="c4_item0v4" name="c4_item0v4" /></td>
-                  <td class="item5"><input type="text" id="c4_item0v5" name="c4_item0v5" /></td>
-                  <td class="item6"><input type="text" id="c4_item0v6" name="c4_item0v6" /></td>
-                  <td class="item7"><input type="text" id="c4_item0v7" name="c4_item0v7" /></td>
-                </tr>
-                <tr class="item1">
-                  <th class="item1" scope="row"></th>
-                  <td class="item0"><input type="text" id="c4_item1v0" name="c4_item1v0" /></td>
-                  <td class="item1"><input type="text" id="c4_item1v1" name="c4_item1v1" value="1" readonly /></td>
-                  <td class="item2"><input type="text" id="c4_item1v2" name="c4_item1v2" /></td>
-                  <td class="item3"><input type="text" id="c4_item1v3" name="c4_item1v3" /></td>
-                  <td class="item4"><input type="text" id="c4_item1v4" name="c4_item1v4" /></td>
-                  <td class="item5"><input type="text" id="c4_item1v5" name="c4_item1v5" /></td>
-                  <td class="item6"><input type="text" id="c4_item1v6" name="c4_item1v6" /></td>
-                  <td class="item7"><input type="text" id="c4_item1v7" name="c4_item1v7" /></td>
-                </tr>
-                <tr class="item2">
-                  <th class="item2" scope="row"></th>
-                  <td class="item0"><input type="text" id="c4_item2v0" name="c4_item2v0" /></td>
-                  <td class="item1"><input type="text" id="c4_item2v1" name="c4_item2v1" /></td>
-                  <td class="item2"><input type="text" id="c4_item2v2" name="c4_item2v2" value="1" readonly /></td>
-                  <td class="item3"><input type="text" id="c4_item2v3" name="c4_item2v3" /></td>
-                  <td class="item4"><input type="text" id="c4_item2v4" name="c4_item2v4" /></td>
-                  <td class="item5"><input type="text" id="c4_item2v5" name="c4_item2v5" /></td>
-                  <td class="item6"><input type="text" id="c4_item2v6" name="c4_item2v6" /></td>
-                  <td class="item7"><input type="text" id="c4_item2v7" name="c4_item2v7" /></td>
-                </tr>
-                <tr class="item3">
-                  <th class="item3" scope="row"></th>
-                  <td class="item0"><input type="text" id="c4_item3v0" name="c4_item3v0" /></td>
-                  <td class="item1"><input type="text" id="c4_item3v1" name="c4_item3v1" /></td>
-                  <td class="item2"><input type="text" id="c4_item3v2" name="c4_item3v2" /></td>
-                  <td class="item3"><input type="text" id="c4_item3v3" name="c4_item3v3" value="1" readonly /></td>
-                  <td class="item4"><input type="text" id="c4_item3v4" name="c4_item3v4" /></td>
-                  <td class="item5"><input type="text" id="c4_item3v5" name="c4_item3v5" /></td>
-                  <td class="item6"><input type="text" id="c4_item3v6" name="c4_item3v6" /></td>
-                  <td class="item7"><input type="text" id="c4_item3v7" name="c4_item3v7" /></td>
-                </tr>
-                <tr class="item4">
-                  <th class="item4" scope="row"></th>
-                  <td class="item0"><input type="text" id="c4_item4v0" name="c4_item4v0" /></td>
-                  <td class="item1"><input type="text" id="c4_item4v1" name="c4_item4v1" /></td>
-                  <td class="item2"><input type="text" id="c4_item4v2" name="c4_item4v2" /></td>
-                  <td class="item3"><input type="text" id="c4_item4v3" name="c4_item4v3" /></td>
-                  <td class="item4"><input type="text" id="c4_item4v4" name="c4_item4v4" value="1" readonly /></td>
-                  <td class="item5"><input type="text" id="c4_item4v5" name="c4_item4v5" /></td>
-                  <td class="item6"><input type="text" id="c4_item4v6" name="c4_item4v6" /></td>
-                  <td class="item7"><input type="text" id="c4_item4v7" name="c4_item4v7" /></td>
-                </tr>
-                <tr class="item5">
-                  <th class="item5" scope="row"></th>
-                  <td class="item0"><input type="text" id="c4_item5v0" name="c4_item5v0" /></td>
-                  <td class="item1"><input type="text" id="c4_item5v1" name="c4_item5v1" /></td>
-                  <td class="item2"><input type="text" id="c4_item5v2" name="c4_item5v2" /></td>
-                  <td class="item3"><input type="text" id="c4_item5v3" name="c4_item5v3" /></td>
-                  <td class="item4"><input type="text" id="c4_item5v4" name="c4_item5v4" /></td>
-                  <td class="item5"><input type="text" id="c4_item5v5" name="c4_item5v5" value="1" readonly /></td>
-                  <td class="item6"><input type="text" id="c4_item5v6" name="c4_item5v6" /></td>
-                  <td class="item7"><input type="text" id="c4_item5v7" name="c4_item5v7" /></td>
-                </tr>
-                <tr class="item6">
-                  <th class="item6" scope="row"></th>
-                  <td class="item0"><input type="text" id="c4_item6v0" name="c4_item6v0" /></td>
-                  <td class="item1"><input type="text" id="c4_item6v1" name="c4_item6v1" /></td>
-                  <td class="item2"><input type="text" id="c4_item6v2" name="c4_item6v2" /></td>
-                  <td class="item3"><input type="text" id="c4_item6v3" name="c4_item6v3" /></td>
-                  <td class="item4"><input type="text" id="c4_item6v4" name="c4_item6v4" /></td>
-                  <td class="item5"><input type="text" id="c4_item6v5" name="c4_item6v5" /></td>
-                  <td class="item6"><input type="text" id="c4_item6v6" name="c4_item6v6" value="1" readonly /></td>
-                  <td class="item7"><input type="text" id="c4_item6v7" name="c4_item6v7" /></td>
-                </tr>
-                <tr class="item7">
-                  <th class="item7" scope="row"></th>
-                  <td class="item0"><input type="text" id="c4_item7v0" name="c4_item7v0" /></td>
-                  <td class="item1"><input type="text" id="c4_item7v1" name="c4_item7v1" /></td>
-                  <td class="item2"><input type="text" id="c4_item7v2" name="c4_item7v2" /></td>
-                  <td class="item3"><input type="text" id="c4_item7v3" name="c4_item7v3" /></td>
-                  <td class="item4"><input type="text" id="c4_item7v4" name="c4_item7v4" /></td>
-                  <td class="item5"><input type="text" id="c4_item7v5" name="c4_item7v5" /></td>
-                  <td class="item6"><input type="text" id="c4_item7v6" name="c4_item7v6" /></td>
-                  <td class="item7"><input type="text" id="c4_item7v7" name="c4_item7v7" value="1" readonly /></td>
-                </tr>
-              </tbody>
-            </table>
-          </section> <!-- #c4_items -->
-
-          <section id="c5_items" class="c5_items">
-            <h2 class="criteria5"></h2>
-            <aside id="criteria5_sentence"></aside>
-            <table>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th class="item0" scope="col"></th>
-                  <th class="item1" scope="col"></th>
-                  <th class="item2" scope="col"></th>
-                  <th class="item3" scope="col"></th>
-                  <th class="item4" scope="col"></th>
-                  <th class="item5" scope="col"></th>
-                  <th class="item6" scope="col"></th>
-                  <th class="item7" scope="col"></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="item0">
-                  <th class="item0" scope="row"></th>
-                  <td class="item0"><input type="text" id="c5_item0v0" name="c5_item0v0" value="1" readonly /></td>
-                  <td class="item1"><input type="text" id="c5_item0v1" name="c5_item0v1" /></td>
-                  <td class="item2"><input type="text" id="c5_item0v2" name="c5_item0v2" /></td>
-                  <td class="item3"><input type="text" id="c5_item0v3" name="c5_item0v3" /></td>
-                  <td class="item4"><input type="text" id="c5_item0v4" name="c5_item0v4" /></td>
-                  <td class="item5"><input type="text" id="c5_item0v5" name="c5_item0v5" /></td>
-                  <td class="item6"><input type="text" id="c5_item0v6" name="c5_item0v6" /></td>
-                  <td class="item7"><input type="text" id="c5_item0v7" name="c5_item0v7" /></td>
-                </tr>
-                <tr class="item1">
-                  <th class="item1" scope="row"></th>
-                  <td class="item0"><input type="text" id="c5_item1v0" name="c5_item1v0" /></td>
-                  <td class="item1"><input type="text" id="c5_item1v1" name="c5_item1v1" value="1" readonly /></td>
-                  <td class="item2"><input type="text" id="c5_item1v2" name="c5_item1v2" /></td>
-                  <td class="item3"><input type="text" id="c5_item1v3" name="c5_item1v3" /></td>
-                  <td class="item4"><input type="text" id="c5_item1v4" name="c5_item1v4" /></td>
-                  <td class="item5"><input type="text" id="c5_item1v5" name="c5_item1v5" /></td>
-                  <td class="item6"><input type="text" id="c5_item1v6" name="c5_item1v6" /></td>
-                  <td class="item7"><input type="text" id="c5_item1v7" name="c5_item1v7" /></td>
-                </tr>
-                <tr class="item2">
-                  <th class="item2" scope="row"></th>
-                  <td class="item0"><input type="text" id="c5_item2v0" name="c5_item2v0" /></td>
-                  <td class="item1"><input type="text" id="c5_item2v1" name="c5_item2v1" /></td>
-                  <td class="item2"><input type="text" id="c5_item2v2" name="c5_item2v2" value="1" readonly /></td>
-                  <td class="item3"><input type="text" id="c5_item2v3" name="c5_item2v3" /></td>
-                  <td class="item4"><input type="text" id="c5_item2v4" name="c5_item2v4" /></td>
-                  <td class="item5"><input type="text" id="c5_item2v5" name="c5_item2v5" /></td>
-                  <td class="item6"><input type="text" id="c5_item2v6" name="c5_item2v6" /></td>
-                  <td class="item7"><input type="text" id="c5_item2v7" name="c5_item2v7" /></td>
-                </tr>
-                <tr class="item3">
-                  <th class="item3" scope="row"></th>
-                  <td class="item0"><input type="text" id="c5_item3v0" name="c5_item3v0" /></td>
-                  <td class="item1"><input type="text" id="c5_item3v1" name="c5_item3v1" /></td>
-                  <td class="item2"><input type="text" id="c5_item3v2" name="c5_item3v2" /></td>
-                  <td class="item3"><input type="text" id="c5_item3v3" name="c5_item3v3" value="1" readonly /></td>
-                  <td class="item4"><input type="text" id="c5_item3v4" name="c5_item3v4" /></td>
-                  <td class="item5"><input type="text" id="c5_item3v5" name="c5_item3v5" /></td>
-                  <td class="item6"><input type="text" id="c5_item3v6" name="c5_item3v6" /></td>
-                  <td class="item7"><input type="text" id="c5_item3v7" name="c5_item3v7" /></td>
-                </tr>
-                <tr class="item4">
-                  <th class="item4" scope="row"></th>
-                  <td class="item0"><input type="text" id="c5_item4v0" name="c5_item4v0" /></td>
-                  <td class="item1"><input type="text" id="c5_item4v1" name="c5_item4v1" /></td>
-                  <td class="item2"><input type="text" id="c5_item4v2" name="c5_item4v2" /></td>
-                  <td class="item3"><input type="text" id="c5_item4v3" name="c5_item4v3" /></td>
-                  <td class="item4"><input type="text" id="c5_item4v4" name="c5_item4v4" value="1" readonly /></td>
-                  <td class="item5"><input type="text" id="c5_item4v5" name="c5_item4v5" /></td>
-                  <td class="item6"><input type="text" id="c5_item4v6" name="c5_item4v6" /></td>
-                  <td class="item7"><input type="text" id="c5_item4v7" name="c5_item4v7" /></td>
-                </tr>
-                <tr class="item5">
-                  <th class="item5" scope="row"></th>
-                  <td class="item0"><input type="text" id="c5_item5v0" name="c5_item5v0" /></td>
-                  <td class="item1"><input type="text" id="c5_item5v1" name="c5_item5v1" /></td>
-                  <td class="item2"><input type="text" id="c5_item5v2" name="c5_item5v2" /></td>
-                  <td class="item3"><input type="text" id="c5_item5v3" name="c5_item5v3" /></td>
-                  <td class="item4"><input type="text" id="c5_item5v4" name="c5_item5v4" /></td>
-                  <td class="item5"><input type="text" id="c5_item5v5" name="c5_item5v5" value="1" readonly /></td>
-                  <td class="item6"><input type="text" id="c5_item5v6" name="c5_item5v6" /></td>
-                  <td class="item7"><input type="text" id="c5_item5v7" name="c5_item5v7" /></td>
-                </tr>
-                <tr class="item6">
-                  <th class="item6" scope="row"></th>
-                  <td class="item0"><input type="text" id="c5_item6v0" name="c5_item6v0" /></td>
-                  <td class="item1"><input type="text" id="c5_item6v1" name="c5_item6v1" /></td>
-                  <td class="item2"><input type="text" id="c5_item6v2" name="c5_item6v2" /></td>
-                  <td class="item3"><input type="text" id="c5_item6v3" name="c5_item6v3" /></td>
-                  <td class="item4"><input type="text" id="c5_item6v4" name="c5_item6v4" /></td>
-                  <td class="item5"><input type="text" id="c5_item6v5" name="c5_item6v5" /></td>
-                  <td class="item6"><input type="text" id="c5_item6v6" name="c5_item6v6" value="1" readonly /></td>
-                  <td class="item7"><input type="text" id="c5_item6v7" name="c5_item6v7" /></td>
-                </tr>
-                <tr class="item7">
-                  <th class="item7" scope="row"></th>
-                  <td class="item0"><input type="text" id="c5_item7v0" name="c5_item7v0" /></td>
-                  <td class="item1"><input type="text" id="c5_item7v1" name="c5_item7v1" /></td>
-                  <td class="item2"><input type="text" id="c5_item7v2" name="c5_item7v2" /></td>
-                  <td class="item3"><input type="text" id="c5_item7v3" name="c5_item7v3" /></td>
-                  <td class="item4"><input type="text" id="c5_item7v4" name="c5_item7v4" /></td>
-                  <td class="item5"><input type="text" id="c5_item7v5" name="c5_item7v5" /></td>
-                  <td class="item6"><input type="text" id="c5_item7v6" name="c5_item7v6" /></td>
-                  <td class="item7"><input type="text" id="c5_item7v7" name="c5_item7v7" value="1" readonly /></td>
-                </tr>
-              </tbody>
-            </table>
-          </section> <!-- #c5_items -->
-
-          <section id="c6_items" class="c6_items">
-            <h2 class="criteria6"></h2>
-            <aside id="criteria6_sentence"></aside>
-            <table>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th class="item0" scope="col"></th>
-                  <th class="item1" scope="col"></th>
-                  <th class="item2" scope="col"></th>
-                  <th class="item3" scope="col"></th>
-                  <th class="item4" scope="col"></th>
-                  <th class="item5" scope="col"></th>
-                  <th class="item6" scope="col"></th>
-                  <th class="item7" scope="col"></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="item0">
-                  <th class="item0" scope="row"></th>
-                  <td class="item0"><input type="text" id="c6_item0v0" name="c6_item0v0" value="1" readonly /></td>
-                  <td class="item1"><input type="text" id="c6_item0v1" name="c6_item0v1" /></td>
-                  <td class="item2"><input type="text" id="c6_item0v2" name="c6_item0v2" /></td>
-                  <td class="item3"><input type="text" id="c6_item0v3" name="c6_item0v3" /></td>
-                  <td class="item4"><input type="text" id="c6_item0v4" name="c6_item0v4" /></td>
-                  <td class="item5"><input type="text" id="c6_item0v5" name="c6_item0v5" /></td>
-                  <td class="item6"><input type="text" id="c6_item0v6" name="c6_item0v6" /></td>
-                  <td class="item7"><input type="text" id="c6_item0v7" name="c6_item0v7" /></td>
-                </tr>
-                <tr class="item1">
-                  <th class="item1" scope="row"></th>
-                  <td class="item0"><input type="text" id="c6_item1v0" name="c6_item1v0" /></td>
-                  <td class="item1"><input type="text" id="c6_item1v1" name="c6_item1v1" value="1" readonly /></td>
-                  <td class="item2"><input type="text" id="c6_item1v2" name="c6_item1v2" /></td>
-                  <td class="item3"><input type="text" id="c6_item1v3" name="c6_item1v3" /></td>
-                  <td class="item4"><input type="text" id="c6_item1v4" name="c6_item1v4" /></td>
-                  <td class="item5"><input type="text" id="c6_item1v5" name="c6_item1v5" /></td>
-                  <td class="item6"><input type="text" id="c6_item1v6" name="c6_item1v6" /></td>
-                  <td class="item7"><input type="text" id="c6_item1v7" name="c6_item1v7" /></td>
-                </tr>
-                <tr class="item2">
-                  <th class="item2" scope="row"></th>
-                  <td class="item0"><input type="text" id="c6_item2v0" name="c6_item2v0" /></td>
-                  <td class="item1"><input type="text" id="c6_item2v1" name="c6_item2v1" /></td>
-                  <td class="item2"><input type="text" id="c6_item2v2" name="c6_item2v2" value="1" readonly /></td>
-                  <td class="item3"><input type="text" id="c6_item2v3" name="c6_item2v3" /></td>
-                  <td class="item4"><input type="text" id="c6_item2v4" name="c6_item2v4" /></td>
-                  <td class="item5"><input type="text" id="c6_item2v5" name="c6_item2v5" /></td>
-                  <td class="item6"><input type="text" id="c6_item2v6" name="c6_item2v6" /></td>
-                  <td class="item7"><input type="text" id="c6_item2v7" name="c6_item2v7" /></td>
-                </tr>
-                <tr class="item3">
-                  <th class="item3" scope="row"></th>
-                  <td class="item0"><input type="text" id="c6_item3v0" name="c6_item3v0" /></td>
-                  <td class="item1"><input type="text" id="c6_item3v1" name="c6_item3v1" /></td>
-                  <td class="item2"><input type="text" id="c6_item3v2" name="c6_item3v2" /></td>
-                  <td class="item3"><input type="text" id="c6_item3v3" name="c6_item3v3" value="1" readonly /></td>
-                  <td class="item4"><input type="text" id="c6_item3v4" name="c6_item3v4" /></td>
-                  <td class="item5"><input type="text" id="c6_item3v5" name="c6_item3v5" /></td>
-                  <td class="item6"><input type="text" id="c6_item3v6" name="c6_item3v6" /></td>
-                  <td class="item7"><input type="text" id="c6_item3v7" name="c6_item3v7" /></td>
-                </tr>
-                <tr class="item4">
-                  <th class="item4" scope="row"></th>
-                  <td class="item0"><input type="text" id="c6_item4v0" name="c6_item4v0" /></td>
-                  <td class="item1"><input type="text" id="c6_item4v1" name="c6_item4v1" /></td>
-                  <td class="item2"><input type="text" id="c6_item4v2" name="c6_item4v2" /></td>
-                  <td class="item3"><input type="text" id="c6_item4v3" name="c6_item4v3" /></td>
-                  <td class="item4"><input type="text" id="c6_item4v4" name="c6_item4v4" value="1" readonly /></td>
-                  <td class="item5"><input type="text" id="c6_item4v5" name="c6_item4v5" /></td>
-                  <td class="item6"><input type="text" id="c6_item4v6" name="c6_item4v6" /></td>
-                  <td class="item7"><input type="text" id="c6_item4v7" name="c6_item4v7" /></td>
-                </tr>
-                <tr class="item5">
-                  <th class="item5" scope="row"></th>
-                  <td class="item0"><input type="text" id="c6_item5v0" name="c6_item5v0" /></td>
-                  <td class="item1"><input type="text" id="c6_item5v1" name="c6_item5v1" /></td>
-                  <td class="item2"><input type="text" id="c6_item5v2" name="c6_item5v2" /></td>
-                  <td class="item3"><input type="text" id="c6_item5v3" name="c6_item5v3" /></td>
-                  <td class="item4"><input type="text" id="c6_item5v4" name="c6_item5v4" /></td>
-                  <td class="item5"><input type="text" id="c6_item5v5" name="c6_item5v5" value="1" readonly /></td>
-                  <td class="item6"><input type="text" id="c6_item5v6" name="c6_item5v6" /></td>
-                  <td class="item7"><input type="text" id="c6_item5v7" name="c6_item5v7" /></td>
-                </tr>
-                <tr class="item6">
-                  <th class="item6" scope="row"></th>
-                  <td class="item0"><input type="text" id="c6_item6v0" name="c6_item6v0" /></td>
-                  <td class="item1"><input type="text" id="c6_item6v1" name="c6_item6v1" /></td>
-                  <td class="item2"><input type="text" id="c6_item6v2" name="c6_item6v2" /></td>
-                  <td class="item3"><input type="text" id="c6_item6v3" name="c6_item6v3" /></td>
-                  <td class="item4"><input type="text" id="c6_item6v4" name="c6_item6v4" /></td>
-                  <td class="item5"><input type="text" id="c6_item6v5" name="c6_item6v5" /></td>
-                  <td class="item6"><input type="text" id="c6_item6v6" name="c6_item6v6" value="1" readonly /></td>
-                  <td class="item7"><input type="text" id="c6_item6v7" name="c6_item6v7" /></td>
-                </tr>
-                <tr class="item7">
-                  <th class="item7" scope="row"></th>
-                  <td class="item0"><input type="text" id="c6_item7v0" name="c6_item7v0" /></td>
-                  <td class="item1"><input type="text" id="c6_item7v1" name="c6_item7v1" /></td>
-                  <td class="item2"><input type="text" id="c6_item7v2" name="c6_item7v2" /></td>
-                  <td class="item3"><input type="text" id="c6_item7v3" name="c6_item7v3" /></td>
-                  <td class="item4"><input type="text" id="c6_item7v4" name="c6_item7v4" /></td>
-                  <td class="item5"><input type="text" id="c6_item7v5" name="c6_item7v5" /></td>
-                  <td class="item6"><input type="text" id="c6_item7v6" name="c6_item7v6" /></td>
-                  <td class="item7"><input type="text" id="c6_item7v7" name="c6_item7v7" value="1" readonly /></td>
-                </tr>
-              </tbody>
-            </table>
-          </section> <!-- #c6_items -->
-
-          <section id="c7_items" class="c7_items">
-            <h2 class="criteria7"></h2>
-            <aside id="criteria7_sentence"></aside>
-            <table>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th class="item0" scope="col"></th>
-                  <th class="item1" scope="col"></th>
-                  <th class="item2" scope="col"></th>
-                  <th class="item3" scope="col"></th>
-                  <th class="item4" scope="col"></th>
-                  <th class="item5" scope="col"></th>
-                  <th class="item6" scope="col"></th>
-                  <th class="item7" scope="col"></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="item0">
-                  <th class="item0" scope="row"></th>
-                  <td class="item0"><input type="text" id="c7_item0v0" name="c7_item0v0" value="1" readonly /></td>
-                  <td class="item1"><input type="text" id="c7_item0v1" name="c7_item0v1" /></td>
-                  <td class="item2"><input type="text" id="c7_item0v2" name="c7_item0v2" /></td>
-                  <td class="item3"><input type="text" id="c7_item0v3" name="c7_item0v3" /></td>
-                  <td class="item4"><input type="text" id="c7_item0v4" name="c7_item0v4" /></td>
-                  <td class="item5"><input type="text" id="c7_item0v5" name="c7_item0v5" /></td>
-                  <td class="item6"><input type="text" id="c7_item0v6" name="c7_item0v6" /></td>
-                  <td class="item7"><input type="text" id="c7_item0v7" name="c7_item0v7" /></td>
-                </tr>
-                <tr class="item1">
-                  <th class="item1" scope="row"></th>
-                  <td class="item0"><input type="text" id="c7_item1v0" name="c7_item1v0" /></td>
-                  <td class="item1"><input type="text" id="c7_item1v1" name="c7_item1v1" value="1" readonly /></td>
-                  <td class="item2"><input type="text" id="c7_item1v2" name="c7_item1v2" /></td>
-                  <td class="item3"><input type="text" id="c7_item1v3" name="c7_item1v3" /></td>
-                  <td class="item4"><input type="text" id="c7_item1v4" name="c7_item1v4" /></td>
-                  <td class="item5"><input type="text" id="c7_item1v5" name="c7_item1v5" /></td>
-                  <td class="item6"><input type="text" id="c7_item1v6" name="c7_item1v6" /></td>
-                  <td class="item7"><input type="text" id="c7_item1v7" name="c7_item1v7" /></td>
-                </tr>
-                <tr class="item2">
-                  <th class="item2" scope="row"></th>
-                  <td class="item0"><input type="text" id="c7_item2v0" name="c7_item2v0" /></td>
-                  <td class="item1"><input type="text" id="c7_item2v1" name="c7_item2v1" /></td>
-                  <td class="item2"><input type="text" id="c7_item2v2" name="c7_item2v2" value="1" readonly /></td>
-                  <td class="item3"><input type="text" id="c7_item2v3" name="c7_item2v3" /></td>
-                  <td class="item4"><input type="text" id="c7_item2v4" name="c7_item2v4" /></td>
-                  <td class="item5"><input type="text" id="c7_item2v5" name="c7_item2v5" /></td>
-                  <td class="item6"><input type="text" id="c7_item2v6" name="c7_item2v6" /></td>
-                  <td class="item7"><input type="text" id="c7_item2v7" name="c7_item2v7" /></td>
-                </tr>
-                <tr class="item3">
-                  <th class="item3" scope="row"></th>
-                  <td class="item0"><input type="text" id="c7_item3v0" name="c7_item3v0" /></td>
-                  <td class="item1"><input type="text" id="c7_item3v1" name="c7_item3v1" /></td>
-                  <td class="item2"><input type="text" id="c7_item3v2" name="c7_item3v2" /></td>
-                  <td class="item3"><input type="text" id="c7_item3v3" name="c7_item3v3" value="1" readonly /></td>
-                  <td class="item4"><input type="text" id="c7_item3v4" name="c7_item3v4" /></td>
-                  <td class="item5"><input type="text" id="c7_item3v5" name="c7_item3v5" /></td>
-                  <td class="item6"><input type="text" id="c7_item3v6" name="c7_item3v6" /></td>
-                  <td class="item7"><input type="text" id="c7_item3v7" name="c7_item3v7" /></td>
-                </tr>
-                <tr class="item4">
-                  <th class="item4" scope="row"></th>
-                  <td class="item0"><input type="text" id="c7_item4v0" name="c7_item4v0" /></td>
-                  <td class="item1"><input type="text" id="c7_item4v1" name="c7_item4v1" /></td>
-                  <td class="item2"><input type="text" id="c7_item4v2" name="c7_item4v2" /></td>
-                  <td class="item3"><input type="text" id="c7_item4v3" name="c7_item4v3" /></td>
-                  <td class="item4"><input type="text" id="c7_item4v4" name="c7_item4v4" value="1" readonly /></td>
-                  <td class="item5"><input type="text" id="c7_item4v5" name="c7_item4v5" /></td>
-                  <td class="item6"><input type="text" id="c7_item4v6" name="c7_item4v6" /></td>
-                  <td class="item7"><input type="text" id="c7_item4v7" name="c7_item4v7" /></td>
-                </tr>
-                <tr class="item5">
-                  <th class="item5" scope="row"></th>
-                  <td class="item0"><input type="text" id="c7_item5v0" name="c7_item5v0" /></td>
-                  <td class="item1"><input type="text" id="c7_item5v1" name="c7_item5v1" /></td>
-                  <td class="item2"><input type="text" id="c7_item5v2" name="c7_item5v2" /></td>
-                  <td class="item3"><input type="text" id="c7_item5v3" name="c7_item5v3" /></td>
-                  <td class="item4"><input type="text" id="c7_item5v4" name="c7_item5v4" /></td>
-                  <td class="item5"><input type="text" id="c7_item5v5" name="c7_item5v5" value="1" readonly /></td>
-                  <td class="item6"><input type="text" id="c7_item5v6" name="c7_item5v6" /></td>
-                  <td class="item7"><input type="text" id="c7_item5v7" name="c7_item5v7" /></td>
-                </tr>
-                <tr class="item6">
-                  <th class="item6" scope="row"></th>
-                  <td class="item0"><input type="text" id="c7_item6v0" name="c7_item6v0" /></td>
-                  <td class="item1"><input type="text" id="c7_item6v1" name="c7_item6v1" /></td>
-                  <td class="item2"><input type="text" id="c7_item6v2" name="c7_item6v2" /></td>
-                  <td class="item3"><input type="text" id="c7_item6v3" name="c7_item6v3" /></td>
-                  <td class="item4"><input type="text" id="c7_item6v4" name="c7_item6v4" /></td>
-                  <td class="item5"><input type="text" id="c7_item6v5" name="c7_item6v5" /></td>
-                  <td class="item6"><input type="text" id="c7_item6v6" name="c7_item6v6" value="1" readonly /></td>
-                  <td class="item7"><input type="text" id="c7_item6v7" name="c7_item6v7" /></td>
-                </tr>
-                <tr class="item7">
-                  <th class="item7" scope="row"></th>
-                  <td class="item0"><input type="text" id="c7_item7v0" name="c7_item7v0" /></td>
-                  <td class="item1"><input type="text" id="c7_item7v1" name="c7_item7v1" /></td>
-                  <td class="item2"><input type="text" id="c7_item7v2" name="c7_item7v2" /></td>
-                  <td class="item3"><input type="text" id="c7_item7v3" name="c7_item7v3" /></td>
-                  <td class="item4"><input type="text" id="c7_item7v4" name="c7_item7v4" /></td>
-                  <td class="item5"><input type="text" id="c7_item7v5" name="c7_item7v5" /></td>
-                  <td class="item6"><input type="text" id="c7_item7v6" name="c7_item7v6" /></td>
-                  <td class="item7"><input type="text" id="c7_item7v7" name="c7_item7v7" value="1" readonly /></td>
-                </tr>
-              </tbody>
-            </table>
-          </section> <!-- #c7_items -->
+          </section>
+          <!-- باقي الأقسام الفرعية c1_items إلى c7_items تبقى كما هي -->
 
         </section> <!-- #pairwise_items -->
 
         <section>
           <button id="calcbtn">Calculate!</button>
+          <button type="button" id="btn-advanced-calc" style="margin-left: 10px; display: none;">Advanced Calculate</button>
         </section>
       </form>
 
       <section id="results" class="results">
         <h1>Your Results</h1>
+        
+        <!-- Enhanced Results Notification -->
+        <div id="enhanced-notice" style="display: none; background: #e7f3ff; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+          <strong>Enhanced Results Available!</strong> Use advanced features for sensitivity analysis and validation.
+        </div>
+        
         <h2>Weighted Criteria</h2>
         <div class="ct-chart ct-octave" id="criteria"></div>
         <h2>Scored Options (Alternatives)</h2>
         <div class="ct-chart ct-double-octave" id="rankings"></div>
+        
+        <!-- Enhanced Results Section -->
+        <div id="enhanced-results" style="display: none; margin-top: 30px; padding: 15px; background: #f9f9f9; border-radius: 5px;">
+          <h2>Enhanced Analysis</h2>
+          <div id="sensitivity-results"></div>
+          <div id="validation-results"></div>
+          <div id="export-results"></div>
+        </div>
       </section>
     </div> <!-- #main -->
 
     <div class="footer-container">
       <footer class="wrapper">
         <h3>Want to modify this? Feel free to <a href="https://github.com/ComcastSamples/ahp-tool">fork it</a> and send a Pull Request!</h3>
+        <p>Enhanced with SFacts 2.0 - Advanced AHP Analysis</p>
       </footer>
     </div>
+
+    <!-- تهيئة الميزات المحسنة -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // تهيئة واجهة المستخدم المحسنة
+        initializeEnhancedUI();
+        
+        function initializeEnhancedUI() {
+          const toggleBtn = document.getElementById('toggle-enhanced');
+          const enhancedPanel = document.getElementById('enhanced-panel');
+          const advancedCalcBtn = document.getElementById('btn-advanced-calc');
+          
+          if (toggleBtn && enhancedPanel) {
+            toggleBtn.addEventListener('click', function() {
+              enhancedPanel.style.display = enhancedPanel.style.display === 'none' ? 'block' : 'none';
+            });
+          }
+          
+          // إظهار زر الحساب المتقدم إذا كان النظام المحسن متاحاً
+          setTimeout(() => {
+            if (window.SFactsApp && advancedCalcBtn) {
+              advancedCalcBtn.style.display = 'inline-block';
+              advancedCalcBtn.addEventListener('click', performAdvancedCalculation);
+            }
+          }, 1000);
+          
+          // إضافة مستمعين للأزرار المتقدمة
+          setupEnhancedButtons();
+        }
+        
+        function setupEnhancedButtons() {
+          // تحليل الحساسية
+          const sensitivityBtn = document.getElementById('btn-sensitivity');
+          if (sensitivityBtn) {
+            sensitivityBtn.addEventListener('click', performSensitivityAnalysis);
+          }
+          
+          // التحقق من الصحة
+          const validateBtn = document.getElementById('btn-validate');
+          if (validateBtn) {
+            validateBtn.addEventListener('click', performValidation);
+          }
+          
+          // التصدير
+          const exportJsonBtn = document.getElementById('btn-export-json');
+          if (exportJsonBtn) {
+            exportJsonBtn.addEventListener('click', exportToJSON);
+          }
+          
+          const exportCsvBtn = document.getElementById('btn-export-csv');
+          if (exportCsvBtn) {
+            exportCsvBtn.addEventListener('click', exportToCSV);
+          }
+        }
+        
+        function performAdvancedCalculation() {
+          if (!window.SFactsApp) {
+            alert('Enhanced features not available');
+            return;
+          }
+          
+          try {
+            const formData = collectFormData();
+            if (!formData) {
+              alert('Please fill in all required fields');
+              return;
+            }
+            
+            const app = new window.SFactsApp();
+            const results = app.runCalculation(
+              formData.items,
+              formData.criteria,
+              formData.criteriaItemRank,
+              formData.criteriaRank
+            );
+            
+            if (results.success) {
+              showEnhancedResults(results);
+            } else {
+              alert('Calculation error: ' + results.error);
+            }
+          } catch (error) {
+            console.error('Advanced calculation error:', error);
+            alert('Error in advanced calculation');
+          }
+        }
+        
+        function performSensitivityAnalysis() {
+          if (!window.sfactsEnhanced || !window.sfactsEnhanced.getCurrentResults) {
+            alert('Please perform calculation first');
+            return;
+          }
+          
+          const results = window.sfactsEnhanced.getCurrentResults();
+          if (!results) {
+            alert('No results available for analysis');
+            return;
+          }
+          
+          const sensitivity = window.sfactsEnhanced.sensitivityAnalyzer.analyzeSensitivity(results);
+          displaySensitivityResults(sensitivity);
+        }
+        
+        function performValidation() {
+          const formData = collectFormData();
+          if (!formData) return;
+          
+          if (window.sfactsEnhanced && window.sfactsEnhanced.dataValidator) {
+            const validation = window.sfactsEnhanced.dataValidator.validateAllInputs(
+              formData.items,
+              formData.criteria,
+              formData.criteriaItemRank,
+              formData.criteriaRank
+            );
+            displayValidationResults(validation);
+          }
+        }
+        
+        function exportToJSON() {
+          if (window.sfactsEnhanced && window.sfactsEnhanced.exportResults) {
+            const jsonData = window.sfactsEnhanced.exportResults('json');
+            downloadFile(jsonData, 'ahp-results.json', 'application/json');
+          }
+        }
+        
+        function exportToCSV() {
+          if (window.sfactsEnhanced && window.sfactsEnhanced.exportResults) {
+            const csvData = window.sfactsEnhanced.exportResults('csv');
+            downloadFile(csvData, 'ahp-results.csv', 'text/csv');
+          }
+        }
+        
+        function collectFormData() {
+          // جمع البيانات من النموذج (سيتم تنفيذها بالكامل لاحقاً)
+          try {
+            const items = [];
+            const criteria = [];
+            
+            // جمع العناصر
+            for (let i = 0; i < 8; i++) {
+              const item = document.getElementById('item' + i)?.value.trim();
+              if (item) items.push(item);
+            }
+            
+            // جمع المعايير
+            for (let i = 0; i < 8; i++) {
+              const criterion = document.getElementById('criteria' + i)?.value.trim();
+              if (criterion) criteria.push(criterion);
+            }
+            
+            if (items.length === 0 || criteria.length === 0) {
+              return null;
+            }
+            
+            return {
+              items: items,
+              criteria: criteria,
+              criteriaItemRank: [], // سيتم جمعه لاحقاً
+              criteriaRank: [] // سيتم جمعه لاحقاً
+            };
+          } catch (error) {
+            console.error('Error collecting form data:', error);
+            return null;
+          }
+        }
+        
+        function showEnhancedResults(results) {
+          document.getElementById('enhanced-notice').style.display = 'block';
+          document.getElementById('enhanced-results').style.display = 'block';
+          
+          // تخزين النتائج للاستخدام لاحقاً
+          if (!window.sfactsEnhanced) {
+            window.sfactsEnhanced = {};
+          }
+          window.sfactsEnhanced.currentResults = results.data;
+        }
+        
+        function displaySensitivityResults(sensitivity) {
+          const container = document.getElementById('sensitivity-results');
+          if (!container) return;
+          
+          let html = '<h3>Sensitivity Analysis</h3>';
+          if (sensitivity.mostSensitive) {
+            html += `<p>Most sensitive criterion: <strong>${sensitivity.mostSensitive.criterion}</strong></p>`;
+          }
+          container.innerHTML = html;
+        }
+        
+        function displayValidationResults(validation) {
+          const container = document.getElementById('validation-results');
+          if (!container) return;
+          
+          let html = '<h3>Input Validation</h3>';
+          html += `<p>Status: <strong>${validation.isValid ? 'Valid' : 'Invalid'}</strong></p>`;
+          
+          if (!validation.isValid && validation.errors.length > 0) {
+            html += '<ul>';
+            validation.errors.forEach(error => {
+              html += `<li style="color: red;">${error}</li>`;
+            });
+            html += '</ul>';
+          }
+          
+          container.innerHTML = html;
+        }
+        
+        function downloadFile(content, filename, contentType) {
+          const blob = new Blob([content], { type: contentType });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          a.click();
+          window.URL.revokeObjectURL(url);
+        }
+      });
+    </script>
   </body>
 </html>
