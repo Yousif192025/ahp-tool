@@ -94,9 +94,229 @@
             margin-top: 20px;
         }
         
+        /* تحسينات إضافية للنتائج */
+        .ct-chart {
+            height: 400px;
+        }
+        
+        .ct-label {
+            font-size: 12px;
+            color: #333;
+        }
+        
+        .ct-series-a .ct-bar {
+            stroke: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            stroke-width: 50px;
+        }
+        
+        .ct-series-a .ct-slice-pie {
+            fill: #667eea;
+        }
+        
+        /* تصميم الجداول */
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .results-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .results-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .results-table tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .results-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* تلميحات المخططات */
+        .chart-tooltip {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        /* مؤشرات التقدم */
+        .loading-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Input Grid Styles */
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .input-grid input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .input-grid input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+        
+        .input-grid input::placeholder {
+            color: #95a5a6;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            min-height: 80px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        textarea:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+        
+        .calculation-buttons {
+            text-align: center;
+            margin: 40px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea0d 0%, #764ba20d 100%);
+            border-radius: 15px;
+            border: 2px dashed #dee2e6;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 45px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .calculation-notice {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid;
+            background: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+        
+        .chart-placeholder {
+            padding: 60px 20px;
+            text-align: center;
+            color: #95a5a6;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px dashed #dee2e6;
+            font-size: 16px;
+        }
+        
+        .html-chart {
+            padding: 20px;
+        }
+        
+        .fallback-chart {
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .results-table-container {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        
         @media (max-width: 992px) {
             .results-grid {
                 grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-primary {
+                width: 100%;
+                padding: 20px;
             }
         }
     </style>
@@ -181,7 +401,7 @@
                 </div>
             </section>
 
-            <!-- Pairwise Comparisons Sections (remain as original) -->
+            <!-- Pairwise Comparisons Sections -->
             <section id="pairwise_criteria" class="pairwise_criteria pairwisetable">
                 <h1>📈 Criteria Pairwise Comparisons</h1>
                 <p>Compare the relative importance of each criterion (use values from 1-9, where 1=equal importance, 9=much more important)</p>
@@ -351,8 +571,10 @@
                 }
                 
                 // Update results timestamp
-                document.getElementById('results-timestamp').textContent = 
-                    'Calculated: ' + new Date().toLocaleTimeString();
+                const timestampElement = document.getElementById('results-timestamp');
+                if (timestampElement) {
+                    timestampElement.textContent = 'Calculated: ' + new Date().toLocaleTimeString();
+                }
                 
                 // Update results status
                 updateResultsStatus('Processing your data...', 'info');
@@ -360,12 +582,15 @@
                 try {
                     // Collect and validate data
                     const validation = validateFormData();
+                    console.log('Form validation result:', validation);
+                    
                     if (!validation.valid) {
-                        throw new Error(validation.message);
+                        throw new Error(validation.message || 'Invalid form data');
                     }
                     
                     // Perform calculation
                     const results = await performCalculation(validation.data);
+                    console.log('Calculation results:', results);
                     
                     // Display results
                     displayResults(results);
@@ -391,7 +616,6 @@
                     // Restore button state
                     setTimeout(() => {
                         calcBtn.disabled = false;
-                        calcBtnText.textContent = '🔄 Calculate Again';
                         calcBtnText.innerHTML = '🚀 Calculate Again';
                     }, 1000);
                 }
@@ -434,7 +658,8 @@
             }
             
             // Check goal
-            const goal = document.getElementById('goal')?.value.trim() || 'Decision Analysis';
+            const goalInput = document.getElementById('goal');
+            const goal = goalInput && goalInput.value.trim() ? goalInput.value.trim() : 'Decision Analysis';
             
             return {
                 valid: true,
@@ -630,125 +855,197 @@
         }
         
         function createCharts(results) {
-            // Destroy existing charts if they exist
-            if (criteriaChart) {
-                criteriaChart.detach();
-            }
-            if (rankingsChart) {
-                rankingsChart.detach();
-            }
+            console.log('Displaying charts with results:', results);
             
-            // Create criteria weights chart
+            // إعداد البيانات للمخططات
             const criteriaData = {
                 labels: results.criteria.labels,
-                series: [results.criteria.normalizedWeights]
+                series: [results.criteria.normalizedWeights.map(w => w * 100)]
             };
             
-            const criteriaOptions = {
-                distributeSeries: true,
-                axisY: {
-                    onlyInteger: false,
-                    offset: 40,
-                    labelInterpolationFnc: function(value) {
-                        return (value * 100).toFixed(1) + '%';
-                    }
-                },
-                plugins: [
-                    window.chartist.plugins.tooltip()
-                ]
-            };
-            
-            const criteriaContainer = document.getElementById('criteria');
-            if (criteriaContainer && window.chartist) {
-                criteriaContainer.innerHTML = '';
-                criteriaChart = new window.chartist.Bar(criteriaContainer, criteriaData, criteriaOptions);
-            }
-            
-            // Create alternative scores chart
             const rankingsData = {
                 labels: results.alternatives.labels,
-                series: [results.alternatives.scores]
+                series: [results.alternatives.scores.map(s => s * 100)]
             };
             
-            const rankingsOptions = {
-                distributeSeries: true,
+            // خيارات المخططات
+            const chartOptions = {
+                axisX: {
+                    showGrid: false
+                },
                 axisY: {
                     onlyInteger: false,
-                    offset: 40,
+                    offset: 60,
                     labelInterpolationFnc: function(value) {
-                        return (value * 100).toFixed(1) + '%';
+                        return value.toFixed(1) + '%';
                     }
                 },
-                plugins: [
-                    window.chartist.plugins.tooltip()
-                ]
+                high: 100,
+                low: 0,
+                chartPadding: {
+                    top: 20,
+                    right: 20,
+                    bottom: 30,
+                    left: 40
+                },
+                plugins: window.chartist && window.chartist.plugins ? [
+                    window.chartist.plugins.tooltip({
+                        class: 'chart-tooltip',
+                        transformTooltipTextFnc: function(value) {
+                            return value.toFixed(2) + '%';
+                        }
+                    })
+                ] : []
             };
             
-            const rankingsContainer = document.getElementById('rankings');
-            if (rankingsContainer && window.chartist) {
-                rankingsContainer.innerHTML = '';
-                rankingsChart = new window.chartist.Bar(rankingsContainer, rankingsData, rankingsOptions);
-            }
-            
-            // Fallback if Chartist not available
-            if (!window.chartist) {
-                createFallbackCharts(results);
-            }
-        }
-        
-        function createFallbackCharts(results) {
-            // Simple HTML-based charts as fallback
+            // إنشاء مخطط معايير الأوزان
             const criteriaContainer = document.getElementById('criteria');
-            const rankingsContainer = document.getElementById('rankings');
-            
             if (criteriaContainer) {
-                criteriaContainer.innerHTML = createHTMLChart(
-                    results.criteria.labels,
-                    results.criteria.normalizedWeights,
-                    'Criteria Weights'
-                );
+                criteriaContainer.innerHTML = '';
+                if (window.chartist && results.criteria.labels.length > 0) {
+                    try {
+                        criteriaChart = new window.chartist.Bar(criteriaContainer, criteriaData, chartOptions);
+                        
+                        // تحسين التنسيق
+                        criteriaChart.on('draw', function(data) {
+                            if (data.type === 'bar') {
+                                data.element.attr({
+                                    style: 'stroke-width: 40px; stroke: linear-gradient(135deg, #667eea 0%, #764ba2 100%);'
+                                });
+                            }
+                        });
+                        
+                        console.log('✓ Criteria chart created successfully');
+                    } catch (error) {
+                        console.error('Error creating criteria chart:', error);
+                        createFallbackChart(criteriaContainer, results.criteria, 'Criteria Weights');
+                    }
+                } else {
+                    createFallbackChart(criteriaContainer, results.criteria, 'Criteria Weights');
+                }
             }
             
+            // إنشاء مخطط درجات البدائل
+            const rankingsContainer = document.getElementById('rankings');
             if (rankingsContainer) {
-                rankingsContainer.innerHTML = createHTMLChart(
-                    results.alternatives.labels,
-                    results.alternatives.scores,
-                    'Alternative Scores'
-                );
+                rankingsContainer.innerHTML = '';
+                if (window.chartist && results.alternatives.labels.length > 0) {
+                    try {
+                        rankingsChart = new window.chartist.Bar(rankingsContainer, rankingsData, chartOptions);
+                        
+                        // تخصيص الألوان للبدائل
+                        rankingsChart.on('draw', function(data) {
+                            if (data.type === 'bar') {
+                                // تدرج لوني حسب الرتبة
+                                const colors = [
+                                    '#2ecc71', // الأول - أخضر
+                                    '#3498db', // الثاني - أزرق
+                                    '#9b59b6', // الثالث - بنفسجي
+                                    '#e74c3c', // الرابع - أحمر
+                                    '#f39c12', // الخامس - برتقالي
+                                    '#1abc9c', // السادس - تركواز
+                                    '#34495e', // السابع - رمادي داكن
+                                    '#95a5a6'  // الثامن - رمادي فاتح
+                                ];
+                                
+                                const color = colors[data.index] || '#3498db';
+                                data.element.attr({
+                                    style: `stroke-width: 40px; stroke: ${color};`
+                                });
+                            }
+                        });
+                        
+                        console.log('✓ Rankings chart created successfully');
+                    } catch (error) {
+                        console.error('Error creating rankings chart:', error);
+                        createFallbackChart(rankingsContainer, results.alternatives, 'Alternative Scores', true);
+                    }
+                } else {
+                    createFallbackChart(rankingsContainer, results.alternatives, 'Alternative Scores', true);
+                }
             }
         }
         
-        function createHTMLChart(labels, values, title) {
-            const maxValue = Math.max(...values);
+        function createFallbackChart(container, data, title, isRanking = false) {
+            const labels = data.labels || [];
+            const values = (isRanking ? data.scores : data.normalizedWeights) || [];
             
-            let html = `<div class="html-chart">
-                <h4 style="margin-top: 0; color: #333;">${title}</h4>
-                <div style="margin-top: 20px;">`;
+            if (labels.length === 0 || values.length === 0) {
+                container.innerHTML = `<div class="chart-placeholder">No data available for ${title}</div>`;
+                return;
+            }
             
-            labels.forEach((label, index) => {
-                const percentage = (values[index] * 100).toFixed(1);
-                const barWidth = (values[index] / maxValue * 100).toFixed(1);
+            // إنشاء مخطط HTML بديل
+            let html = `
+                <div class="fallback-chart">
+                    <h4 style="margin: 0 0 20px 0; color: #2c3e50; font-size: 16px;">${title}</h4>
+                    <div style="max-height: 300px; overflow-y: auto;">
+            `;
+            
+            // ترتيب البيانات تنازلياً
+            const sortedData = labels.map((label, index) => ({
+                label,
+                value: values[index],
+                percentage: (values[index] * 100).toFixed(2)
+            })).sort((a, b) => b.value - a.value);
+            
+            // إنشاء أشرطة العرض
+            sortedData.forEach((item, index) => {
+                const barWidth = Math.max(5, (item.value * 100)); // عرض الشريط كنسبة مئوية
+                
+                // تحديد الألوان حسب الترتيب
+                let color;
+                if (index === 0) color = '#2ecc71'; // الأول - أخضر
+                else if (index === 1) color = '#3498db'; // الثاني - أزرق
+                else if (index === 2) color = '#9b59b6'; // الثالث - بنفسجي
+                else color = '#e0e0e0'; // البقية - رمادي
                 
                 html += `
-                <div style="margin-bottom: 15px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                        <span style="font-size: 14px; color: #555;">${label}</span>
-                        <span style="font-weight: bold; color: #2c3e50;">${percentage}%</span>
-                    </div>
-                    <div style="background: #ecf0f1; height: 20px; border-radius: 10px; overflow: hidden;">
-                        <div style="background: linear-gradient(90deg, #3498db, #2ecc71); 
-                                    height: 100%; width: ${barWidth}%; 
-                                    border-radius: 10px; transition: width 1s ease;">
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 14px;">
+                            <span style="font-weight: 500;">${item.label}</span>
+                            <span style="font-weight: bold; color: ${index < 3 ? color : '#2c3e50'}">
+                                ${item.percentage}%
+                            </span>
+                        </div>
+                        <div style="background: #f0f0f0; height: 25px; border-radius: 12.5px; overflow: hidden; position: relative;">
+                            <div style="
+                                background: linear-gradient(90deg, ${color}80, ${color});
+                                height: 100%; 
+                                width: ${barWidth}%; 
+                                border-radius: 12.5px; 
+                                transition: width 1s ease;
+                                position: relative;
+                            ">
+                                <div style="
+                                    position: absolute;
+                                    right: 10px;
+                                    top: 50%;
+                                    transform: translateY(-50%);
+                                    color: white;
+                                    font-size: 12px;
+                                    font-weight: bold;
+                                    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+                                ">
+                                    ${item.percentage}%
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>`;
+                `;
             });
             
-            html += `</div></div>`;
-            return html;
+            html += `
+                </div>
+            </div>
+            `;
+            
+            container.innerHTML = html;
         }
         
         function createTables(results) {
+            console.log('Creating tables with results:', results);
+            
             // Create criteria table
             const criteriaTable = document.getElementById('criteria-table');
             if (criteriaTable) {
@@ -773,42 +1070,61 @@
         }
         
         function createHTMLTable(labels, values, headers, type) {
-            // Sort by value (descending)
+            // دمج البيانات وترتيبها
             const items = labels.map((label, index) => ({
-                label,
-                value: values[index],
-                percentage: (values[index] * 100).toFixed(1) + '%'
-            })).sort((a, b) => b.value - a.value);
+                label: label || `Item ${index + 1}`,
+                value: values[index] || 0,
+                percentage: ((values[index] || 0) * 100).toFixed(2) + '%'
+            }));
+            
+            // ترتيب تنازلي حسب القيمة
+            const sortedItems = [...items].sort((a, b) => b.value - a.value);
             
             let html = `
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-                    <thead>
-                        <tr style="background: #f8f9fa;">
-                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Rank</th>
-                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">${headers[0]}</th>
-                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">${headers[1]}</th>
-                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">${headers[2]}</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
+                <div class="results-table-container">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">Rank</th>
+                                <th>${headers[0]}</th>
+                                <th style="width: 120px;">${headers[1]}</th>
+                                <th style="width: 120px;">${headers[2]}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
             
-            items.forEach((item, index) => {
+            sortedItems.forEach((item, index) => {
                 const rank = index + 1;
-                const rankClass = rank === 1 ? 'style="color: #e74c3c; font-weight: bold;"' : 
-                                 rank === 2 ? 'style="color: #e67e22;"' : 
-                                 rank === 3 ? 'style="color: #f39c12;"' : '';
+                let rankColor = '#95a5a6'; // اللون الافتراضي
+                
+                // تخصيص الألوان حسب الرتبة
+                if (rank === 1) rankColor = '#e74c3c'; // ذهبي
+                else if (rank === 2) rankColor = '#3498db'; // فضي
+                else if (rank === 3) rankColor = '#e67e22'; // برونزي
                 
                 html += `
-                <tr style="border-bottom: 1px solid #eee;">
-                    <td style="padding: 12px;" ${rankClass}>${rank}</td>
-                    <td style="padding: 12px;">${item.label}</td>
-                    <td style="padding: 12px;">${item.value.toFixed(4)}</td>
-                    <td style="padding: 12px; font-weight: bold;">${item.percentage}</td>
-                </tr>`;
+                    <tr>
+                        <td style="text-align: center; font-weight: bold; color: ${rankColor};">
+                            ${rank}
+                        </td>
+                        <td>${item.label}</td>
+                        <td style="text-align: center; font-family: monospace;">
+                            ${item.value.toFixed(4)}
+                        </td>
+                        <td style="text-align: center; font-weight: bold; color: #2c3e50;">
+                            ${item.percentage}
+                        </td>
+                    </tr>
+                `;
             });
             
-            html += `</tbody></table></div>`;
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
             return html;
         }
         
@@ -1010,7 +1326,10 @@
             
             // Clear results
             initializeChartContainers();
-            document.getElementById('results').style.display = 'none';
+            const resultsSection = document.getElementById('results');
+            if (resultsSection) {
+                resultsSection.style.display = 'none';
+            }
             
             // Clear storage
             sessionStorage.removeItem('ahp_form_data');
@@ -1021,175 +1340,34 @@
         
         function monitorSystemStatus() {
             const statusElement = document.getElementById('system-status');
+            if (!statusElement) return;
             
-            const checkInterval = setInterval(() => {
-                if (window.SFactsApp) {
-                    statusElement.textContent = 'Enhanced features: Ready ✓';
-                    statusElement.className = 'system-status active';
-                    clearInterval(checkInterval);
-                } else if (window.runCalculation) {
-                    statusElement.textContent = 'Basic AHP system: Ready ✓';
-                    statusElement.className = 'system-status active';
-                    clearInterval(checkInterval);
-                } else if (window.chartist) {
-                    statusElement.textContent = 'Chart system: Ready ✓';
-                    statusElement.className = 'system-status active';
-                }
-            }, 1000);
+            // التحقق من المكونات المتاحة
+            const components = {
+                'Enhanced Features': window.SFactsApp,
+                'Chart System': window.chartist,
+                'AHP Engine': window.runCalculation,
+                'Enhanced Integration': window.integrationLayer
+            };
             
-            // Fallback after 10 seconds
-            setTimeout(() => {
-                if (statusElement.textContent.includes('Loading')) {
-                    statusElement.textContent = 'Basic features available';
-                    statusElement.className = 'system-status';
-                }
-            }, 10000);
+            const available = Object.entries(components)
+                .filter(([_, component]) => component)
+                .map(([name, _]) => name);
+            
+            if (available.length > 0) {
+                statusElement.innerHTML = `
+                    <span style="color: #2ecc71;">✓</span> 
+                    Ready with: ${available.join(', ')}
+                `;
+                statusElement.className = 'system-status active';
+            } else {
+                statusElement.innerHTML = `
+                    <span style="color: #e74c3c;">⚠</span> 
+                    Basic mode only (enhanced features not available)
+                `;
+                statusElement.className = 'system-status';
+            }
         }
-        
-        // Add custom styles
-        const style = document.createElement('style');
-        style.textContent = `
-            .input-grid {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
-                margin: 20px 0;
-            }
-            
-            .input-grid input {
-                width: 100%;
-                padding: 12px 15px;
-                border: 2px solid #e0e0e0;
-                border-radius: 8px;
-                font-size: 14px;
-                transition: all 0.3s ease;
-                background: white;
-            }
-            
-            .input-grid input:focus {
-                border-color: #3498db;
-                box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-                outline: none;
-            }
-            
-            .input-grid input::placeholder {
-                color: #95a5a6;
-            }
-            
-            textarea {
-                width: 100%;
-                padding: 15px;
-                border: 2px solid #e0e0e0;
-                border-radius: 8px;
-                font-size: 14px;
-                min-height: 80px;
-                transition: all 0.3s ease;
-                font-family: inherit;
-            }
-            
-            textarea:focus {
-                border-color: #3498db;
-                box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-                outline: none;
-            }
-            
-            .calculation-buttons {
-                text-align: center;
-                margin: 40px 0;
-                padding: 30px;
-                background: linear-gradient(135deg, #667eea0d 0%, #764ba20d 100%);
-                border-radius: 15px;
-                border: 2px dashed #dee2e6;
-            }
-            
-            .btn-primary {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-                border: none;
-                padding: 18px 45px;
-                border-radius: 50px;
-                font-size: 18px;
-                font-weight: bold;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-            }
-            
-            .btn-primary:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
-            }
-            
-            .btn-primary:active {
-                transform: translateY(-1px);
-            }
-            
-            .btn-primary:disabled {
-                opacity: 0.6;
-                cursor: not-allowed;
-                transform: none;
-                box-shadow: none;
-            }
-            
-            .calculation-notice {
-                padding: 20px;
-                border-radius: 10px;
-                margin: 20px 0;
-                border: 2px solid;
-                background: #d1ecf1;
-                border-color: #bee5eb;
-                color: #0c5460;
-            }
-            
-            .chart-placeholder {
-                padding: 60px 20px;
-                text-align: center;
-                color: #95a5a6;
-                background: #f8f9fa;
-                border-radius: 8px;
-                border: 2px dashed #dee2e6;
-                font-size: 16px;
-            }
-            
-            .html-chart {
-                padding: 20px;
-            }
-            
-            @media (max-width: 768px) {
-                .input-grid {
-                    grid-template-columns: 1fr;
-                }
-                
-                .results-grid {
-                    grid-template-columns: 1fr;
-                }
-                
-                .btn-primary {
-                    width: 100%;
-                    padding: 20px;
-                }
-            }
-            
-            /* Chartist custom styles */
-            .ct-series-a .ct-bar {
-                stroke: #3498db;
-                stroke-width: 40px;
-            }
-            
-            .ct-series-a .ct-slice-pie {
-                fill: #3498db;
-            }
-            
-            .ct-label {
-                color: #2c3e50;
-                font-size: 14px;
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
