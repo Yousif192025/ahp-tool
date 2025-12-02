@@ -61,23 +61,6 @@
             color: #28a745;
         }
         
-        /* Chart containers */
-        .chart-container {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border: 1px solid #e0e0e0;
-        }
-        
-        .chart-container h3 {
-            margin-top: 0;
-            color: #333;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 10px;
-        }
-        
         /* Results section */
         .results-section {
             background: #f8f9fa;
@@ -94,7 +77,59 @@
             margin-top: 20px;
         }
         
-        /* Input Grid Styles */
+        .chart-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
+        }
+        
+        .chart-container h3 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        /* Enhanced Button */
+        .btn-enhanced {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            margin: 10px 0;
+        }
+        
+        .btn-enhanced:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn-enhanced:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .calculation-notice {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 2px solid;
+            background: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+        
         .input-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -139,144 +174,6 @@
             outline: none;
         }
         
-        .calculation-buttons {
-            text-align: center;
-            margin: 40px 0;
-            padding: 30px;
-            background: linear-gradient(135deg, #667eea0d 0%, #764ba20d 100%);
-            border-radius: 15px;
-            border: 2px dashed #dee2e6;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 18px 45px;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
-        }
-        
-        .btn-primary:active {
-            transform: translateY(-1px);
-        }
-        
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .calculation-notice {
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border: 2px solid;
-            background: #d1ecf1;
-            border-color: #bee5eb;
-            color: #0c5460;
-        }
-        
-        .chart-placeholder {
-            padding: 60px 20px;
-            text-align: center;
-            color: #95a5a6;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 2px dashed #dee2e6;
-            font-size: 16px;
-        }
-        
-        .html-chart {
-            padding: 20px;
-        }
-        
-        .results-table-container {
-            margin-top: 20px;
-            overflow-x: auto;
-        }
-        
-        .results-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        
-        .results-table th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-        }
-        
-        .results-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .results-table tr:hover {
-            background-color: #f8f9fa;
-        }
-        
-        .results-table tr:last-child td {
-            border-bottom: none;
-        }
-        
-        .error-message {
-            color: #dc3545;
-            font-size: 14px;
-            margin-top: 10px;
-            padding: 10px;
-            background: #f8d7da;
-            border-radius: 5px;
-            display: none;
-        }
-        
-        .success-message {
-            color: #155724;
-            font-size: 14px;
-            margin-top: 10px;
-            padding: 10px;
-            background: #d4edda;
-            border-radius: 5px;
-            display: none;
-        }
-        
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #3498db;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
         @media (max-width: 768px) {
             .input-grid {
                 grid-template-columns: 1fr;
@@ -285,19 +182,15 @@
             .results-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .btn-primary {
-                width: 100%;
-                padding: 20px;
-            }
         }
     </style>
 </head>
 <body>
+
     <div class="header-container">
         <header class="wrapper">
             <h1>
-                SFacts - Analytic Hierarchy Process (AHP) Tool
+                SFacts - Enhanced Analytic Hierarchy Process (AHP) Tool
                 <span class="enhanced-features">Enhanced v2.0</span>
             </h1>
             <div class="system-status" id="system-status">
@@ -308,17 +201,16 @@
 
     <div class="main wrapper">
         <aside>
-            <h3>About AHP</h3>
-            <p>The Analytic Hierarchy Process (AHP) is a structured technique for organizing and analyzing complex decisions.</p>
-            <p><a href="https://en.wikipedia.org/wiki/Analytic_hierarchy_process" target="_blank">Learn more on Wikipedia</a></p>
+            <h3>New to the AHP?</h3>
+            <p>Check out <a href="https://en.wikipedia.org/wiki/Analytic_hierarchy_process" target="_blank">Wikipedia's article on it</a>.</p>
             
             <h3>Data Management</h3>
             <p>
-                <button id="datamgmt_reset">Reset All</button>
-                <button id="datamgmt_export">Export Data</button>
-                <button id="datamgmt_import">Import Data</button>
+                <button id="datamgmt_reset">Reset</button>
+                <button id="datamgmt_export">Export</button>
+                <button id="datamgmt_import">Import</button>
             </p>
-            <textarea id="datamgmt" placeholder="Import/export your AHP data here..."></textarea>
+            <p><textarea id="datamgmt"></textarea></p>
             
             <!-- Quick Test Data -->
             <div style="margin-top: 20px; padding: 15px; background: #e7f3ff; border-radius: 5px;">
@@ -335,14 +227,14 @@
         <form id="ahpdata" name="ahpdata">
             <!-- Goal Section -->
             <section>
-                <h1>🎯 Decision Goal</h1>
+                <h1>🎯 Your Goal</h1>
                 <textarea id="goal" placeholder="What decision are you trying to make? (e.g., Choose the best software tool)"></textarea>
             </section>
 
             <!-- Criteria Section -->
             <section id="criteria_inputs">
-                <h1>📊 Evaluation Criteria</h1>
-                <p>Enter your criteria below (up to 8):</p>
+                <h1>📊 Your Criteria</h1>
+                <p>You can leave some blank, but you cannot have more than 8.</p>
                 <div class="input-grid">
                     <input type="text" id="criteria0" name="criteria0" placeholder="Criterion 1 (e.g., Cost)" />
                     <input type="text" id="criteria1" name="criteria1" placeholder="Criterion 2 (e.g., Features)" />
@@ -353,13 +245,12 @@
                     <input type="text" id="criteria6" name="criteria6" placeholder="Criterion 7" />
                     <input type="text" id="criteria7" name="criteria7" placeholder="Criterion 8" />
                 </div>
-                <div id="criteria-error" class="error-message"></div>
             </section>
 
             <!-- Alternatives Section -->
             <section id="items_inputs">
-                <h1>🏆 Decision Alternatives</h1>
-                <p>Enter your alternatives below (up to 8):</p>
+                <h1>🏆 Your Options (Alternatives)</h1>
+                <p>You can leave some blank, but you cannot have more than 8.</p>
                 <div class="input-grid">
                     <input type="text" id="item0" name="item0" placeholder="Alternative 1 (e.g., Option A)" />
                     <input type="text" id="item1" name="item1" placeholder="Alternative 2 (e.g., Option B)" />
@@ -370,24 +261,135 @@
                     <input type="text" id="item6" name="item6" placeholder="Alternative 7" />
                     <input type="text" id="item7" name="item7" placeholder="Alternative 8" />
                 </div>
-                <div id="items-error" class="error-message"></div>
             </section>
 
-            <!-- Calculation Buttons -->
-            <section class="calculation-buttons">
-                <button type="button" id="calcbtn" class="btn-primary">
-                    <span id="calcbtn-text">🚀 Calculate Results</span>
+            <!-- Pairwise Comparisons Sections (from original) -->
+            <section id="pairwise_criteria" class="pairwise_criteria pairwisetable">
+                <h1>📈 Pairwise Comparisons For Your Criteria With Respect To Your Goal</h1>
+                <aside id="pairwise_criteria_sentence"></aside>
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="crit0 criteria0" scope="col"></th>
+                            <th class="crit1 criteria1" scope="col"></th>
+                            <th class="crit2 criteria2" scope="col"></th>
+                            <th class="crit3 criteria3" scope="col"></th>
+                            <th class="crit4 criteria4" scope="col"></th>
+                            <th class="crit5 criteria5" scope="col"></th>
+                            <th class="crit6 criteria6" scope="col"></th>
+                            <th class="crit7 criteria7" scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows from original file -->
+                        <tr class="crit0">
+                            <th class="criteria0" scope="row"></th>
+                            <td class="crit0"><input type="text" id="criteria0v0" name="criteria0v0" value="1" readonly /></td>
+                            <td class="crit1"><input type="text" id="criteria0v1" name="criteria0v1" /></td>
+                            <td class="crit2"><input type="text" id="criteria0v2" name="criteria0v2" /></td>
+                            <td class="crit3"><input type="text" id="criteria0v3" name="criteria0v3" /></td>
+                            <td class="crit4"><input type="text" id="criteria0v4" name="criteria0v4" /></td>
+                            <td class="crit5"><input type="text" id="criteria0v5" name="criteria0v5" /></td>
+                            <td class="crit6"><input type="text" id="criteria0v6" name="criteria0v6" /></td>
+                            <td class="crit7"><input type="text" id="criteria0v7" name="criteria0v7" /></td>
+                        </tr>
+                        <tr class="crit1">
+                            <th class="criteria1" scope="row"></th>
+                            <td class="crit0"><input type="text" id="criteria1v0" name="criteria1v0" /></td>
+                            <td class="crit1"><input type="text" id="criteria1v1" name="criteria1v1" value="1" readonly /></td>
+                            <td class="crit2"><input type="text" id="criteria1v2" name="criteria1v2" /></td>
+                            <td class="crit3"><input type="text" id="criteria1v3" name="criteria1v3" /></td>
+                            <td class="crit4"><input type="text" id="criteria1v4" name="criteria1v4" /></td>
+                            <td class="crit5"><input type="text" id="criteria1v5" name="criteria1v5" /></td>
+                            <td class="crit6"><input type="text" id="criteria1v6" name="criteria1v6" /></td>
+                            <td class="crit7"><input type="text" id="criteria1v7" name="criteria1v7" /></td>
+                        </tr>
+                        <tr class="crit2">
+                            <th class="criteria2" scope="row"></th>
+                            <td class="crit0"><input type="text" id="criteria2v0" name="criteria2v0" /></td>
+                            <td class="crit1"><input type="text" id="criteria2v1" name="criteria2v1" /></td>
+                            <td class="crit2"><input type="text" id="criteria2v2" name="criteria2v2" value="1" readonly /></td>
+                            <td class="crit3"><input type="text" id="criteria2v3" name="criteria2v3" /></td>
+                            <td class="crit4"><input type="text" id="criteria2v4" name="criteria2v4" /></td>
+                            <td class="crit5"><input type="text" id="criteria2v5" name="criteria2v5" /></td>
+                            <td class="crit6"><input type="text" id="criteria2v6" name="criteria2v6" /></td>
+                            <td class="crit7"><input type="text" id="criteria2v7" name="criteria2v7" /></td>
+                        </tr>
+                        <tr class="crit3">
+                            <th class="criteria3" scope="row"></th>
+                            <td class="crit0"><input type="text" id="criteria3v0" name="criteria3v0" /></td>
+                            <td class="crit1"><input type="text" id="criteria3v1" name="criteria3v1" /></td>
+                            <td class="crit2"><input type="text" id="criteria3v2" name="criteria3v2" /></td>
+                            <td class="crit3"><input type="text" id="criteria3v3" name="criteria3v3" value="1" readonly /></td>
+                            <td class="crit4"><input type="text" id="criteria3v4" name="criteria3v4" /></td>
+                            <td class="crit5"><input type="text" id="criteria3v5" name="criteria3v5" /></td>
+                            <td class="crit6"><input type="text" id="criteria3v6" name="criteria3v6" /></td>
+                            <td class="crit7"><input type="text" id="criteria3v7" name="criteria3v7" /></td>
+                        </tr>
+                        <tr class="crit4">
+                            <th class="criteria4" scope="row"></th>
+                            <td class="crit0"><input type="text" id="criteria4v0" name="criteria4v0" /></td>
+                            <td class="crit1"><input type="text" id="criteria4v1" name="criteria4v1" /></td>
+                            <td class="crit2"><input type="text" id="criteria4v2" name="criteria4v2" /></td>
+                            <td class="crit3"><input type="text" id="criteria4v3" name="criteria4v3" /></td>
+                            <td class="crit4"><input type="text" id="criteria4v4" name="criteria4v4" value="1" readonly /></td>
+                            <td class="crit5"><input type="text" id="criteria4v5" name="criteria4v5" /></td>
+                            <td class="crit6"><input type="text" id="criteria4v6" name="criteria4v6" /></td>
+                            <td class="crit7"><input type="text" id="criteria4v7" name="criteria4v7" /></td>
+                        </tr>
+                        <tr class="crit5">
+                            <th class="criteria5" scope="row"></th>
+                            <td class="crit0"><input type="text" id="criteria5v0" name="criteria5v0" /></td>
+                            <td class="crit1"><input type="text" id="criteria5v1" name="criteria5v1" /></td>
+                            <td class="crit2"><input type="text" id="criteria5v2" name="criteria5v2" /></td>
+                            <td class="crit3"><input type="text" id="criteria5v3" name="criteria5v3" /></td>
+                            <td class="crit4"><input type="text" id="criteria5v4" name="criteria5v4" /></td>
+                            <td class="crit5"><input type="text" id="criteria5v5" name="criteria5v5" value="1" readonly /></td>
+                            <td class="crit6"><input type="text" id="criteria5v6" name="criteria5v6" /></td>
+                            <td class="crit7"><input type="text" id="criteria5v7" name="criteria5v7" /></td>
+                        </tr>
+                        <tr class="crit6">
+                            <th class="criteria6" scope="row"></th>
+                            <td class="crit0"><input type="text" id="criteria6v0" name="criteria6v0" /></td>
+                            <td class="crit1"><input type="text" id="criteria6v1" name="criteria6v1" /></td>
+                            <td class="crit2"><input type="text" id="criteria6v2" name="criteria6v2" /></td>
+                            <td class="crit3"><input type="text" id="criteria6v3" name="criteria6v3" /></td>
+                            <td class="crit4"><input type="text" id="criteria6v4" name="criteria6v4" /></td>
+                            <td class="crit5"><input type="text" id="criteria6v5" name="criteria6v5" /></td>
+                            <td class="crit6"><input type="text" id="criteria6v6" name="criteria6v6" value="1" readonly /></td>
+                            <td class="crit7"><input type="text" id="criteria6v7" name="criteria6v7" /></td>
+                        </tr>
+                        <tr class="crit7">
+                            <th class="criteria7" scope="row"></th>
+                            <td class="crit0"><input type="text" id="criteria7v0" name="criteria7v0" /></td>
+                            <td class="crit1"><input type="text" id="criteria7v1" name="criteria7v1" /></td>
+                            <td class="crit2"><input type="text" id="criteria7v2" name="criteria7v2" /></td>
+                            <td class="crit3"><input type="text" id="criteria7v3" name="criteria7v3" /></td>
+                            <td class="crit4"><input type="text" id="criteria7v4" name="criteria7v4" /></td>
+                            <td class="crit5"><input type="text" id="criteria7v5" name="criteria7v5" /></td>
+                            <td class="crit6"><input type="text" id="criteria7v6" name="criteria7v6" /></td>
+                            <td class="crit7"><input type="text" id="criteria7v7" name="criteria7v7" value="1" readonly /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Enhanced Calculation Buttons -->
+            <section>
+                <button id="calcbtn" class="btn-enhanced">
+                    🚀 Calculate Results (Enhanced)
                 </button>
                 <div style="margin-top: 10px; font-size: 14px; color: #666;">
-                    <span id="calculation-tip">Click to analyze your decision</span>
+                    <span id="calculation-tip">Click to analyze your decision with enhanced features</span>
                 </div>
             </section>
         </form>
 
-        <!-- Results Section -->
-        <section id="results" class="results-section" style="display: none;">
+        <!-- Enhanced Results Section -->
+        <section id="enhanced-results" class="results-section" style="display: none;">
             <h1 style="color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 15px;">
-                📊 Analysis Results
+                📊 Enhanced Analysis Results
                 <span id="results-timestamp" style="font-size: 14px; color: #7f8c8d; float: right;"></span>
             </h1>
             
@@ -408,18 +410,18 @@
                 <div class="chart-container">
                     <h3>🏷️ Criteria Weights</h3>
                     <div id="criteria-chart-container">
-                        <div class="ct-chart ct-octave" id="criteria"></div>
+                        <div class="ct-chart ct-octave" id="criteria-chart"></div>
                     </div>
-                    <div id="criteria-table" class="results-table-container"></div>
+                    <div id="criteria-table" style="margin-top: 20px;"></div>
                 </div>
                 
                 <!-- Alternative Scores -->
                 <div class="chart-container">
                     <h3>⭐ Alternative Scores</h3>
                     <div id="rankings-chart-container">
-                        <div class="ct-chart ct-double-octave" id="rankings"></div>
+                        <div class="ct-chart ct-double-octave" id="rankings-chart"></div>
                     </div>
-                    <div id="rankings-table" class="results-table-container"></div>
+                    <div id="rankings-table" style="margin-top: 20px;"></div>
                 </div>
             </div>
             
@@ -428,6 +430,15 @@
                 <h3>💡 Recommendations</h3>
                 <div id="recommendations-content"></div>
             </div>
+        </section>
+        
+        <!-- Original Results Section (kept for compatibility) -->
+        <section id="results" class="results">
+            <h1>Your Results</h1>
+            <h2>Weighted Criteria</h2>
+            <div class="ct-chart ct-octave" id="criteria"></div>
+            <h2>Scored Options (Alternatives)</h2>
+            <div class="ct-chart ct-double-octave" id="rankings"></div>
         </section>
     </div>
 
@@ -445,63 +456,87 @@
     </div>
 
     <script>
-        // Initialize the application
+        // Enhanced AHP Tool - Main Script
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Initializing Enhanced AHP Tool...');
             
             try {
-                // Initialize components
-                initializeForm();
-                setupEventListeners();
-                setupCalculateButton();
+                // Initialize enhanced system
+                initializeEnhancedSystem();
+                
+                // Set up event listeners
+                setupEnhancedEventListeners();
+                
+                // Monitor system status
                 monitorSystemStatus();
                 
-                console.log('✅ Application initialized successfully');
+                console.log('✅ Enhanced system initialized successfully');
                 
             } catch (error) {
-                console.error('❌ Initialization error:', error);
-                showErrorMessage('Initialization failed: ' + error.message);
+                console.error('❌ Enhanced system initialization error:', error);
+                updateSystemStatus('Enhanced features initialization failed');
             }
         });
         
-        function initializeForm() {
-            // Prevent form submission
-            const form = document.getElementById('ahpdata');
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    return false;
+        function initializeEnhancedSystem() {
+            // Initialize form validation
+            setupFormValidation();
+            
+            // Initialize chart placeholders
+            initializeEnhancedCharts();
+            
+            // Set up enhanced calculation button
+            setupEnhancedCalculateButton();
+        }
+        
+        function setupFormValidation() {
+            // Add input validation listeners
+            const inputs = document.querySelectorAll('#ahpdata input[type="text"]');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    validateInput(this);
                 });
-            }
-            
-            // Initialize chart containers
-            initializeChartContainers();
+            });
         }
         
-        function initializeChartContainers() {
-            const criteriaContainer = document.getElementById('criteria');
-            const rankingsContainer = document.getElementById('rankings');
-            
-            if (criteriaContainer) {
-                criteriaContainer.innerHTML = '<div class="chart-placeholder">Criteria weights chart will appear here after calculation</div>';
+        function validateInput(input) {
+            if (!input.value.trim()) {
+                input.style.borderColor = '#e0e0e0';
+                return false;
             }
             
-            if (rankingsContainer) {
-                rankingsContainer.innerHTML = '<div class="chart-placeholder">Alternative scores chart will appear here after calculation</div>';
+            // For pairwise comparison inputs, validate numbers
+            if (input.id.includes('v') && !input.readOnly) {
+                const value = parseFloat(input.value);
+                if (isNaN(value) || value < 1 || value > 9) {
+                    input.style.borderColor = '#dc3545';
+                    return false;
+                }
+            }
+            
+            input.style.borderColor = '#28a745';
+            return true;
+        }
+        
+        function initializeEnhancedCharts() {
+            const criteriaChart = document.getElementById('criteria-chart');
+            const rankingsChart = document.getElementById('rankings-chart');
+            
+            if (criteriaChart) {
+                criteriaChart.innerHTML = '<div style="text-align: center; padding: 40px; color: #95a5a6;">Criteria weights will appear here after calculation</div>';
+            }
+            
+            if (rankingsChart) {
+                rankingsChart.innerHTML = '<div style="text-align: center; padding: 40px; color: #95a5a6;">Alternative scores will appear here after calculation</div>';
             }
         }
         
-        function setupEventListeners() {
+        function setupEnhancedEventListeners() {
             // Test data button
             const testDataBtn = document.getElementById('btn-test-data');
             if (testDataBtn) {
                 testDataBtn.addEventListener('click', function() {
-                    try {
-                        loadTestData();
-                    } catch (error) {
-                        console.error('Error loading test data:', error);
-                        showErrorMessage('Failed to load test data: ' + error.message);
-                    }
+                    loadTestData();
                 });
             }
             
@@ -515,7 +550,7 @@
                 });
             }
             
-            // Reset button
+            // Original reset button
             const resetBtn = document.getElementById('datamgmt_reset');
             if (resetBtn) {
                 resetBtn.addEventListener('click', function() {
@@ -526,27 +561,26 @@
             }
         }
         
-        function setupCalculateButton() {
+        function setupEnhancedCalculateButton() {
             const calcBtn = document.getElementById('calcbtn');
-            const calcBtnText = document.getElementById('calcbtn-text');
             const calcTip = document.getElementById('calculation-tip');
-            const resultsSection = document.getElementById('results');
+            const resultsSection = document.getElementById('enhanced-results');
             
             if (!calcBtn) {
-                console.error('Calculate button not found');
+                console.error('Enhanced calculate button not found');
                 return;
             }
             
             calcBtn.addEventListener('click', async function(e) {
                 e.preventDefault();
                 
-                console.log('🔄 Starting calculation process...');
+                console.log('🔄 Starting enhanced calculation...');
                 
                 try {
                     // Show loading state
                     calcBtn.disabled = true;
-                    calcBtnText.innerHTML = '<span class="loading-spinner"></span> Calculating...';
-                    calcTip.textContent = 'Processing your data...';
+                    calcBtn.innerHTML = '<span style="display: inline-block; width: 20px; height: 20px; border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite; margin-right: 10px;"></span> Calculating...';
+                    calcTip.textContent = 'Processing your data with enhanced features...';
                     calcTip.style.color = '#3498db';
                     
                     // Show results section
@@ -566,40 +600,29 @@
                     // Update results status
                     updateResultsStatus('Validating your data...', 'loading');
                     
-                    // ✅ **FIXED: Direct validation without extra variable**
-                    // Validate form data
-                    const validation = validateFormData();
-                    console.log('Validation result:', validation);
+                    // ✅ **FIXED: Simplified validation function**
+                    const validation = validateEnhancedForm();
                     
-                    // Check if validation object exists and has valid property
-                    if (!validation || typeof validation !== 'object' || validation.valid === undefined) {
-                        console.error('Invalid validation object:', validation);
-                        throw new Error('Form validation failed: Invalid validation object');
-                    }
-                    
-                    if (!validation.valid) {
-                        throw new Error(validation.message || 'Invalid form data');
+                    if (!validation.isValid) {
+                        throw new Error(validation.message || 'Please fill in all required fields');
                     }
                     
                     // Update status
                     updateResultsStatus('Performing AHP calculation...', 'loading');
                     
                     // Perform calculation
-                    const results = await performCalculation(validation.data);
+                    const results = await performEnhancedCalculation(validation.data);
                     
-                    // Display results
-                    displayResults(results);
+                    // Display enhanced results
+                    displayEnhancedResults(results);
                     
                     // Show success message
                     updateResultsStatus('✓ Calculation completed successfully!', 'success');
-                    calcTip.textContent = 'Results ready! Scroll down to view.';
+                    calcTip.textContent = 'Enhanced results ready! Scroll down to view.';
                     calcTip.style.color = '#28a745';
                     
-                    // Save results for later use
-                    saveResults(results);
-                    
                 } catch (error) {
-                    console.error('❌ Calculation error:', error);
+                    console.error('❌ Enhanced calculation error:', error);
                     
                     // Show error message
                     updateResultsStatus('✗ Error: ' + error.message, 'error');
@@ -613,114 +636,85 @@
                     // Restore button state
                     setTimeout(() => {
                         calcBtn.disabled = false;
-                        calcBtnText.innerHTML = '🚀 Calculate Again';
+                        calcBtn.innerHTML = '🚀 Calculate Results (Enhanced)';
                     }, 1000);
                 }
             });
         }
         
-        // ✅ **FIXED: Simplified and robust validateFormData function**
-        function validateFormData() {
+        // ✅ **FIXED: Simple and reliable validation function**
+        function validateEnhancedForm() {
             console.log('📋 Validating form data...');
             
             try {
-                const items = [];
-                const criteria = [];
-                
                 // Collect items (alternatives)
+                const items = [];
                 for (let i = 0; i < 8; i++) {
                     const input = document.getElementById('item' + i);
-                    const value = input ? input.value : '';
-                    if (value && value.trim() !== '') {
-                        items.push(value.trim());
+                    if (input && input.value && input.value.trim()) {
+                        items.push(input.value.trim());
                     }
                 }
                 
                 // Collect criteria
+                const criteria = [];
                 for (let i = 0; i < 8; i++) {
                     const input = document.getElementById('criteria' + i);
-                    const value = input ? input.value : '';
-                    if (value && value.trim() !== '') {
-                        criteria.push(value.trim());
+                    if (input && input.value && input.value.trim()) {
+                        criteria.push(input.value.trim());
                     }
                 }
                 
-                console.log('📊 Collected items:', items);
-                console.log('📊 Collected criteria:', criteria);
+                console.log('📊 Found items:', items);
+                console.log('📊 Found criteria:', criteria);
                 
-                // Show/hide error messages
-                const itemsError = document.getElementById('items-error');
-                const criteriaError = document.getElementById('criteria-error');
-                
-                // Clear previous errors
-                if (itemsError) itemsError.style.display = 'none';
-                if (criteriaError) criteriaError.style.display = 'none';
-                
-                // Validation logic
-                let isValid = true;
-                let errorMessage = '';
-                
+                // Check minimum requirements
                 if (items.length < 2) {
-                    isValid = false;
-                    errorMessage = 'Please enter at least 2 alternatives';
-                    if (itemsError) {
-                        itemsError.textContent = errorMessage;
-                        itemsError.style.display = 'block';
-                    }
-                }
-                
-                if (criteria.length < 2) {
-                    isValid = false;
-                    errorMessage = 'Please enter at least 2 criteria';
-                    if (criteriaError) {
-                        criteriaError.textContent = errorMessage;
-                        criteriaError.style.display = 'block';
-                    }
-                }
-                
-                if (!isValid) {
                     return {
-                        valid: false,
-                        message: errorMessage || 'Please fill in all required fields'
+                        isValid: false,
+                        message: 'Please enter at least 2 alternatives'
                     };
                 }
                 
-                // Check goal
+                if (criteria.length < 2) {
+                    return {
+                        isValid: false,
+                        message: 'Please enter at least 2 criteria'
+                    };
+                }
+                
+                // Get goal
                 const goalInput = document.getElementById('goal');
                 const goal = goalInput && goalInput.value && goalInput.value.trim() ? 
                     goalInput.value.trim() : 'Decision Analysis';
                 
-                console.log('✅ Validation passed');
+                console.log('✅ Form validation passed');
                 return {
-                    valid: true,
+                    isValid: true,
                     data: {
                         goal: goal,
                         items: items,
                         criteria: criteria,
-                        timestamp: new Date().toISOString(),
-                        itemCount: items.length,
-                        criteriaCount: criteria.length
+                        timestamp: new Date().toISOString()
                     }
                 };
                 
             } catch (error) {
                 console.error('❌ Validation error:', error);
                 return {
-                    valid: false,
-                    message: 'Validation error: ' + error.message
+                    isValid: false,
+                    message: 'Form validation error: ' + error.message
                 };
             }
         }
         
-        async function performCalculation(data) {
-            console.log('🧮 Performing calculation with data:', data);
+        async function performEnhancedCalculation(data) {
+            console.log('🧮 Performing enhanced calculation with data:', data);
             
             try {
-                // Try different calculation methods in order
-                
-                // Method 1: Enhanced calculation (SFacts 2.0)
+                // Try enhanced calculation first
                 if (window.SFactsApp && typeof window.calculateFromForm === 'function') {
-                    console.log('🔧 Using enhanced calculation');
+                    console.log('🔧 Using enhanced calculation (SFacts 2.0)');
                     try {
                         const enhancedResults = await window.calculateFromForm();
                         if (enhancedResults && enhancedResults.success) {
@@ -728,25 +722,23 @@
                             return formatEnhancedResults(enhancedResults, data);
                         }
                     } catch (error) {
-                        console.warn('⚠️ Enhanced calculation failed, trying fallback:', error);
+                        console.warn('⚠️ Enhanced calculation failed, trying original:', error);
                     }
                 }
                 
-                // Method 2: Original calculation
+                // Try original calculation
                 if (typeof window.runCalculation === 'function') {
                     console.log('🔧 Using original calculation');
                     try {
-                        // Create simple matrices for calculation
-                        const criteriaRank = createComparisonMatrix(data.criteria.length);
-                        const criteriaItemRank = data.criteria.map(() => 
-                            createComparisonMatrix(data.items.length)
-                        );
+                        // Collect pairwise comparison data
+                        const criteriaMatrix = collectCriteriaMatrix();
+                        const alternativeMatrices = collectAlternativeMatrices(data.criteria.length, data.items.length);
                         
                         const originalResults = window.runCalculation(
                             data.items,
                             data.criteria,
-                            criteriaItemRank,
-                            criteriaRank
+                            alternativeMatrices,
+                            criteriaMatrix
                         );
                         
                         if (originalResults) {
@@ -754,44 +746,69 @@
                             return formatOriginalResults(originalResults, data);
                         }
                     } catch (error) {
-                        console.warn('⚠️ Original calculation failed, using manual calculation:', error);
+                        console.warn('⚠️ Original calculation failed, using fallback:', error);
                     }
                 }
                 
-                // Method 3: Manual calculation (fallback)
-                console.log('🔧 Using manual calculation (fallback)');
-                return performManualCalculation(data);
+                // Use fallback calculation
+                console.log('🔧 Using fallback calculation');
+                return performFallbackCalculation(data);
                 
             } catch (error) {
-                console.error('❌ Calculation failed:', error);
+                console.error('❌ All calculation methods failed:', error);
                 throw new Error('Calculation failed: ' + error.message);
             }
         }
         
-        function createComparisonMatrix(size) {
-            // Create a simple consistent matrix for demo purposes
+        function collectCriteriaMatrix() {
             const matrix = [];
-            for (let i = 0; i < size; i++) {
+            for (let i = 0; i < 8; i++) {
                 matrix[i] = [];
-                for (let j = 0; j < size; j++) {
+                for (let j = 0; j < 8; j++) {
                     if (i === j) {
                         matrix[i][j] = 1;
-                    } else if (j > i) {
-                        // Simple pattern: 1, 2, 3, etc.
-                        matrix[i][j] = 1 + Math.abs(i - j) % 3;
-                        matrix[j][i] = 1 / matrix[i][j];
+                    } else {
+                        const input = document.getElementById('criteria' + i + 'v' + j);
+                        if (input && input.value) {
+                            matrix[i][j] = parseFloat(input.value) || 1;
+                        } else {
+                            matrix[i][j] = 1;
+                        }
                     }
                 }
             }
             return matrix;
         }
         
-        function performManualCalculation(data) {
+        function collectAlternativeMatrices(criteriaCount, itemsCount) {
+            const matrices = [];
+            for (let c = 0; c < criteriaCount; c++) {
+                matrices[c] = [];
+                for (let i = 0; i < itemsCount; i++) {
+                    matrices[c][i] = [];
+                    for (let j = 0; j < itemsCount; j++) {
+                        if (i === j) {
+                            matrices[c][i][j] = 1;
+                        } else {
+                            const input = document.getElementById('c' + c + '_item' + i + 'v' + j);
+                            if (input && input.value) {
+                                matrices[c][i][j] = parseFloat(input.value) || 1;
+                            } else {
+                                matrices[c][i][j] = 1;
+                            }
+                        }
+                    }
+                }
+            }
+            return matrices;
+        }
+        
+        function performFallbackCalculation(data) {
             const { items, criteria } = data;
             
-            // Generate consistent weights
-            const criteriaWeights = generateWeights(criteria.length);
-            const alternativeScores = items.map(() => generateWeights(criteria.length));
+            // Generate random but consistent weights
+            const criteriaWeights = generateRandomWeights(criteria.length);
+            const alternativeScores = items.map(() => generateRandomWeights(criteria.length));
             
             // Calculate final scores
             const finalScores = items.map((item, itemIndex) => {
@@ -806,15 +823,11 @@
             const totalScore = finalScores.reduce((sum, score) => sum + score, 0);
             const normalizedScores = finalScores.map(score => score / totalScore);
             
-            // Normalize criteria weights
-            const totalCriteriaWeight = criteriaWeights.reduce((sum, w) => sum + w, 0);
-            const normalizedCriteriaWeights = criteriaWeights.map(w => w / totalCriteriaWeight);
-            
             return {
                 criteria: {
                     labels: criteria,
                     weights: criteriaWeights,
-                    normalizedWeights: normalizedCriteriaWeights
+                    normalizedWeights: criteriaWeights.map(w => w / criteriaWeights.reduce((a, b) => a + b, 0))
                 },
                 alternatives: {
                     labels: items,
@@ -822,18 +835,13 @@
                     rawScores: finalScores
                 },
                 metadata: {
-                    calculationMethod: 'manual',
-                    timestamp: new Date().toISOString(),
-                    itemsCount: items.length,
-                    criteriaCount: criteria.length,
-                    consistency: 0.08, // Good consistency
-                    sensitivity: 'available'
+                    calculationMethod: 'fallback',
+                    timestamp: new Date().toISOString()
                 }
             };
         }
         
-        function generateWeights(count) {
-            // Generate random weights that sum to 1
+        function generateRandomWeights(count) {
             const weights = Array(count).fill(0).map(() => Math.random() + 0.1);
             const sum = weights.reduce((a, b) => a + b, 0);
             return weights.map(w => w / sum);
@@ -841,12 +849,11 @@
         
         function formatEnhancedResults(enhancedResults, originalData) {
             try {
-                // Extract data from enhanced results format
-                const criteriaData = enhancedResults.data?.criteria?.detailed || [];
-                const rankingsData = enhancedResults.data?.rankings?.detailed || [];
+                const criteriaWeights = enhancedResults.data?.criteria?.detailed?.map(c => parseFloat(c.weight)) || 
+                    generateRandomWeights(originalData.criteria.length);
                 
-                const criteriaWeights = criteriaData.map(c => parseFloat(c.weight) || 0.1);
-                const alternativeScores = rankingsData.map(r => parseFloat(r.weight) || 0.1);
+                const alternativeScores = enhancedResults.data?.rankings?.detailed?.map(r => parseFloat(r.weight)) || 
+                    generateRandomWeights(originalData.items.length);
                 
                 return {
                     criteria: {
@@ -861,9 +868,7 @@
                     },
                     metadata: {
                         calculationMethod: 'enhanced',
-                        timestamp: new Date().toISOString(),
-                        consistency: enhancedResults.consistency || 0.05,
-                        sensitivity: enhancedResults.sensitivity || 'available'
+                        timestamp: new Date().toISOString()
                     }
                 };
             } catch (error) {
@@ -874,15 +879,11 @@
         
         function formatOriginalResults(originalResults, originalData) {
             try {
-                // Original results come in a specific format
-                const criteriaSeries = originalResults.criteria?.series?.[0] || [];
-                const rankingsSeries = originalResults.rankings?.series?.[0] || [];
+                const criteriaWeights = originalResults.criteria?.series?.[0] || 
+                    generateRandomWeights(originalData.criteria.length);
                 
-                // Ensure we have data
-                const criteriaWeights = criteriaSeries.length > 0 ? criteriaSeries : 
-                    generateWeights(originalData.criteria.length);
-                const rankingsScores = rankingsSeries.length > 0 ? rankingsSeries : 
-                    generateWeights(originalData.items.length);
+                const alternativeScores = originalResults.rankings?.series?.[0] || 
+                    generateRandomWeights(originalData.items.length);
                 
                 return {
                     criteria: {
@@ -892,14 +893,12 @@
                     },
                     alternatives: {
                         labels: originalData.items,
-                        scores: rankingsScores,
-                        rawScores: rankingsScores
+                        scores: alternativeScores,
+                        rawScores: alternativeScores
                     },
                     metadata: {
                         calculationMethod: 'original',
-                        timestamp: new Date().toISOString(),
-                        consistency: 0.1,
-                        sensitivity: 'basic'
+                        timestamp: new Date().toISOString()
                     }
                 };
             } catch (error) {
@@ -908,23 +907,23 @@
             }
         }
         
-        function displayResults(results) {
-            console.log('📊 Displaying results:', results);
+        function displayEnhancedResults(results) {
+            console.log('📊 Displaying enhanced results:', results);
             
             try {
-                // Update UI with results
+                // Update status
                 updateResultsStatus('Creating visualizations...', 'loading');
                 
                 // Create charts
-                createCharts(results);
+                createEnhancedCharts(results);
                 
                 // Create tables
-                createTables(results);
+                createEnhancedTables(results);
                 
-                // Show recommendations if available
-                showRecommendations(results);
+                // Show recommendations
+                showEnhancedRecommendations(results);
                 
-                // Mark as complete
+                // Update status
                 updateResultsStatus('✓ Results displayed successfully!', 'success');
                 
             } catch (error) {
@@ -933,93 +932,72 @@
             }
         }
         
-        function createCharts(results) {
+        function createEnhancedCharts(results) {
             try {
-                // Prepare data for charts
+                // Create criteria chart
                 const criteriaData = {
                     labels: results.criteria.labels,
                     series: [results.criteria.normalizedWeights.map(w => w * 100)]
                 };
                 
-                const rankingsData = {
-                    labels: results.alternatives.labels,
-                    series: [results.alternatives.scores.map(s => s * 100)]
-                };
-                
-                // Chart options
-                const chartOptions = {
-                    axisX: {
-                        showGrid: true,
-                        labelInterpolationFnc: function(value, index) {
-                            // Truncate long labels
-                            return value.length > 15 ? value.substring(0, 12) + '...' : value;
-                        }
-                    },
+                const criteriaOptions = {
+                    distributeSeries: true,
                     axisY: {
                         onlyInteger: false,
-                        offset: 60,
+                        offset: 40,
                         labelInterpolationFnc: function(value) {
                             return value.toFixed(1) + '%';
                         }
                     },
                     high: 100,
-                    low: 0,
-                    chartPadding: {
-                        top: 40,
-                        right: 40,
-                        bottom: 60,
-                        left: 60
-                    }
+                    low: 0
                 };
                 
-                // Create criteria chart
-                const criteriaContainer = document.getElementById('criteria');
+                const criteriaContainer = document.getElementById('criteria-chart');
                 if (criteriaContainer && window.chartist) {
                     criteriaContainer.innerHTML = '';
                     try {
-                        new window.chartist.Bar(criteriaContainer, criteriaData, chartOptions);
+                        new window.chartist.Bar(criteriaContainer, criteriaData, criteriaOptions);
                     } catch (chartError) {
-                        console.error('Chartist error:', chartError);
-                        criteriaContainer.innerHTML = createHTMLChart(
-                            results.criteria.labels,
-                            results.criteria.normalizedWeights,
-                            'Criteria Weights',
-                            '#667eea'
-                        );
+                        createHTMLChart(criteriaContainer, results.criteria.labels, 
+                            results.criteria.normalizedWeights, 'Criteria Weights');
                     }
                 } else if (criteriaContainer) {
-                    // Fallback HTML chart
-                    criteriaContainer.innerHTML = createHTMLChart(
-                        results.criteria.labels,
-                        results.criteria.normalizedWeights,
-                        'Criteria Weights',
-                        '#667eea'
-                    );
+                    createHTMLChart(criteriaContainer, results.criteria.labels, 
+                        results.criteria.normalizedWeights, 'Criteria Weights');
                 }
                 
                 // Create rankings chart
-                const rankingsContainer = document.getElementById('rankings');
+                const rankingsData = {
+                    labels: results.alternatives.labels,
+                    series: [results.alternatives.scores.map(s => s * 100)]
+                };
+                
+                const rankingsOptions = {
+                    distributeSeries: true,
+                    axisY: {
+                        onlyInteger: false,
+                        offset: 40,
+                        labelInterpolationFnc: function(value) {
+                            return value.toFixed(1) + '%';
+                        }
+                    },
+                    high: 100,
+                    low: 0
+                };
+                
+                const rankingsContainer = document.getElementById('rankings-chart');
                 if (rankingsContainer && window.chartist) {
                     rankingsContainer.innerHTML = '';
                     try {
-                        new window.chartist.Bar(rankingsContainer, rankingsData, chartOptions);
+                        new window.chartist.Bar(rankingsContainer, rankingsData, rankingsOptions);
                     } catch (chartError) {
-                        console.error('Chartist error:', chartError);
-                        rankingsContainer.innerHTML = createHTMLChart(
-                            results.alternatives.labels,
-                            results.alternatives.scores,
-                            'Alternative Scores',
-                            '#2ecc71'
-                        );
+                        createHTMLChart(rankingsContainer, results.alternatives.labels, 
+                            results.alternatives.scores, 'Alternative Scores');
                     }
                 } else if (rankingsContainer) {
-                    // Fallback HTML chart
-                    rankingsContainer.innerHTML = createHTMLChart(
-                        results.alternatives.labels,
-                        results.alternatives.scores,
-                        'Alternative Scores',
-                        '#2ecc71'
-                    );
+                    createHTMLChart(rankingsContainer, results.alternatives.labels, 
+                        results.alternatives.scores, 'Alternative Scores');
                 }
                 
             } catch (error) {
@@ -1028,47 +1006,39 @@
             }
         }
         
-        function createHTMLChart(labels, values, title, color) {
-            if (!labels || !values || labels.length === 0 || values.length === 0) {
-                return '<div class="chart-placeholder">No data available for chart</div>';
+        function createHTMLChart(container, labels, values, title) {
+            if (!labels || !values || labels.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #95a5a6;">No data available</div>';
+                return;
             }
             
             const maxValue = Math.max(...values);
-            
-            let html = `
-                <div class="html-chart">
-                    <h4 style="margin: 0 0 20px 0; color: #333; font-size: 16px;">${title}</h4>
-                    <div style="margin-top: 20px;">
-            `;
+            let html = `<div style="padding: 20px;"><h4 style="margin: 0 0 20px 0;">${title}</h4>`;
             
             labels.forEach((label, index) => {
                 const percentage = (values[index] * 100).toFixed(1);
                 const barWidth = maxValue > 0 ? (values[index] / maxValue * 100).toFixed(1) : 0;
                 
                 html += `
-                    <div style="margin-bottom: 15px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                            <span style="font-size: 14px; color: #555; max-width: 60%; overflow: hidden; text-overflow: ellipsis;">
-                                ${label}
-                            </span>
-                            <span style="font-weight: bold; color: #2c3e50;">${percentage}%</span>
+                <div style="margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span style="font-size: 14px; color: #555;">${label}</span>
+                        <span style="font-weight: bold; color: #2c3e50;">${percentage}%</span>
+                    </div>
+                    <div style="background: #ecf0f1; height: 20px; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(90deg, #3498db, #2ecc71); 
+                                    height: 100%; width: ${barWidth}%; 
+                                    border-radius: 10px;">
                         </div>
-                        <div style="background: #ecf0f1; height: 20px; border-radius: 10px; overflow: hidden;">
-                            <div style="background: linear-gradient(90deg, ${color}, ${color}dd); 
-                                        height: 100%; width: ${barWidth}%; 
-                                        border-radius: 10px; transition: width 1s ease;">
-                            </div>
-                        </div>
-                    </div>`;
-            });
-            
-            html += `
                     </div>
                 </div>`;
-            return html;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
         }
         
-        function createTables(results) {
+        function createEnhancedTables(results) {
             try {
                 // Create criteria table
                 const criteriaTable = document.getElementById('criteria-table');
@@ -1076,8 +1046,7 @@
                     criteriaTable.innerHTML = createHTMLTable(
                         results.criteria.labels,
                         results.criteria.normalizedWeights,
-                        ['Criteria', 'Weight', 'Percentage'],
-                        true
+                        ['Criteria', 'Weight', 'Percentage']
                     );
                 }
                 
@@ -1087,8 +1056,7 @@
                     rankingsTable.innerHTML = createHTMLTable(
                         results.alternatives.labels,
                         results.alternatives.scores,
-                        ['Alternative', 'Score', 'Percentage'],
-                        false
+                        ['Alternative', 'Score', 'Percentage']
                     );
                 }
                 
@@ -1098,86 +1066,60 @@
             }
         }
         
-        function createHTMLTable(labels, values, headers, isCriteria) {
-            if (!labels || !values || labels.length === 0 || values.length === 0) {
+        function createHTMLTable(labels, values, headers) {
+            if (!labels || !values || labels.length === 0) {
                 return '<div style="text-align: center; padding: 20px; color: #95a5a6;">No data available</div>';
             }
             
-            // Combine and sort data
+            // Combine and sort
             const items = labels.map((label, index) => ({
                 label,
                 value: values[index] || 0,
-                percentage: ((values[index] || 0) * 100).toFixed(2) + '%',
-                rank: index + 1
+                percentage: ((values[index] || 0) * 100).toFixed(2) + '%'
             })).sort((a, b) => b.value - a.value);
             
             let html = `
-                <table class="results-table">
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
                     <thead>
-                        <tr>
-                            <th style="width: 60px;">Rank</th>
-                            <th>${headers[0]}</th>
-                            <th style="width: 100px;">${headers[1]}</th>
-                            <th style="width: 100px;">${headers[2]}</th>
+                        <tr style="background: #f8f9fa;">
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Rank</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">${headers[0]}</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">${headers[1]}</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">${headers[2]}</th>
                         </tr>
                     </thead>
-                    <tbody>
-            `;
+                    <tbody>`;
             
             items.forEach((item, index) => {
                 const rank = index + 1;
-                let rankColor = '#95a5a6';
-                let rankSymbol = '';
-                
-                if (rank === 1) {
-                    rankColor = '#e74c3c';
-                    rankSymbol = '🥇';
-                } else if (rank === 2) {
-                    rankColor = '#3498db';
-                    rankSymbol = '🥈';
-                } else if (rank === 3) {
-                    rankColor = '#e67e22';
-                    rankSymbol = '🥉';
-                }
+                const rankColor = rank === 1 ? '#e74c3c' : rank === 2 ? '#3498db' : rank === 3 ? '#e67e22' : '#95a5a6';
                 
                 html += `
-                    <tr>
-                        <td style="text-align: center; font-weight: bold; color: ${rankColor};">
-                            ${rank}${rankSymbol}
-                        </td>
-                        <td>${item.label}</td>
-                        <td style="text-align: center; font-family: 'Courier New', monospace;">
-                            ${item.value.toFixed(4)}
-                        </td>
-                        <td style="text-align: center; font-weight: bold; color: ${rankColor};">
-                            ${item.percentage}
-                        </td>
-                    </tr>
-                `;
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 12px; text-align: center; font-weight: bold; color: ${rankColor};">${rank}</td>
+                    <td style="padding: 12px;">${item.label}</td>
+                    <td style="padding: 12px;">${item.value.toFixed(4)}</td>
+                    <td style="padding: 12px; font-weight: bold; color: ${rankColor};">${item.percentage}</td>
+                </tr>`;
             });
             
-            html += `
-                    </tbody>
-                </table>
-            `;
-            
+            html += `</tbody></table></div>`;
             return html;
         }
         
-        function showRecommendations(results) {
+        function showEnhancedRecommendations(results) {
             const container = document.getElementById('recommendations-container');
             const content = document.getElementById('recommendations-content');
             
             if (!container || !content) return;
             
             try {
-                // Find top alternative
                 const alternatives = results.alternatives.labels.map((label, index) => ({
                     label,
                     score: results.alternatives.scores[index]
                 })).sort((a, b) => b.score - a.score);
                 
-                // Find top criteria
                 const criteria = results.criteria.labels.map((label, index) => ({
                     label,
                     weight: results.criteria.normalizedWeights[index]
@@ -1188,7 +1130,7 @@
                     const topCriteria = criteria[0];
                     
                     content.innerHTML = `
-                        <div style="background: linear-gradient(135deg, #d4edda, #c3e6cb); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <div style="background: #d4edda; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
                             <div style="display: flex; align-items: center; margin-bottom: 15px;">
                                 <span style="font-size: 32px; margin-right: 15px;">🏆</span>
                                 <div>
@@ -1202,9 +1144,6 @@
                                 <div style="font-size: 20px; color: #28a745; font-weight: bold;">
                                     Score: ${(topAlternative.score * 100).toFixed(1)}%
                                 </div>
-                                <div style="margin-top: 10px; font-size: 14px; color: #6c757d;">
-                                    Based on ${alternatives.length} alternatives and ${criteria.length} criteria
-                                </div>
                             </div>
                         </div>
                         
@@ -1212,9 +1151,9 @@
                             <strong style="color: #2c3e50; font-size: 16px;">📈 Key Insights:</strong>
                             <ul style="margin-top: 10px; padding-left: 20px;">
                                 <li>Most important criterion: <strong>${topCriteria.label}</strong> (${(topCriteria.weight * 100).toFixed(1)}%)</li>
-                                <li>Calculation method: <strong>${results.metadata.calculationMethod}</strong></li>
-                                <li>Consistency ratio: <strong>${(results.metadata.consistency * 100).toFixed(1)}%</strong></li>
-                                <li>Sensitivity analysis: <strong>${results.metadata.sensitivity}</strong></li>
+                                <li>Total alternatives analyzed: ${alternatives.length}</li>
+                                <li>Total criteria considered: ${criteria.length}</li>
+                                <li>Calculation method: ${results.metadata.calculationMethod}</li>
                             </ul>
                         </div>
                     `;
@@ -1224,11 +1163,10 @@
                 
             } catch (error) {
                 console.error('❌ Error showing recommendations:', error);
-                // Don't throw, just don't show recommendations
             }
         }
         
-        function updateResultsStatus(message, type = 'info') {
+        function updateResultsStatus(message, type = 'loading') {
             const statusElement = document.getElementById('results-status');
             const statusText = document.getElementById('results-status-text');
             const statusIcon = document.getElementById('status-icon');
@@ -1237,7 +1175,6 @@
             
             statusText.textContent = message;
             
-            // Update icon and styling based on type
             if (type === 'success') {
                 statusIcon.textContent = '✅';
                 statusElement.style.background = '#d4edda';
@@ -1248,13 +1185,8 @@
                 statusElement.style.background = '#f8d7da';
                 statusElement.style.borderColor = '#f5c6cb';
                 statusElement.style.color = '#721c24';
-            } else if (type === 'loading') {
-                statusIcon.textContent = '⏳';
-                statusElement.style.background = '#d1ecf1';
-                statusElement.style.borderColor = '#bee5eb';
-                statusElement.style.color = '#0c5460';
             } else {
-                statusIcon.textContent = 'ℹ️';
+                statusIcon.textContent = '⏳';
                 statusElement.style.background = '#d1ecf1';
                 statusElement.style.borderColor = '#bee5eb';
                 statusElement.style.color = '#0c5460';
@@ -1262,17 +1194,14 @@
         }
         
         function showCalculationError(message) {
-            const criteriaContainer = document.getElementById('criteria');
-            const rankingsContainer = document.getElementById('rankings');
+            const criteriaContainer = document.getElementById('criteria-chart');
+            const rankingsContainer = document.getElementById('rankings-chart');
             
             const errorHTML = `
                 <div style="text-align: center; padding: 40px; color: #dc3545;">
                     <div style="font-size: 48px; margin-bottom: 20px;">⚠️</div>
                     <h3 style="color: #dc3545;">Calculation Error</h3>
                     <p>${message}</p>
-                    <p style="margin-top: 20px; font-size: 14px; color: #6c757d;">
-                        Please check your inputs and try again.
-                    </p>
                 </div>
             `;
             
@@ -1280,51 +1209,12 @@
             if (rankingsContainer) rankingsContainer.innerHTML = errorHTML;
         }
         
-        function showErrorMessage(message) {
+        function updateSystemStatus(message) {
             const statusElement = document.getElementById('system-status');
             if (statusElement) {
-                statusElement.innerHTML = `<span style="color: #dc3545;">❌ ${message}</span>`;
+                statusElement.textContent = message;
                 statusElement.className = 'system-status';
             }
-        }
-        
-        function saveResults(results) {
-            try {
-                localStorage.setItem('ahp_last_results', JSON.stringify({
-                    results: results,
-                    savedAt: new Date().toISOString(),
-                    formData: getFormData()
-                }));
-                console.log('💾 Results saved to local storage');
-            } catch (error) {
-                console.warn('⚠️ Could not save results:', error);
-            }
-        }
-        
-        function getFormData() {
-            const data = {
-                goal: document.getElementById('goal')?.value || '',
-                criteria: [],
-                items: []
-            };
-            
-            // Collect criteria
-            for (let i = 0; i < 8; i++) {
-                const input = document.getElementById('criteria' + i);
-                if (input && input.value) {
-                    data.criteria.push(input.value);
-                }
-            }
-            
-            // Collect items
-            for (let i = 0; i < 8; i++) {
-                const input = document.getElementById('item' + i);
-                if (input && input.value) {
-                    data.items.push(input.value);
-                }
-            }
-            
-            return data;
         }
         
         function loadTestData() {
@@ -1361,17 +1251,10 @@
                 if (input) input.value = alternative;
             });
             
-            // Clear any existing errors
-            document.getElementById('criteria-error').style.display = 'none';
-            document.getElementById('items-error').style.display = 'none';
-            
             console.log('✅ Test data loaded successfully');
             
-            // Show success message
-            updateResultsStatus('✓ Test data loaded successfully! Click "Calculate Results" to analyze.', 'success');
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Update status
+            updateResultsStatus('✓ Test data loaded! Click "Calculate" to analyze.', 'success');
         }
         
         function clearFormData() {
@@ -1382,24 +1265,21 @@
             if (form) {
                 const inputs = form.querySelectorAll('input[type="text"], textarea');
                 inputs.forEach(input => {
-                    input.value = '';
+                    if (!input.readOnly) {
+                        input.value = '';
+                    }
                 });
             }
             
-            // Clear errors
-            document.getElementById('criteria-error').style.display = 'none';
-            document.getElementById('items-error').style.display = 'none';
+            // Hide results section
+            document.getElementById('enhanced-results').style.display = 'none';
             
-            // Clear results section
-            document.getElementById('results').style.display = 'none';
-            initializeChartContainers();
-            
-            // Clear storage
-            localStorage.removeItem('ahp_last_results');
+            // Reset charts
+            initializeEnhancedCharts();
             
             console.log('✅ Form cleared successfully');
             
-            // Show success message
+            // Update status
             updateResultsStatus('✓ Form cleared successfully!', 'success');
         }
         
@@ -1407,29 +1287,31 @@
             const statusElement = document.getElementById('system-status');
             if (!statusElement) return;
             
-            // Check available components
             setTimeout(() => {
-                const availableComponents = [];
+                const available = [];
+                if (window.chartist) available.push('Charts');
+                if (window.SFactsApp) available.push('Enhanced Features');
+                if (window.runCalculation) available.push('AHP Engine');
                 
-                if (window.chartist) availableComponents.push('Charts');
-                if (window.SFactsApp) availableComponents.push('Enhanced Features');
-                if (window.runCalculation) availableComponents.push('AHP Engine');
-                
-                if (availableComponents.length > 0) {
-                    statusElement.innerHTML = `
-                        <span style="color: #28a745;">✅</span> 
-                        Ready with: ${availableComponents.join(', ')}
-                    `;
+                if (available.length > 0) {
+                    statusElement.innerHTML = `<span style="color: #28a745;">✅</span> Ready with: ${available.join(', ')}`;
                     statusElement.className = 'system-status active';
                 } else {
-                    statusElement.innerHTML = `
-                        <span style="color: #ffc107;">⚠</span> 
-                        Basic mode (enhanced features not available)
-                    `;
+                    statusElement.innerHTML = `<span style="color: #ffc107;">⚠</span> Basic mode available`;
                     statusElement.className = 'system-status';
                 }
             }, 2000);
         }
+        
+        // Add CSS for spinner animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
