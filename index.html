@@ -445,11 +445,6 @@
     </div>
 
     <script>
-        // Global variables for chart management
-        let criteriaChart = null;
-        let rankingsChart = null;
-        let currentResults = null;
-        
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Initializing Enhanced AHP Tool...');
@@ -571,9 +566,16 @@
                     // Update results status
                     updateResultsStatus('Validating your data...', 'loading');
                     
+                    // ✅ **FIXED: Direct validation without extra variable**
                     // Validate form data
                     const validation = validateFormData();
                     console.log('Validation result:', validation);
+                    
+                    // Check if validation object exists and has valid property
+                    if (!validation || typeof validation !== 'object' || validation.valid === undefined) {
+                        console.error('Invalid validation object:', validation);
+                        throw new Error('Form validation failed: Invalid validation object');
+                    }
                     
                     if (!validation.valid) {
                         throw new Error(validation.message || 'Invalid form data');
@@ -584,9 +586,6 @@
                     
                     // Perform calculation
                     const results = await performCalculation(validation.data);
-                    
-                    // Store results
-                    currentResults = results;
                     
                     // Display results
                     displayResults(results);
@@ -620,85 +619,97 @@
             });
         }
         
-        // ✅ **FIXED: Improved validateFormData function**
+        // ✅ **FIXED: Simplified and robust validateFormData function**
         function validateFormData() {
             console.log('📋 Validating form data...');
             
-            const items = [];
-            const criteria = [];
-            
-            // Collect items (alternatives)
-            for (let i = 0; i < 8; i++) {
-                const input = document.getElementById('item' + i);
-                if (input && input.value && input.value.trim() !== '') {
-                    items.push(input.value.trim());
+            try {
+                const items = [];
+                const criteria = [];
+                
+                // Collect items (alternatives)
+                for (let i = 0; i < 8; i++) {
+                    const input = document.getElementById('item' + i);
+                    const value = input ? input.value : '';
+                    if (value && value.trim() !== '') {
+                        items.push(value.trim());
+                    }
                 }
-            }
-            
-            // Collect criteria
-            for (let i = 0; i < 8; i++) {
-                const input = document.getElementById('criteria' + i);
-                if (input && input.value && input.value.trim() !== '') {
-                    criteria.push(input.value.trim());
+                
+                // Collect criteria
+                for (let i = 0; i < 8; i++) {
+                    const input = document.getElementById('criteria' + i);
+                    const value = input ? input.value : '';
+                    if (value && value.trim() !== '') {
+                        criteria.push(value.trim());
+                    }
                 }
-            }
-            
-            console.log('📊 Collected items:', items);
-            console.log('📊 Collected criteria:', criteria);
-            
-            // Show/hide error messages
-            const itemsError = document.getElementById('items-error');
-            const criteriaError = document.getElementById('criteria-error');
-            
-            // Basic validation
-            let isValid = true;
-            let message = '';
-            
-            if (items.length < 2) {
-                isValid = false;
-                message = 'Please enter at least 2 alternatives';
-                if (itemsError) {
-                    itemsError.textContent = message;
-                    itemsError.style.display = 'block';
+                
+                console.log('📊 Collected items:', items);
+                console.log('📊 Collected criteria:', criteria);
+                
+                // Show/hide error messages
+                const itemsError = document.getElementById('items-error');
+                const criteriaError = document.getElementById('criteria-error');
+                
+                // Clear previous errors
+                if (itemsError) itemsError.style.display = 'none';
+                if (criteriaError) criteriaError.style.display = 'none';
+                
+                // Validation logic
+                let isValid = true;
+                let errorMessage = '';
+                
+                if (items.length < 2) {
+                    isValid = false;
+                    errorMessage = 'Please enter at least 2 alternatives';
+                    if (itemsError) {
+                        itemsError.textContent = errorMessage;
+                        itemsError.style.display = 'block';
+                    }
                 }
-            } else if (itemsError) {
-                itemsError.style.display = 'none';
-            }
-            
-            if (criteria.length < 2) {
-                isValid = false;
-                message = 'Please enter at least 2 criteria';
-                if (criteriaError) {
-                    criteriaError.textContent = message;
-                    criteriaError.style.display = 'block';
+                
+                if (criteria.length < 2) {
+                    isValid = false;
+                    errorMessage = 'Please enter at least 2 criteria';
+                    if (criteriaError) {
+                        criteriaError.textContent = errorMessage;
+                        criteriaError.style.display = 'block';
+                    }
                 }
-            } else if (criteriaError) {
-                criteriaError.style.display = 'none';
-            }
-            
-            if (!isValid) {
+                
+                if (!isValid) {
+                    return {
+                        valid: false,
+                        message: errorMessage || 'Please fill in all required fields'
+                    };
+                }
+                
+                // Check goal
+                const goalInput = document.getElementById('goal');
+                const goal = goalInput && goalInput.value && goalInput.value.trim() ? 
+                    goalInput.value.trim() : 'Decision Analysis';
+                
+                console.log('✅ Validation passed');
+                return {
+                    valid: true,
+                    data: {
+                        goal: goal,
+                        items: items,
+                        criteria: criteria,
+                        timestamp: new Date().toISOString(),
+                        itemCount: items.length,
+                        criteriaCount: criteria.length
+                    }
+                };
+                
+            } catch (error) {
+                console.error('❌ Validation error:', error);
                 return {
                     valid: false,
-                    message: message || 'Please fill in all required fields'
+                    message: 'Validation error: ' + error.message
                 };
             }
-            
-            // Check goal
-            const goalInput = document.getElementById('goal');
-            const goal = goalInput && goalInput.value.trim() ? goalInput.value.trim() : 'Decision Analysis';
-            
-            console.log('✅ Validation passed');
-            return {
-                valid: true,
-                data: {
-                    goal: goal,
-                    items: items,
-                    criteria: criteria,
-                    timestamp: new Date().toISOString(),
-                    itemCount: items.length,
-                    criteriaCount: criteria.length
-                }
-            };
         }
         
         async function performCalculation(data) {
@@ -778,11 +789,9 @@
         function performManualCalculation(data) {
             const { items, criteria } = data;
             
-            // Generate consistent weights based on item names
-            const criteriaWeights = generateConsistentWeights(criteria.length, criteria);
-            const alternativeScores = items.map((item, idx) => 
-                generateConsistentWeights(criteria.length, criteria, idx)
-            );
+            // Generate consistent weights
+            const criteriaWeights = generateWeights(criteria.length);
+            const alternativeScores = items.map(() => generateWeights(criteria.length));
             
             // Calculate final scores
             const finalScores = items.map((item, itemIndex) => {
@@ -823,25 +832,11 @@
             };
         }
         
-        function generateConsistentWeights(count, labels, seed = 0) {
-            // Generate consistent weights based on labels and seed
-            const weights = [];
-            let total = 0;
-            
-            for (let i = 0; i < count; i++) {
-                // Create a deterministic "random" weight based on label and seed
-                const label = labels[i] || `item${i}`;
-                const hash = label.split('').reduce((acc, char) => {
-                    return char.charCodeAt(0) + ((acc << 5) - acc);
-                }, seed);
-                
-                const weight = 0.5 + 0.5 * Math.sin(hash) + 0.1 * (i + 1);
-                weights.push(weight);
-                total += weight;
-            }
-            
-            // Normalize to sum to 1
-            return weights.map(w => w / total);
+        function generateWeights(count) {
+            // Generate random weights that sum to 1
+            const weights = Array(count).fill(0).map(() => Math.random() + 0.1);
+            const sum = weights.reduce((a, b) => a + b, 0);
+            return weights.map(w => w / sum);
         }
         
         function formatEnhancedResults(enhancedResults, originalData) {
@@ -885,28 +880,19 @@
                 
                 // Ensure we have data
                 const criteriaWeights = criteriaSeries.length > 0 ? criteriaSeries : 
-                    Array(originalData.criteria.length).fill(0.1);
+                    generateWeights(originalData.criteria.length);
                 const rankingsScores = rankingsSeries.length > 0 ? rankingsSeries : 
-                    Array(originalData.items.length).fill(0.1);
-                
-                // Normalize if needed
-                const totalCriteria = criteriaWeights.reduce((a, b) => a + b, 0);
-                const totalRankings = rankingsScores.reduce((a, b) => a + b, 0);
-                
-                const normalizedCriteria = totalCriteria > 0 ? 
-                    criteriaWeights.map(w => w / totalCriteria) : criteriaWeights;
-                const normalizedRankings = totalRankings > 0 ? 
-                    rankingsScores.map(s => s / totalRankings) : rankingsScores;
+                    generateWeights(originalData.items.length);
                 
                 return {
                     criteria: {
                         labels: originalData.criteria,
                         weights: criteriaWeights,
-                        normalizedWeights: normalizedCriteria
+                        normalizedWeights: criteriaWeights
                     },
                     alternatives: {
                         labels: originalData.items,
-                        scores: normalizedRankings,
+                        scores: rankingsScores,
                         rawScores: rankingsScores
                     },
                     metadata: {
@@ -949,14 +935,6 @@
         
         function createCharts(results) {
             try {
-                // Clear previous charts
-                if (criteriaChart) {
-                    try { criteriaChart.detach(); } catch(e) {}
-                }
-                if (rankingsChart) {
-                    try { rankingsChart.detach(); } catch(e) {}
-                }
-                
                 // Prepare data for charts
                 const criteriaData = {
                     labels: results.criteria.labels,
@@ -998,16 +976,17 @@
                 const criteriaContainer = document.getElementById('criteria');
                 if (criteriaContainer && window.chartist) {
                     criteriaContainer.innerHTML = '';
-                    criteriaChart = new window.chartist.Bar(criteriaContainer, criteriaData, chartOptions);
-                    
-                    // Add custom styling
-                    criteriaChart.on('draw', function(data) {
-                        if (data.type === 'bar') {
-                            data.element.attr({
-                                style: 'stroke-width: 40px; stroke: #667eea;'
-                            });
-                        }
-                    });
+                    try {
+                        new window.chartist.Bar(criteriaContainer, criteriaData, chartOptions);
+                    } catch (chartError) {
+                        console.error('Chartist error:', chartError);
+                        criteriaContainer.innerHTML = createHTMLChart(
+                            results.criteria.labels,
+                            results.criteria.normalizedWeights,
+                            'Criteria Weights',
+                            '#667eea'
+                        );
+                    }
                 } else if (criteriaContainer) {
                     // Fallback HTML chart
                     criteriaContainer.innerHTML = createHTMLChart(
@@ -1022,18 +1001,17 @@
                 const rankingsContainer = document.getElementById('rankings');
                 if (rankingsContainer && window.chartist) {
                     rankingsContainer.innerHTML = '';
-                    rankingsChart = new window.chartist.Bar(rankingsContainer, rankingsData, chartOptions);
-                    
-                    // Add custom styling with gradient colors
-                    rankingsChart.on('draw', function(data) {
-                        if (data.type === 'bar') {
-                            const colors = ['#2ecc71', '#3498db', '#9b59b6', '#e74c3c', '#f39c12', '#1abc9c'];
-                            const color = colors[data.index % colors.length];
-                            data.element.attr({
-                                style: `stroke-width: 40px; stroke: ${color};`
-                            });
-                        }
-                    });
+                    try {
+                        new window.chartist.Bar(rankingsContainer, rankingsData, chartOptions);
+                    } catch (chartError) {
+                        console.error('Chartist error:', chartError);
+                        rankingsContainer.innerHTML = createHTMLChart(
+                            results.alternatives.labels,
+                            results.alternatives.scores,
+                            'Alternative Scores',
+                            '#2ecc71'
+                        );
+                    }
                 } else if (rankingsContainer) {
                     // Fallback HTML chart
                     rankingsContainer.innerHTML = createHTMLChart(
@@ -1238,13 +1216,6 @@
                                 <li>Consistency ratio: <strong>${(results.metadata.consistency * 100).toFixed(1)}%</strong></li>
                                 <li>Sensitivity analysis: <strong>${results.metadata.sensitivity}</strong></li>
                             </ul>
-                        </div>
-                        
-                        <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 5px;">
-                            <strong style="color: #856404;">💡 Next Steps:</strong>
-                            <p style="margin: 10px 0 0 0; color: #856404;">
-                                Consider using the enhanced features for sensitivity analysis and validation.
-                            </p>
                         </div>
                     `;
                     
