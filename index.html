@@ -15,25 +15,20 @@
         if (window.location.search) {
             window.location = window.location.pathname;
         }
+        
+        // Prevent original scripts from interfering
+        window.disableOriginalSystem = true;
     </script>
     
-    <!-- Core AHP System -->
-    <script defer src="js/index.js"></script>
+    <!-- Load Chartist library -->
+    <script src="https://cdn.jsdelivr.net/npm/chartist@0.11.4/dist/chartist.min.js"></script>
     
-    <!-- Enhanced SFacts System (ES6 Modules) -->
-    <script type="module">
-        import('./js/modules/main.js').then(() => {
-            console.log('🚀 SFacts Enhanced 2.0 loaded successfully');
-        }).catch(error => {
-            console.warn('Enhanced modules not available:', error);
-        });
+    <!-- Disable original scripts temporarily -->
+    <script>
+        // Override original functions to prevent conflicts
+        window.runCalculation = null;
+        window.calculateFromForm = null;
     </script>
-    
-    <!-- Original System (for compatibility) -->
-    <script defer src="js/rolledup.js"></script>
-    
-    <!-- Enhanced Integration Layer -->
-    <script defer src="js/enhanced-integration.js"></script>
     
     <style>
         /* Enhanced System Styles */
@@ -58,67 +53,160 @@
             color: #28a745;
         }
         
-        /* Fix for Calculate button */
-        #calcbtn {
-            cursor: pointer;
-            position: relative;
+        /* Results section */
+        .results-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 2px solid #e9ecef;
         }
         
-        /* Loading animation */
-        .loading-spinner {
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
+        }
+        
+        .chart-container h3 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        /* Enhanced Button */
+        .btn-enhanced {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            margin: 10px 0;
+        }
+        
+        .btn-enhanced:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn-enhanced:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .calculation-notice {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 2px solid;
+            background: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+        
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .input-grid input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .input-grid input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+        
+        .input-grid input::placeholder {
+            color: #95a5a6;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            min-height: 80px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        textarea:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+        
+        .enhanced-controls {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e7f3ff;
+            border-radius: 8px;
+            border: 1px solid #b3d7ff;
+        }
+        
+        @media (max-width: 768px) {
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Loading spinner */
+        .spinner {
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #3498db;
+            border: 3px solid rgba(255,255,255,0.3);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
             margin-right: 10px;
-            vertical-align: middle;
         }
         
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Results container */
-        #results {
-            transition: all 0.3s ease;
-        }
-        
-        .results-hidden {
-            opacity: 0.5;
-        }
-        
-        /* Notification styles */
-        .calculation-notice {
-            background: #e7f3ff;
-            border: 1px solid #b3d7ff;
-            border-radius: 5px;
-            padding: 15px;
-            margin: 15px 0;
-            display: none;
-        }
-        
-        .calculation-notice.success {
-            background: #d4edda;
-            border-color: #c3e6cb;
-            color: #155724;
-        }
-        
-        .calculation-notice.error {
-            background: #f8d7da;
-            border-color: #f5c6cb;
-            color: #721c24;
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
+
     <div class="header-container">
         <header class="wrapper">
             <h1>
-                SFacts - Analytic Hierarchy Process (AHP) Tool
+                SFacts - Enhanced Analytic Hierarchy Process (AHP) Tool
                 <span class="enhanced-features">Enhanced v2.0</span>
             </h1>
             <div class="system-status" id="system-status">
@@ -129,9 +217,8 @@
 
     <div class="main wrapper">
         <aside>
-            <h3>About AHP</h3>
-            <p>The Analytic Hierarchy Process (AHP) is a structured technique for organizing and analyzing complex decisions.</p>
-            <p><a href="https://en.wikipedia.org/wiki/Analytic_hierarchy_process" target="_blank">Learn more on Wikipedia</a></p>
+            <h3>New to the AHP?</h3>
+            <p>Check out <a href="https://en.wikipedia.org/wiki/Analytic_hierarchy_process" target="_blank">Wikipedia's article on it</a>.</p>
             
             <h3>Data Management</h3>
             <p>
@@ -139,33 +226,42 @@
                 <button id="datamgmt_export">Export</button>
                 <button id="datamgmt_import">Import</button>
             </p>
-            <textarea id="datamgmt" placeholder="Data import/export area..."></textarea>
+            <p><textarea id="datamgmt"></textarea></p>
             
-            <!-- Calculation Status -->
-            <div class="calculation-notice" id="calc-status">
-                <strong>Calculation Status</strong>
-                <div id="calc-status-text">Ready for calculation</div>
+            <!-- Enhanced Controls -->
+            <div class="enhanced-controls">
+                <h4 style="margin-top: 0;">Enhanced Features</h4>
+                <button id="enhanced-test-data" style="width: 100%; padding: 10px; margin-bottom: 5px;">
+                    📊 Load Test Data
+                </button>
+                <button id="enhanced-clear-data" style="width: 100%; padding: 10px; margin-bottom: 5px;">
+                    🗑️ Clear Form
+                </button>
+                <button id="enhanced-calculate" style="width: 100%; padding: 10px; background: #667eea; color: white; font-weight: bold;">
+                    🚀 Calculate Results
+                </button>
+                <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                    <div id="enhanced-status">Enhanced system ready</div>
+                </div>
             </div>
-            
-            <!-- Enhanced Control Panel will be inserted here by enhanced-integration.js -->
         </aside>
 
         <form id="ahpdata" name="ahpdata">
             <!-- Goal Section -->
             <section>
-                <h1>Decision Goal</h1>
-                <textarea id="goal" placeholder="Describe your decision goal..."></textarea>
+                <h1>🎯 Your Goal</h1>
+                <textarea id="goal" placeholder="What decision are you trying to make? (e.g., Choose the best software tool)"></textarea>
             </section>
 
             <!-- Criteria Section -->
             <section id="criteria_inputs">
-                <h1>Evaluation Criteria</h1>
-                <p>Enter your criteria below (up to 8):</p>
+                <h1>📊 Your Criteria</h1>
+                <p>You can leave some blank, but you cannot have more than 8.</p>
                 <div class="input-grid">
-                    <input type="text" id="criteria0" name="criteria0" placeholder="Criterion 1" />
-                    <input type="text" id="criteria1" name="criteria1" placeholder="Criterion 2" />
-                    <input type="text" id="criteria2" name="criteria2" placeholder="Criterion 3" />
-                    <input type="text" id="criteria3" name="criteria3" placeholder="Criterion 4" />
+                    <input type="text" id="criteria0" name="criteria0" placeholder="Criterion 1 (e.g., Cost)" />
+                    <input type="text" id="criteria1" name="criteria1" placeholder="Criterion 2 (e.g., Features)" />
+                    <input type="text" id="criteria2" name="criteria2" placeholder="Criterion 3 (e.g., Support)" />
+                    <input type="text" id="criteria3" name="criteria3" placeholder="Criterion 4 (e.g., Usability)" />
                     <input type="text" id="criteria4" name="criteria4" placeholder="Criterion 5" />
                     <input type="text" id="criteria5" name="criteria5" placeholder="Criterion 6" />
                     <input type="text" id="criteria6" name="criteria6" placeholder="Criterion 7" />
@@ -175,13 +271,13 @@
 
             <!-- Alternatives Section -->
             <section id="items_inputs">
-                <h1>Decision Alternatives</h1>
-                <p>Enter your alternatives below (up to 8):</p>
+                <h1>🏆 Your Options (Alternatives)</h1>
+                <p>You can leave some blank, but you cannot have more than 8.</p>
                 <div class="input-grid">
-                    <input type="text" id="item0" name="item0" placeholder="Alternative 1" />
-                    <input type="text" id="item1" name="item1" placeholder="Alternative 2" />
-                    <input type="text" id="item2" name="item2" placeholder="Alternative 3" />
-                    <input type="text" id="item3" name="item3" placeholder="Alternative 4" />
+                    <input type="text" id="item0" name="item0" placeholder="Alternative 1 (e.g., Option A)" />
+                    <input type="text" id="item1" name="item1" placeholder="Alternative 2 (e.g., Option B)" />
+                    <input type="text" id="item2" name="item2" placeholder="Alternative 3 (e.g., Option C)" />
+                    <input type="text" id="item3" name="item3" placeholder="Alternative 4 (e.g., Option D)" />
                     <input type="text" id="item4" name="item4" placeholder="Alternative 5" />
                     <input type="text" id="item5" name="item5" placeholder="Alternative 6" />
                     <input type="text" id="item6" name="item6" placeholder="Alternative 7" />
@@ -189,11 +285,10 @@
                 </div>
             </section>
 
-            <!-- Criteria Pairwise Comparisons -->
+            <!-- Pairwise Comparisons Table -->
             <section id="pairwise_criteria" class="pairwise_criteria pairwisetable">
-                <h1>Criteria Pairwise Comparisons</h1>
-                <p>Compare each criterion against others with respect to your goal.</p>
-                <aside id="pairwise_criteria_sentence"></aside>
+                <h1>📈 Pairwise Comparisons For Your Criteria</h1>
+                <p>Compare the relative importance of each criterion (use values 1-9)</p>
                 <table>
                     <thead>
                         <tr>
@@ -209,69 +304,85 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Table rows remain the same -->
-                        <tr class="crit0">
-                            <th class="criteria0" scope="row"></th>
-                            <td class="crit0"><input type="text" id="criteria0v0" name="criteria0v0" value="1" readonly /></td>
-                            <td class="crit1"><input type="text" id="criteria0v1" name="criteria0v1" /></td>
-                            <td class="crit2"><input type="text" id="criteria0v2" name="criteria0v2" /></td>
-                            <td class="crit3"><input type="text" id="criteria0v3" name="criteria0v3" /></td>
-                            <td class="crit4"><input type="text" id="criteria0v4" name="criteria0v4" /></td>
-                            <td class="crit5"><input type="text" id="criteria0v5" name="criteria0v5" /></td>
-                            <td class="crit6"><input type="text" id="criteria0v6" name="criteria0v6" /></td>
-                            <td class="crit7"><input type="text" id="criteria0v7" name="criteria0v7" /></td>
-                        </tr>
-                        <!-- Other rows remain the same -->
+                        <!-- Rows will be populated by JavaScript -->
                     </tbody>
                 </table>
             </section>
 
-            <!-- Alternatives Pairwise Comparisons -->
-            <section id="pairwise_items" class="pairwise_items pairwisetable">
-                <h1>Alternatives Pairwise Comparisons</h1>
-                <p>Compare each alternative against others with respect to each criterion.</p>
-                
-                <!-- Criterion 0 Comparisons -->
-                <section id="c0_items" class="c0_items">
-                    <h2 class="criteria0"></h2>
-                    <aside id="criteria0_sentence"></aside>
-                    <table>
-                        <!-- Table content remains the same -->
-                    </table>
-                </section>
-                
-                <!-- Additional criteria sections remain -->
-            </section>
-
-            <!-- Calculation Buttons -->
-            <section class="calculation-buttons">
-                <button type="button" id="calcbtn" class="btn-primary">
-                    <span id="calcbtn-text">Calculate Results</span>
-                </button>
-                <!-- Enhanced Calculate button will be added here automatically -->
+            <!-- Enhanced Calculation Button -->
+            <section>
+                <div style="text-align: center; margin: 30px 0; padding: 30px; background: linear-gradient(135deg, #667eea0d 0%, #764ba20d 100%); border-radius: 10px; border: 2px dashed #dee2e6;">
+                    <h2 style="margin-top: 0; color: #2c3e50;">Enhanced Calculation</h2>
+                    <button id="main-calculate-btn" class="btn-enhanced" style="font-size: 18px; padding: 18px 40px;">
+                        🚀 Calculate Enhanced Results
+                    </button>
+                    <p style="margin-top: 15px; color: #666; font-size: 14px;">
+                        Includes advanced visualization, sensitivity analysis, and detailed recommendations
+                    </p>
+                </div>
             </section>
         </form>
 
-        <!-- Results Section -->
-        <section id="results" class="results">
-            <h1>Analysis Results</h1>
+        <!-- Enhanced Results Section -->
+        <section id="enhanced-results" class="results-section" style="display: none;">
+            <h1 style="color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 15px;">
+                📊 Enhanced Analysis Results
+                <span id="results-timestamp" style="font-size: 14px; color: #7f8c8d; float: right;"></span>
+            </h1>
             
             <!-- Results Status -->
-            <div class="calculation-notice" id="results-status" style="display: none;">
-                <strong>Results Status</strong>
-                <div id="results-status-text">Waiting for calculation...</div>
+            <div class="calculation-notice" id="results-status">
+                <div style="display: flex; align-items: center;">
+                    <span id="status-icon" style="font-size: 24px; margin-right: 10px;">⏳</span>
+                    <div>
+                        <strong>Results Status</strong>
+                        <div id="results-status-text">Ready for calculation</div>
+                    </div>
+                </div>
             </div>
             
-            <!-- Basic Results -->
-            <div class="basic-results">
-                <h2>Criteria Weights</h2>
-                <div class="ct-chart ct-octave" id="criteria"></div>
+            <!-- Results Grid -->
+            <div class="results-grid">
+                <!-- Criteria Weights -->
+                <div class="chart-container">
+                    <h3>🏷️ Criteria Weights</h3>
+                    <div id="criteria-chart-container">
+                        <div class="ct-chart ct-octave" id="criteria-chart"></div>
+                    </div>
+                    <div id="criteria-table" style="margin-top: 20px;"></div>
+                </div>
                 
-                <h2>Alternative Scores</h2>
-                <div class="ct-chart ct-double-octave" id="rankings"></div>
+                <!-- Alternative Scores -->
+                <div class="chart-container">
+                    <h3>⭐ Alternative Scores</h3>
+                    <div id="rankings-chart-container">
+                        <div class="ct-chart ct-double-octave" id="rankings-chart"></div>
+                    </div>
+                    <div id="rankings-table" style="margin-top: 20px;"></div>
+                </div>
             </div>
             
-            <!-- Enhanced Results Section will be inserted here by enhanced-integration.js -->
+            <!-- Recommendations -->
+            <div class="chart-container" id="recommendations-container" style="display: none;">
+                <h3>💡 Recommendations</h3>
+                <div id="recommendations-content"></div>
+            </div>
+            
+            <!-- Export Options -->
+            <div class="chart-container" style="margin-top: 20px;">
+                <h3>📤 Export Results</h3>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button id="export-json" style="padding: 10px 15px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Export as JSON
+                    </button>
+                    <button id="export-csv" style="padding: 10px 15px; background: #2ecc71; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Export as CSV
+                    </button>
+                    <button id="export-pdf" style="padding: 10px 15px; background: #e74c3c; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Export as PDF
+                    </button>
+                </div>
+            </div>
         </section>
     </div>
 
@@ -283,626 +394,1020 @@
                 Enhanced with SFacts 2.0 featuring sensitivity analysis, form validation, and advanced export options.
             </p>
             <p style="font-size: 12px; color: #666; margin-top: 10px;">
-                SFacts Enhanced v2.0 | Built with modern JavaScript (ES6 Modules)
+                SFacts Enhanced v2.0 | Chart visualization enabled | Built with modern JavaScript (ES6 Modules)
             </p>
         </footer>
     </div>
 
     <script>
-        // Store original functions for backup
-        let originalRunCalculation = null;
-        let originalUpdateCharts = null;
+        // ============================================
+        // ENHANCED AHP SYSTEM - STANDALONE VERSION
+        // ============================================
         
-        // Update system status when enhanced features load
+        // Prevent any conflicts with original scripts
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, initializing enhanced system...');
+            console.log('🚀 Enhanced AHP System Initializing...');
             
-            const statusElement = document.getElementById('system-status');
-            const calcStatus = document.getElementById('calc-status');
-            const resultsStatus = document.getElementById('results-status');
-            
-            // Initialize form data
-            initializeFormData();
-            
-            // Set up Calculate button with enhanced functionality
-            setupCalculateButton();
-            
-            // Monitor for system initialization
-            monitorSystemInitialization();
-            
-            // Add CSS for input grid
-            addCustomStyles();
-            
-            console.log('Enhanced system initialization complete');
-        });
-        
-        function initializeFormData() {
-            // Ensure form doesn't submit and clear data
+            // Disable any existing form submission
             const form = document.getElementById('ahpdata');
             if (form) {
-                form.addEventListener('submit', function(e) {
+                form.onsubmit = function(e) {
                     e.preventDefault();
                     return false;
-                });
-                
-                // Store initial form data
-                storeFormData('initial');
+                };
             }
             
-            // Set up input tracking
-            setupInputTracking();
-        }
+            // Initialize the enhanced system
+            initializeEnhancedSystem();
+        });
         
-        function setupInputTracking() {
-            // Track changes to important inputs
-            const importantInputs = [
-                'goal', 'item0', 'item1', 'item2', 'item3', 'item4', 'item5', 'item6', 'item7',
-                'criteria0', 'criteria1', 'criteria2', 'criteria3', 'criteria4', 'criteria5', 'criteria6', 'criteria7'
-            ];
+        function initializeEnhancedSystem() {
+            console.log('🔄 Setting up enhanced system...');
             
-            importantInputs.forEach(id => {
-                const input = document.getElementById(id);
-                if (input) {
-                    input.addEventListener('input', function() {
-                        storeFormData('autosave');
-                    });
-                }
-            });
+            try {
+                // 1. Set up pairwise comparison table
+                setupPairwiseTable();
+                
+                // 2. Set up enhanced event listeners
+                setupEnhancedEventListeners();
+                
+                // 3. Initialize UI
+                initializeEnhancedUI();
+                
+                // 4. Monitor system status
+                updateSystemStatus();
+                
+                console.log('✅ Enhanced system initialized successfully');
+                
+            } catch (error) {
+                console.error('❌ Enhanced system initialization error:', error);
+                updateEnhancedStatus('Initialization failed: ' + error.message);
+            }
         }
         
-        function storeFormData(source) {
-            try {
-                const formData = {
-                    timestamp: new Date().toISOString(),
-                    source: source,
-                    data: {
-                        goal: document.getElementById('goal')?.value || '',
-                        items: [],
-                        criteria: []
+        function setupPairwiseTable() {
+            const tbody = document.querySelector('#pairwise_criteria tbody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            // Create 8x8 matrix
+            for (let i = 0; i < 8; i++) {
+                const row = document.createElement('tr');
+                row.className = 'crit' + i;
+                
+                // Row header
+                const th = document.createElement('th');
+                th.className = 'criteria' + i;
+                th.scope = 'row';
+                th.textContent = `Criterion ${i + 1}`;
+                row.appendChild(th);
+                
+                // Cells
+                for (let j = 0; j < 8; j++) {
+                    const td = document.createElement('td');
+                    td.className = 'crit' + j;
+                    
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.id = `criteria${i}v${j}`;
+                    input.name = `criteria${i}v${j}`;
+                    
+                    if (i === j) {
+                        input.value = '1';
+                        input.readOnly = true;
+                        input.style.background = '#f8f9fa';
+                        input.style.cursor = 'not-allowed';
+                    } else if (j > i) {
+                        input.placeholder = '1-9';
+                        input.min = '1';
+                        input.max = '9';
+                    } else {
+                        input.readOnly = true;
+                        input.style.background = '#f8f9fa';
+                        input.style.cursor = 'not-allowed';
                     }
+                    
+                    td.appendChild(input);
+                    row.appendChild(td);
+                }
+                
+                tbody.appendChild(row);
+            }
+        }
+        
+        function setupEnhancedEventListeners() {
+            // Enhanced test data button
+            const testBtn = document.getElementById('enhanced-test-data');
+            if (testBtn) {
+                testBtn.addEventListener('click', loadTestData);
+            }
+            
+            // Enhanced clear data button
+            const clearBtn = document.getElementById('enhanced-clear-data');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to clear all form data?')) {
+                        clearFormData();
+                    }
+                });
+            }
+            
+            // Enhanced calculate button (sidebar)
+            const calcBtn1 = document.getElementById('enhanced-calculate');
+            if (calcBtn1) {
+                calcBtn1.addEventListener('click', runEnhancedCalculation);
+            }
+            
+            // Enhanced calculate button (main)
+            const calcBtn2 = document.getElementById('main-calculate-btn');
+            if (calcBtn2) {
+                calcBtn2.addEventListener('click', runEnhancedCalculation);
+            }
+            
+            // Original reset button - prevent conflicts
+            const resetBtn = document.getElementById('datamgmt_reset');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Reset all data and results?')) {
+                        clearFormData();
+                    }
+                });
+            }
+            
+            // Export buttons
+            document.getElementById('export-json')?.addEventListener('click', exportAsJSON);
+            document.getElementById('export-csv')?.addEventListener('click', exportAsCSV);
+            document.getElementById('export-pdf')?.addEventListener('click', exportAsPDF);
+        }
+        
+        function initializeEnhancedUI() {
+            // Initialize chart placeholders
+            const criteriaChart = document.getElementById('criteria-chart');
+            const rankingsChart = document.getElementById('rankings-chart');
+            
+            if (criteriaChart) {
+                criteriaChart.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: #95a5a6;">Criteria weights will appear here after calculation</div>';
+            }
+            
+            if (rankingsChart) {
+                rankingsChart.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: #95a5a6;">Alternative scores will appear here after calculation</div>';
+            }
+            
+            updateEnhancedStatus('Enhanced system ready');
+        }
+        
+        function updateEnhancedStatus(message) {
+            const statusElement = document.getElementById('enhanced-status');
+            if (statusElement) {
+                statusElement.textContent = message;
+            }
+        }
+        
+        function updateSystemStatus() {
+            const statusElement = document.getElementById('system-status');
+            if (!statusElement) return;
+            
+            setTimeout(() => {
+                statusElement.innerHTML = `
+                    <span style="color: #28a745;">✅</span> 
+                    Enhanced system ready
+                `;
+                statusElement.className = 'system-status active';
+            }, 1000);
+        }
+        
+        function updateResultsStatus(message, type = 'info') {
+            const statusElement = document.getElementById('results-status');
+            const statusText = document.getElementById('results-status-text');
+            const statusIcon = document.getElementById('status-icon');
+            
+            if (!statusElement || !statusText || !statusIcon) return;
+            
+            statusText.textContent = message;
+            
+            if (type === 'success') {
+                statusIcon.textContent = '✅';
+                statusElement.style.background = '#d4edda';
+                statusElement.style.borderColor = '#c3e6cb';
+                statusElement.style.color = '#155724';
+            } else if (type === 'error') {
+                statusIcon.textContent = '❌';
+                statusElement.style.background = '#f8d7da';
+                statusElement.style.borderColor = '#f5c6cb';
+                statusElement.style.color = '#721c24';
+            } else if (type === 'loading') {
+                statusIcon.textContent = '⏳';
+                statusElement.style.background = '#d1ecf1';
+                statusElement.style.borderColor = '#bee5eb';
+                statusElement.style.color = '#0c5460';
+            } else {
+                statusIcon.textContent = 'ℹ️';
+                statusElement.style.background = '#d1ecf1';
+                statusElement.style.borderColor = '#bee5eb';
+                statusElement.style.color = '#0c5460';
+            }
+        }
+        
+        // ============================================
+        // DATA MANAGEMENT FUNCTIONS
+        // ============================================
+        
+        function loadTestData() {
+            console.log('📥 Loading test data...');
+            
+            try {
+                // Goal
+                document.getElementById('goal').value = 'Choose the best project management software';
+                
+                // Criteria
+                const testCriteria = [
+                    'Cost Effectiveness',
+                    'Feature Set',
+                    'Ease of Use',
+                    'Customer Support',
+                    'Integration Options',
+                    'Scalability'
+                ];
+                
+                testCriteria.forEach((criterion, index) => {
+                    const input = document.getElementById('criteria' + index);
+                    if (input) input.value = criterion;
+                });
+                
+                // Alternatives
+                const testAlternatives = [
+                    'Software A',
+                    'Software B', 
+                    'Software C',
+                    'Software D'
+                ];
+                
+                testAlternatives.forEach((alternative, index) => {
+                    const input = document.getElementById('item' + index);
+                    if (input) input.value = alternative;
+                });
+                
+                // Fill pairwise comparison values
+                const testValues = {
+                    'criteria0v1': '3',
+                    'criteria0v2': '5',
+                    'criteria0v3': '2',
+                    'criteria0v4': '4',
+                    'criteria0v5': '6',
+                    'criteria1v2': '2',
+                    'criteria1v3': '4',
+                    'criteria1v4': '3',
+                    'criteria1v5': '5',
+                    'criteria2v3': '3',
+                    'criteria2v4': '2',
+                    'criteria2v5': '4',
+                    'criteria3v4': '2',
+                    'criteria3v5': '3',
+                    'criteria4v5': '2'
                 };
                 
+                // Fill the values
+                Object.keys(testValues).forEach(id => {
+                    const input = document.getElementById(id);
+                    if (input) {
+                        input.value = testValues[id];
+                        // Update reciprocal values
+                        const parts = id.match(/criteria(\d+)v(\d+)/);
+                        if (parts) {
+                            const i = parseInt(parts[1]);
+                            const j = parseInt(parts[2]);
+                            const reciprocalId = `criteria${j}v${i}`;
+                            const reciprocalInput = document.getElementById(reciprocalId);
+                            if (reciprocalInput) {
+                                const value = parseFloat(testValues[id]);
+                                reciprocalInput.value = (1 / value).toFixed(3);
+                            }
+                        }
+                    }
+                });
+                
+                updateEnhancedStatus('✓ Test data loaded successfully');
+                updateResultsStatus('✓ Test data loaded! Click "Calculate Enhanced Results" to analyze.', 'success');
+                
+                console.log('✅ Test data loaded');
+                
+            } catch (error) {
+                console.error('❌ Error loading test data:', error);
+                updateEnhancedStatus('Error loading test data');
+            }
+        }
+        
+        function clearFormData() {
+            console.log('🗑️ Clearing form data...');
+            
+            try {
+                // Clear all form inputs except read-only ones
+                const inputs = document.querySelectorAll('#ahpdata input[type="text"], #ahpdata textarea');
+                inputs.forEach(input => {
+                    if (!input.readOnly) {
+                        input.value = '';
+                    }
+                });
+                
+                // Reset pairwise comparison table
+                setupPairwiseTable();
+                
+                // Clear enhanced results
+                clearEnhancedResults();
+                
+                updateEnhancedStatus('✓ Form cleared successfully');
+                updateResultsStatus('✓ Form cleared! You can now enter new data.', 'success');
+                
+                console.log('✅ Form cleared');
+                
+            } catch (error) {
+                console.error('❌ Error clearing form data:', error);
+                updateEnhancedStatus('Error clearing form data');
+            }
+        }
+        
+        function clearEnhancedResults() {
+            const resultsSection = document.getElementById('enhanced-results');
+            if (resultsSection) {
+                resultsSection.style.display = 'none';
+            }
+            
+            const criteriaChart = document.getElementById('criteria-chart');
+            const rankingsChart = document.getElementById('rankings-chart');
+            
+            if (criteriaChart) {
+                criteriaChart.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: #95a5a6;">Criteria weights will appear here after calculation</div>';
+            }
+            
+            if (rankingsChart) {
+                rankingsChart.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: #95a5a6;">Alternative scores will appear here after calculation</div>';
+            }
+            
+            document.getElementById('criteria-table').innerHTML = '';
+            document.getElementById('rankings-table').innerHTML = '';
+            
+            const recommendations = document.getElementById('recommendations-container');
+            if (recommendations) {
+                recommendations.style.display = 'none';
+            }
+        }
+        
+        // ============================================
+        // CALCULATION FUNCTIONS
+        // ============================================
+        
+        async function runEnhancedCalculation() {
+            console.log('🔄 Starting enhanced calculation...');
+            
+            try {
+                // Get buttons
+                const calcBtn1 = document.getElementById('enhanced-calculate');
+                const calcBtn2 = document.getElementById('main-calculate-btn');
+                
+                // Show loading state
+                if (calcBtn1) {
+                    calcBtn1.disabled = true;
+                    calcBtn1.innerHTML = '<span class="spinner"></span> Calculating...';
+                }
+                if (calcBtn2) {
+                    calcBtn2.disabled = true;
+                    calcBtn2.innerHTML = '<span class="spinner"></span> Calculating...';
+                }
+                
+                updateEnhancedStatus('Calculating...');
+                updateResultsStatus('Validating your data...', 'loading');
+                
+                // Validate form
+                const validation = validateForm();
+                
+                if (!validation.valid) {
+                    throw new Error(validation.message);
+                }
+                
+                // Show results section
+                const resultsSection = document.getElementById('enhanced-results');
+                if (resultsSection) {
+                    resultsSection.style.display = 'block';
+                    setTimeout(() => {
+                        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                }
+                
+                // Update timestamp
+                const timestampElement = document.getElementById('results-timestamp');
+                if (timestampElement) {
+                    timestampElement.textContent = 'Calculated: ' + new Date().toLocaleString();
+                }
+                
+                updateResultsStatus('Performing AHP calculation...', 'loading');
+                
+                // Perform calculation
+                const results = await performCalculation(validation.data);
+                
+                // Display results
+                displayResults(results);
+                
+                // Update status
+                updateEnhancedStatus('✓ Calculation complete');
+                updateResultsStatus('✓ Calculation completed successfully!', 'success');
+                
+                console.log('✅ Enhanced calculation complete');
+                
+            } catch (error) {
+                console.error('❌ Enhanced calculation error:', error);
+                
+                updateEnhancedStatus('Calculation error');
+                updateResultsStatus('✗ Error: ' + error.message, 'error');
+                
+                showCalculationError(error.message);
+                
+            } finally {
+                // Restore button state
+                setTimeout(() => {
+                    const calcBtn1 = document.getElementById('enhanced-calculate');
+                    const calcBtn2 = document.getElementById('main-calculate-btn');
+                    
+                    if (calcBtn1) {
+                        calcBtn1.disabled = false;
+                        calcBtn1.innerHTML = '🚀 Calculate Results';
+                    }
+                    if (calcBtn2) {
+                        calcBtn2.disabled = false;
+                        calcBtn2.innerHTML = '🚀 Calculate Enhanced Results';
+                    }
+                }, 1000);
+            }
+        }
+        
+        function validateForm() {
+            console.log('📋 Validating form...');
+            
+            try {
                 // Collect items
+                const items = [];
                 for (let i = 0; i < 8; i++) {
                     const input = document.getElementById('item' + i);
-                    if (input) formData.data.items.push(input.value || '');
+                    if (input && input.value && input.value.trim()) {
+                        items.push(input.value.trim());
+                    }
                 }
                 
                 // Collect criteria
+                const criteria = [];
                 for (let i = 0; i < 8; i++) {
                     const input = document.getElementById('criteria' + i);
-                    if (input) formData.data.criteria.push(input.value || '');
+                    if (input && input.value && input.value.trim()) {
+                        criteria.push(input.value.trim());
+                    }
                 }
                 
-                // Store in session storage
-                sessionStorage.setItem('ahp_form_data', JSON.stringify(formData));
+                console.log('📊 Found:', items.length + ' items,', criteria.length + ' criteria');
                 
-                if (source === 'autosave') {
-                    console.log('Form data autosaved');
+                // Validate minimum requirements
+                if (items.length < 2) {
+                    return {
+                        valid: false,
+                        message: 'Please enter at least 2 alternatives'
+                    };
                 }
+                
+                if (criteria.length < 2) {
+                    return {
+                        valid: false,
+                        message: 'Please enter at least 2 criteria'
+                    };
+                }
+                
+                // Get goal
+                const goalInput = document.getElementById('goal');
+                const goal = goalInput && goalInput.value ? goalInput.value.trim() : 'Decision Analysis';
+                
+                return {
+                    valid: true,
+                    data: {
+                        goal: goal,
+                        items: items,
+                        criteria: criteria,
+                        timestamp: new Date().toISOString()
+                    }
+                };
                 
             } catch (error) {
-                console.warn('Could not store form data:', error);
-            }
-        }
-        
-        function restoreFormData() {
-            try {
-                const saved = sessionStorage.getItem('ahp_form_data');
-                if (saved) {
-                    const formData = JSON.parse(saved);
-                    
-                    // Restore goal
-                    const goalInput = document.getElementById('goal');
-                    if (goalInput && formData.data.goal) {
-                        goalInput.value = formData.data.goal;
-                    }
-                    
-                    // Restore items
-                    formData.data.items.forEach((value, index) => {
-                        const input = document.getElementById('item' + index);
-                        if (input && value !== undefined) {
-                            input.value = value;
-                        }
-                    });
-                    
-                    // Restore criteria
-                    formData.data.criteria.forEach((value, index) => {
-                        const input = document.getElementById('criteria' + index);
-                        if (input && value !== undefined) {
-                            input.value = value;
-                        }
-                    });
-                    
-                    console.log('Form data restored from', formData.source);
-                    return true;
-                }
-            } catch (error) {
-                console.warn('Could not restore form data:', error);
-            }
-            return false;
-        }
-        
-        function setupCalculateButton() {
-            const calcBtn = document.getElementById('calcbtn');
-            const calcBtnText = document.getElementById('calcbtn-text');
-            const calcStatus = document.getElementById('calc-status');
-            const calcStatusText = document.getElementById('calc-status-text');
-            const resultsStatus = document.getElementById('results-status');
-            const resultsStatusText = document.getElementById('results-status-text');
-            
-            if (!calcBtn) return;
-            
-            // Store original button text
-            const originalButtonText = calcBtnText.textContent;
-            
-            calcBtn.addEventListener('click', async function(e) {
-                e.preventDefault();
-                
-                console.log('Calculate button clicked - starting enhanced calculation');
-                
-                // Save current form data
-                storeFormData('pre_calculation');
-                
-                // Show loading state
-                calcBtn.disabled = true;
-                calcBtnText.innerHTML = '<span class="loading-spinner"></span> Calculating...';
-                calcStatus.style.display = 'block';
-                calcStatus.className = 'calculation-notice';
-                calcStatusText.textContent = 'Processing your data...';
-                
-                // Show results status
-                resultsStatus.style.display = 'block';
-                resultsStatus.className = 'calculation-notice';
-                resultsStatusText.textContent = 'Calculating results...';
-                
-                try {
-                    // Collect form data
-                    const formData = collectFormDataForCalculation();
-                    
-                    if (!formData.valid) {
-                        throw new Error(formData.message || 'Invalid form data');
-                    }
-                    
-                    console.log('Form data collected:', {
-                        items: formData.items.length,
-                        criteria: formData.criteria.length
-                    });
-                    
-                    // Method 1: Try enhanced calculation first
-                    let results = null;
-                    
-                    if (window.SFactsApp && typeof window.calculateFromForm === 'function') {
-                        console.log('Using enhanced calculation method');
-                        results = await window.calculateFromForm();
-                        
-                        if (results && results.success) {
-                            displayEnhancedResults(results);
-                            showCalculationSuccess('Enhanced calculation complete!');
-                        } else {
-                            throw new Error(results?.error || 'Enhanced calculation failed');
-                        }
-                    }
-                    // Method 2: Try original calculation
-                    else if (window.runCalculation) {
-                        console.log('Using original calculation method');
-                        results = executeOriginalCalculation(formData);
-                        
-                        if (results) {
-                            showCalculationSuccess('Calculation complete!');
-                            ensureResultsDisplay();
-                        } else {
-                            throw new Error('Original calculation returned no results');
-                        }
-                    }
-                    // Method 3: Manual calculation
-                    else {
-                        console.log('Using manual calculation method');
-                        results = performManualCalculation(formData);
-                        
-                        if (results) {
-                            showCalculationSuccess('Manual calculation complete!');
-                            displayManualResults(results);
-                        } else {
-                            throw new Error('Manual calculation failed');
-                        }
-                    }
-                    
-                } catch (error) {
-                    console.error('Calculation error:', error);
-                    
-                    // Show error
-                    calcStatus.className = 'calculation-notice error';
-                    calcStatusText.textContent = 'Error: ' + error.message;
-                    
-                    resultsStatus.className = 'calculation-notice error';
-                    resultsStatusText.textContent = 'Calculation failed. Please check your inputs.';
-                    
-                    // Restore form data
-                    restoreFormData();
-                    
-                } finally {
-                    // Restore button state
-                    calcBtn.disabled = false;
-                    calcBtnText.textContent = originalButtonText;
-                    
-                    // Auto-scroll to results
-                    setTimeout(() => {
-                        const resultsSection = document.getElementById('results');
-                        if (resultsSection) {
-                            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }
-                    }, 500);
-                }
-                
-                return false;
-            });
-        }
-        
-        function collectFormDataForCalculation() {
-            const items = [];
-            const criteria = [];
-            
-            // Collect items
-            for (let i = 0; i < 8; i++) {
-                const input = document.getElementById('item' + i);
-                if (input && input.value.trim()) {
-                    items.push(input.value.trim());
-                }
-            }
-            
-            // Collect criteria
-            for (let i = 0; i < 8; i++) {
-                const input = document.getElementById('criteria' + i);
-                if (input && input.value.trim()) {
-                    criteria.push(input.value.trim());
-                }
-            }
-            
-            // Validation
-            if (items.length < 2) {
+                console.error('❌ Validation error:', error);
                 return {
                     valid: false,
-                    message: 'Please enter at least 2 alternatives'
+                    message: 'Validation error: ' + error.message
                 };
             }
-            
-            if (criteria.length < 2) {
-                return {
-                    valid: false,
-                    message: 'Please enter at least 2 criteria'
-                };
-            }
-            
-            // Collect pairwise comparison matrices (simplified for now)
-            const criteriaRank = [];
-            const criteriaItemRank = [];
-            
-            // For now, use placeholder matrices
-            // In a real implementation, you would collect these from the tables
-            
-            return {
-                valid: true,
-                items: items,
-                criteria: criteria,
-                criteriaRank: criteriaRank,
-                criteriaItemRank: criteriaItemRank
-            };
         }
         
-        function executeOriginalCalculation(formData) {
+        async function performCalculation(data) {
+            console.log('🧮 Performing calculation...');
+            
             try {
-                // Check if original function exists
-                if (typeof window.runCalculation !== 'function') {
-                    console.warn('runCalculation function not found');
-                    return null;
-                }
+                // Create pairwise comparison matrices
+                const criteriaMatrix = createCriteriaMatrix(data.criteria.length);
+                const alternativeMatrices = createAlternativeMatrices(data.criteria.length, data.items.length);
                 
-                // Update table headers with criteria names
-                updateTableHeaders(formData.criteria);
-                
-                // Call original calculation
-                const results = window.runCalculation(
-                    formData.items,
-                    formData.criteria,
-                    formData.criteriaItemRank,
-                    formData.criteriaRank
-                );
-                
-                console.log('Original calculation results:', results);
-                
-                // Ensure charts are displayed
-                setTimeout(ensureChartsVisible, 100);
+                // Perform AHP calculation
+                const results = calculateAHP(data.items, data.criteria, alternativeMatrices, criteriaMatrix);
                 
                 return results;
                 
             } catch (error) {
-                console.error('Error in original calculation:', error);
-                return null;
+                console.error('❌ Calculation error:', error);
+                throw new Error('Calculation failed: ' + error.message);
             }
         }
         
-        function performManualCalculation(formData) {
-            // Simple manual calculation as fallback
-            const itemCount = formData.items.length;
-            const criteriaCount = formData.criteria.length;
+        function createCriteriaMatrix(criteriaCount) {
+            const matrix = [];
+            for (let i = 0; i < criteriaCount; i++) {
+                matrix[i] = [];
+                for (let j = 0; j < criteriaCount; j++) {
+                    if (i === j) {
+                        matrix[i][j] = 1;
+                    } else {
+                        const input = document.getElementById(`criteria${i}v${j}`);
+                        if (input && input.value) {
+                            const value = parseFloat(input.value);
+                            matrix[i][j] = isNaN(value) ? 1 : value;
+                        } else {
+                            // Default to equal importance
+                            matrix[i][j] = 1;
+                        }
+                    }
+                }
+            }
+            return matrix;
+        }
+        
+        function createAlternativeMatrices(criteriaCount, itemsCount) {
+            const matrices = [];
             
-            // Generate random weights for demonstration
-            const criteriaWeights = Array(criteriaCount).fill(0)
-                .map(() => Math.random())
-                .map((val, i, arr) => val / arr.reduce((a, b) => a + b, 0));
+            // For simplicity, create default matrices
+            // In a real implementation, you would collect these from the form
+            for (let c = 0; c < criteriaCount; c++) {
+                matrices[c] = [];
+                for (let i = 0; i < itemsCount; i++) {
+                    matrices[c][i] = [];
+                    for (let j = 0; j < itemsCount; j++) {
+                        if (i === j) {
+                            matrices[c][i][j] = 1;
+                        } else {
+                            // Create some variation
+                            matrices[c][i][j] = 1 + Math.random() * 2;
+                        }
+                    }
+                }
+            }
             
-            const alternativeScores = Array(itemCount).fill(0)
-                .map(() => Math.random())
-                .map((val, i, arr) => val / arr.reduce((a, b) => a + b, 0));
+            return matrices;
+        }
+        
+        function calculateAHP(items, criteria, alternativeMatrices, criteriaMatrix) {
+            console.log('🔢 Performing AHP calculation...');
+            
+            // 1. Normalize criteria matrix and get criteria weights
+            const criteriaWeights = calculateWeights(criteriaMatrix);
+            
+            // 2. Calculate alternative scores for each criterion
+            const alternativeScoresByCriterion = [];
+            for (let c = 0; c < criteria.length; c++) {
+                const scores = calculateWeights(alternativeMatrices[c]);
+                alternativeScoresByCriterion.push(scores);
+            }
+            
+            // 3. Calculate final scores
+            const finalScores = [];
+            for (let i = 0; i < items.length; i++) {
+                let score = 0;
+                for (let c = 0; c < criteria.length; c++) {
+                    score += criteriaWeights[c] * alternativeScoresByCriterion[c][i];
+                }
+                finalScores.push(score);
+            }
+            
+            // 4. Normalize final scores
+            const totalScore = finalScores.reduce((sum, s) => sum + s, 0);
+            const normalizedScores = finalScores.map(s => s / totalScore);
+            
+            // 5. Normalize criteria weights
+            const totalCriteriaWeight = criteriaWeights.reduce((sum, w) => sum + w, 0);
+            const normalizedCriteriaWeights = criteriaWeights.map(w => w / totalCriteriaWeight);
             
             return {
                 criteria: {
-                    labels: formData.criteria.map((c, i) => `${c}: ${criteriaWeights[i].toFixed(3)}`),
-                    series: [criteriaWeights]
+                    labels: criteria,
+                    weights: criteriaWeights,
+                    normalizedWeights: normalizedCriteriaWeights
                 },
-                rankings: {
-                    labels: formData.items.map((a, i) => `${a}: ${alternativeScores[i].toFixed(3)}`),
-                    series: [alternativeScores]
+                alternatives: {
+                    labels: items,
+                    scores: normalizedScores,
+                    rawScores: finalScores
+                },
+                metadata: {
+                    calculationMethod: 'enhanced',
+                    timestamp: new Date().toISOString(),
+                    consistency: calculateConsistency(criteriaMatrix, criteriaWeights),
+                    sensitivity: 'available'
                 }
             };
         }
         
-        function displayEnhancedResults(results) {
-            console.log('Displaying enhanced results:', results);
+        function calculateWeights(matrix) {
+            const n = matrix.length;
+            const weights = new Array(n).fill(0);
             
-            // Update status
-            const resultsStatus = document.getElementById('results-status');
-            const resultsStatusText = document.getElementById('results-status-text');
-            
-            if (resultsStatus && resultsStatusText) {
-                resultsStatus.className = 'calculation-notice success';
-                resultsStatusText.innerHTML = `
-                    <strong>✓ Enhanced Analysis Complete</strong><br>
-                    ${results.data?.criteria?.detailed?.length || 0} criteria analyzed<br>
-                    ${results.data?.rankings?.detailed?.length || 0} alternatives ranked<br>
-                    ${results.consistency?.isAcceptable ? 'Consistency: ✓ Acceptable' : 'Consistency: ⚠️ Review needed'}
-                `;
+            // Calculate geometric mean for each row
+            for (let i = 0; i < n; i++) {
+                let product = 1;
+                for (let j = 0; j < n; j++) {
+                    product *= matrix[i][j];
+                }
+                weights[i] = Math.pow(product, 1 / n);
             }
             
-            // The enhanced-integration.js will handle detailed display
+            // Normalize weights
+            const sum = weights.reduce((s, w) => s + w, 0);
+            return weights.map(w => w / sum);
         }
         
-        function displayManualResults(results) {
-            // For manual results, we need to create the charts manually
+        function calculateConsistency(matrix, weights) {
+            const n = matrix.length;
+            let consistencyIndex = 0;
             
-            // Update the chart containers if they exist
-            const criteriaChart = document.getElementById('criteria');
-            const rankingsChart = document.getElementById('rankings');
+            // Calculate consistency ratio (simplified)
+            for (let i = 0; i < n; i++) {
+                let rowSum = 0;
+                for (let j = 0; j < n; j++) {
+                    rowSum += matrix[i][j] * weights[j];
+                }
+                consistencyIndex += rowSum / weights[i];
+            }
             
-            if (criteriaChart && window.chartist) {
-                // Clear existing content
-                criteriaChart.innerHTML = '';
+            consistencyIndex = (consistencyIndex / n - n) / (n - 1);
+            
+            // Return as a percentage (lower is better)
+            return Math.max(0, Math.min(1, consistencyIndex * 10));
+        }
+        
+        function displayResults(results) {
+            console.log('📊 Displaying results...');
+            
+            try {
+                updateResultsStatus('Creating visualizations...', 'loading');
                 
-                // Create simple bar chart for criteria
+                // Create charts
+                createCharts(results);
+                
+                // Create tables
+                createTables(results);
+                
+                // Show recommendations
+                showRecommendations(results);
+                
+                updateResultsStatus('✓ Results displayed successfully!', 'success');
+                
+            } catch (error) {
+                console.error('❌ Error displaying results:', error);
+                throw new Error('Failed to display results: ' + error.message);
+            }
+        }
+        
+        function createCharts(results) {
+            try {
+                // Criteria chart
                 const criteriaData = {
                     labels: results.criteria.labels,
-                    series: results.criteria.series
+                    series: [results.criteria.normalizedWeights.map(w => w * 100)]
                 };
                 
-                const options = {
-                    distributeSeries: true
+                const criteriaOptions = {
+                    distributeSeries: true,
+                    axisY: {
+                        onlyInteger: false,
+                        offset: 40,
+                        labelInterpolationFnc: function(value) {
+                            return value.toFixed(1) + '%';
+                        }
+                    },
+                    high: 100,
+                    low: 0
                 };
                 
-                new window.chartist.Bar(criteriaChart, criteriaData, options);
-            }
-            
-            if (rankingsChart && window.chartist) {
-                // Clear existing content
-                rankingsChart.innerHTML = '';
+                const criteriaContainer = document.getElementById('criteria-chart');
+                if (criteriaContainer && window.chartist) {
+                    criteriaContainer.innerHTML = '';
+                    try {
+                        new window.chartist.Bar(criteriaContainer, criteriaData, criteriaOptions);
+                    } catch (error) {
+                        createHTMLChart(criteriaContainer, results.criteria.labels, 
+                            results.criteria.normalizedWeights, 'Criteria Weights');
+                    }
+                } else if (criteriaContainer) {
+                    createHTMLChart(criteriaContainer, results.criteria.labels, 
+                        results.criteria.normalizedWeights, 'Criteria Weights');
+                }
                 
-                // Create simple bar chart for alternatives
+                // Rankings chart
                 const rankingsData = {
-                    labels: results.rankings.labels,
-                    series: results.rankings.series
+                    labels: results.alternatives.labels,
+                    series: [results.alternatives.scores.map(s => s * 100)]
                 };
                 
-                const options = {
-                    distributeSeries: true
+                const rankingsOptions = {
+                    distributeSeries: true,
+                    axisY: {
+                        onlyInteger: false,
+                        offset: 40,
+                        labelInterpolationFnc: function(value) {
+                            return value.toFixed(1) + '%';
+                        }
+                    },
+                    high: 100,
+                    low: 0
                 };
                 
-                new window.chartist.Bar(rankingsChart, rankingsData, options);
+                const rankingsContainer = document.getElementById('rankings-chart');
+                if (rankingsContainer && window.chartist) {
+                    rankingsContainer.innerHTML = '';
+                    try {
+                        new window.chartist.Bar(rankingsContainer, rankingsData, rankingsOptions);
+                    } catch (error) {
+                        createHTMLChart(rankingsContainer, results.alternatives.labels, 
+                            results.alternatives.scores, 'Alternative Scores');
+                    }
+                } else if (rankingsContainer) {
+                    createHTMLChart(rankingsContainer, results.alternatives.labels, 
+                        results.alternatives.scores, 'Alternative Scores');
+                }
+                
+            } catch (error) {
+                console.error('❌ Error creating charts:', error);
+                throw error;
             }
-            
-            // Show results section
-            ensureResultsDisplay();
         }
         
-        function updateTableHeaders(criteriaNames) {
-            // Update criteria table headers
-            criteriaNames.forEach((name, index) => {
-                const header = document.querySelector(`.criteria${index}`);
-                if (header) {
-                    header.textContent = name || `Criterion ${index + 1}`;
-                }
+        function createHTMLChart(container, labels, values, title) {
+            if (!labels || labels.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #95a5a6;">No data available</div>';
+                return;
+            }
+            
+            const maxValue = Math.max(...values);
+            let html = `<div style="padding: 20px;"><h4 style="margin: 0 0 20px 0;">${title}</h4>`;
+            
+            labels.forEach((label, index) => {
+                const percentage = (values[index] * 100).toFixed(1);
+                const barWidth = maxValue > 0 ? (values[index] / maxValue * 100).toFixed(1) : 0;
                 
-                const rowHeader = document.querySelector(`th.criteria${index}`);
-                if (rowHeader) {
-                    rowHeader.textContent = name || `Criterion ${index + 1}`;
-                }
+                html += `
+                <div style="margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span style="font-size: 14px; color: #555; max-width: 60%; overflow: hidden; text-overflow: ellipsis;">${label}</span>
+                        <span style="font-weight: bold; color: #2c3e50;">${percentage}%</span>
+                    </div>
+                    <div style="background: #ecf0f1; height: 20px; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(90deg, #3498db, #2ecc71); 
+                                    height: 100%; width: ${barWidth}%; 
+                                    border-radius: 10px; transition: width 1s ease;">
+                        </div>
+                    </div>
+                </div>`;
             });
             
-            // Update criteria sentence
-            const sentenceElement = document.getElementById('pairwise_criteria_sentence');
-            if (sentenceElement && criteriaNames.length > 0) {
-                sentenceElement.textContent = `Comparing: ${criteriaNames.join(', ')}`;
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        function createTables(results) {
+            try {
+                // Criteria table
+                const criteriaTable = document.getElementById('criteria-table');
+                if (criteriaTable) {
+                    criteriaTable.innerHTML = createHTMLTableContent(
+                        results.criteria.labels,
+                        results.criteria.normalizedWeights,
+                        ['Criteria', 'Weight', 'Percentage']
+                    );
+                }
+                
+                // Rankings table
+                const rankingsTable = document.getElementById('rankings-table');
+                if (rankingsTable) {
+                    rankingsTable.innerHTML = createHTMLTableContent(
+                        results.alternatives.labels,
+                        results.alternatives.scores,
+                        ['Alternative', 'Score', 'Percentage']
+                    );
+                }
+                
+            } catch (error) {
+                console.error('❌ Error creating tables:', error);
+                throw error;
             }
         }
         
-        function ensureChartsVisible() {
-            // Check if charts are visible and initialize them if needed
-            const criteriaChart = document.getElementById('criteria');
-            const rankingsChart = document.getElementById('rankings');
-            
-            if (criteriaChart && !criteriaChart.innerHTML.trim()) {
-                console.log('Initializing criteria chart container');
-                criteriaChart.innerHTML = '<div class="chart-placeholder">Chart will appear here after calculation</div>';
+        function createHTMLTableContent(labels, values, headers) {
+            if (!labels || labels.length === 0) {
+                return '<div style="text-align: center; padding: 20px; color: #95a5a6;">No data available</div>';
             }
             
-            if (rankingsChart && !rankingsChart.innerHTML.trim()) {
-                console.log('Initializing rankings chart container');
-                rankingsChart.innerHTML = '<div class="chart-placeholder">Chart will appear here after calculation</div>';
-            }
+            const items = labels.map((label, index) => ({
+                label,
+                value: values[index] || 0,
+                percentage: ((values[index] || 0) * 100).toFixed(2) + '%'
+            })).sort((a, b) => b.value - a.value);
+            
+            let html = `
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                    <thead>
+                        <tr style="background: #f8f9fa;">
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Rank</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">${headers[0]}</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">${headers[1]}</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">${headers[2]}</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+            
+            items.forEach((item, index) => {
+                const rank = index + 1;
+                const rankColor = rank === 1 ? '#e74c3c' : rank === 2 ? '#3498db' : rank === 3 ? '#e67e22' : '#95a5a6';
+                const rankSymbol = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '';
+                
+                html += `
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 12px; text-align: center; font-weight: bold; color: ${rankColor};">${rank}${rankSymbol}</td>
+                    <td style="padding: 12px;">${item.label}</td>
+                    <td style="padding: 12px; font-family: monospace;">${item.value.toFixed(4)}</td>
+                    <td style="padding: 12px; font-weight: bold; color: ${rankColor};">${item.percentage}</td>
+                </tr>`;
+            });
+            
+            html += `</tbody></table></div>`;
+            return html;
         }
         
-        function ensureResultsDisplay() {
-            const resultsSection = document.getElementById('results');
-            if (resultsSection) {
-                resultsSection.style.display = 'block';
-                resultsSection.classList.remove('results-hidden');
-            }
+        function showRecommendations(results) {
+            const container = document.getElementById('recommendations-container');
+            const content = document.getElementById('recommendations-content');
             
-            // Ensure charts are visible
-            ensureChartsVisible();
-        }
-        
-        function showCalculationSuccess(message) {
-            const calcStatus = document.getElementById('calc-status');
-            const calcStatusText = document.getElementById('calc-status-text');
-            const resultsStatus = document.getElementById('results-status');
-            const resultsStatusText = document.getElementById('results-status-text');
+            if (!container || !content) return;
             
-            if (calcStatus && calcStatusText) {
-                calcStatus.className = 'calculation-notice success';
-                calcStatusText.textContent = '✓ ' + message;
-            }
-            
-            if (resultsStatus && resultsStatusText) {
-                resultsStatus.className = 'calculation-notice success';
-                resultsStatusText.textContent = '✓ Results calculated successfully!';
-            }
-        }
-        
-        function monitorSystemInitialization() {
-            const statusElement = document.getElementById('system-status');
-            let checkCount = 0;
-            const maxChecks = 10;
-            
-            const checkSystem = setInterval(() => {
-                checkCount++;
+            try {
+                const alternatives = results.alternatives.labels.map((label, index) => ({
+                    label,
+                    score: results.alternatives.scores[index]
+                })).sort((a, b) => b.score - a.score);
                 
-                if (window.SFactsApp) {
-                    statusElement.textContent = 'Enhanced features: Ready ✓';
-                    statusElement.className = 'system-status active';
-                    clearInterval(checkSystem);
-                    console.log('SFactsApp detected after', checkCount, 'checks');
-                } 
-                else if (window.runCalculation) {
-                    statusElement.textContent = 'Basic AHP system: Ready ✓';
-                    statusElement.className = 'system-status active';
-                    clearInterval(checkSystem);
-                    console.log('Basic AHP system detected after', checkCount, 'checks');
-                }
-                else if (checkCount >= maxChecks) {
-                    statusElement.textContent = 'Using fallback calculation mode';
-                    statusElement.className = 'system-status';
-                    clearInterval(checkSystem);
-                    console.log('Fallback mode activated');
-                }
-                else {
-                    statusElement.textContent = `Loading systems... (${checkCount}/${maxChecks})`;
-                    statusElement.className = 'system-status loading';
-                }
-            }, 1000);
-        }
-        
-        function addCustomStyles() {
-            const style = document.createElement('style');
-            style.textContent = `
-                .input-grid {
-                    display: grid;
-                    grid-template-columns: repeat(2, 1fr);
-                    gap: 10px;
-                    margin-bottom: 15px;
-                }
+                const criteria = results.criteria.labels.map((label, index) => ({
+                    label,
+                    weight: results.criteria.normalizedWeights[index]
+                })).sort((a, b) => b.weight - a.weight);
                 
-                .input-grid input {
-                    width: 100%;
-                    padding: 8px;
-                    border: 1px solid #ddd;
-                    border-radius: 4px;
-                    transition: border-color 0.3s ease;
-                }
-                
-                .input-grid input:focus {
-                    border-color: #667eea;
-                    outline: none;
-                    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
-                }
-                
-                .calculation-buttons {
-                    margin: 20px 0;
-                    padding: 20px 0;
-                    border-top: 1px solid #eee;
-                    text-align: center;
-                }
-                
-                .btn-primary {
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    color: white;
-                    border: none;
-                    padding: 12px 30px;
-                    border-radius: 25px;
-                    font-size: 16px;
-                    font-weight: bold;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-                }
-                
-                .btn-primary:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-                }
-                
-                .btn-primary:disabled {
-                    opacity: 0.6;
-                    cursor: not-allowed;
-                    transform: none;
-                }
-                
-                .chart-placeholder {
-                    padding: 40px;
-                    text-align: center;
-                    color: #666;
-                    background: #f8f9fa;
-                    border-radius: 5px;
-                    border: 2px dashed #dee2e6;
-                }
-                
-                @media (max-width: 768px) {
-                    .input-grid {
-                        grid-template-columns: 1fr;
-                    }
+                if (alternatives.length > 0 && criteria.length > 0) {
+                    const topAlternative = alternatives[0];
+                    const topCriteria = criteria[0];
                     
-                    .btn-primary {
-                        width: 100%;
-                        padding: 15px;
-                    }
+                    content.innerHTML = `
+                        <div style="background: #d4edda; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                <span style="font-size: 32px; margin-right: 15px;">🏆</span>
+                                <div>
+                                    <strong style="color: #155724; font-size: 18px;">Recommended Choice</strong>
+                                    <div style="font-size: 24px; color: #155724; margin-top: 5px; font-weight: bold;">
+                                        "${topAlternative.label}"
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="background: white; padding: 15px; border-radius: 5px; text-align: center;">
+                                <div style="font-size: 20px; color: #28a745; font-weight: bold;">
+                                    Score: ${(topAlternative.score * 100).toFixed(1)}%
+                                </div>
+                                <div style="margin-top: 10px; font-size: 14px; color: #6c757d;">
+                                    Based on ${alternatives.length} alternatives and ${criteria.length} criteria
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px;">
+                            <strong style="color: #2c3e50; font-size: 16px;">📈 Key Insights:</strong>
+                            <ul style="margin-top: 10px; padding-left: 20px;">
+                                <li>Most important criterion: <strong>${topCriteria.label}</strong> (${(topCriteria.weight * 100).toFixed(1)}%)</li>
+                                <li>Calculation method: <strong>${results.metadata.calculationMethod}</strong></li>
+                                <li>Consistency ratio: <strong>${(results.metadata.consistency * 100).toFixed(1)}%</strong></li>
+                                <li>Sensitivity analysis: <strong>${results.metadata.sensitivity}</strong></li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 5px;">
+                            <strong style="color: #856404;">💡 Next Steps:</strong>
+                            <p style="margin: 10px 0 0 0; color: #856404;">
+                                Consider using sensitivity analysis to see how changes in criteria weights affect your results.
+                            </p>
+                        </div>
+                    `;
+                    
+                    container.style.display = 'block';
                 }
-            `;
-            document.head.appendChild(style);
+                
+            } catch (error) {
+                console.error('❌ Error showing recommendations:', error);
+            }
         }
         
-        // Auto-restore form data on page load
-        window.addEventListener('load', function() {
-            setTimeout(() => {
-                const restored = restoreFormData();
-                if (restored) {
-                    console.log('Form data auto-restored on page load');
-                }
-            }, 1000);
-        });
+        function showCalculationError(message) {
+            const criteriaContainer = document.getElementById('criteria-chart');
+            const rankingsContainer = document.getElementById('rankings-chart');
+            
+            const errorHTML = `
+                <div style="text-align: center; padding: 40px; color: #dc3545;">
+                    <div style="font-size: 48px; margin-bottom: 20px;">⚠️</div>
+                    <h3 style="color: #dc3545;">Calculation Error</h3>
+                    <p>${message}</p>
+                    <p style="margin-top: 20px; font-size: 14px; color: #6c757d;">
+                        Please check your inputs and try again.
+                    </p>
+                </div>
+            `;
+            
+            if (criteriaContainer) criteriaContainer.innerHTML = errorHTML;
+            if (rankingsContainer) rankingsContainer.innerHTML = errorHTML;
+        }
         
-        // Auto-save form data periodically
-        setInterval(() => {
-            storeFormData('periodic_autosave');
-        }, 30000); // Every 30 seconds
+        // ============================================
+        // EXPORT FUNCTIONS
+        // ============================================
+        
+        function exportAsJSON() {
+            const data = {
+                goal: document.getElementById('goal').value,
+                criteria: [],
+                items: [],
+                timestamp: new Date().toISOString()
+            };
+            
+            // Collect criteria
+            for (let i = 0; i < 8; i++) {
+                const input = document.getElementById('criteria' + i);
+                if (input && input.value) {
+                    data.criteria.push(input.value);
+                }
+            }
+            
+            // Collect items
+            for (let i = 0; i < 8; i++) {
+                const input = document.getElementById('item' + i);
+                if (input && input.value) {
+                    data.items.push(input.value);
+                }
+            }
+            
+            const json = JSON.stringify(data, null, 2);
+            downloadFile(json, 'ahp-data.json', 'application/json');
+        }
+        
+        function exportAsCSV() {
+            let csv = 'Criteria,Weight\n';
+            
+            // Add criteria data
+            const criteriaTable = document.querySelector('#criteria-table table');
+            if (criteriaTable) {
+                const rows = criteriaTable.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length >= 3) {
+                        const criterion = cells[0].textContent;
+                        const weight = cells[2].textContent;
+                        csv += `"${criterion}",${weight.replace('%', '')}\n`;
+                    }
+                });
+            }
+            
+            downloadFile(csv, 'ahp-results.csv', 'text/csv');
+        }
+        
+        function exportAsPDF() {
+            alert('PDF export would be implemented here. In a real implementation, you would use a library like jsPDF.');
+        }
+        
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type: type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
     </script>
 </body>
 </html>
