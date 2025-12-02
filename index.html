@@ -174,14 +174,92 @@
             border: 1px solid #b3d7ff;
         }
         
-        @media (max-width: 768px) {
-            .input-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .results-grid {
-                grid-template-columns: 1fr;
-            }
+        /* Table styles for pairwise comparisons */
+        .pairwise-items table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .pairwise-items th, .pairwise-items td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .pairwise-items th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .pairwise-items input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .pairwise-items input:read-only {
+            background: #f5f5f5;
+            cursor: not-allowed;
+        }
+        
+        .criterion-comparison {
+            margin: 30px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .criterion-comparison h3 {
+            color: #3498db;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        /* Sensitivity Analysis Styles */
+        .sensitivity-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .sensitivity-table th, .sensitivity-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        
+        .sensitivity-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .sensitivity-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+        
+        .sensitivity-badge.positive {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .sensitivity-badge.negative {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .sensitivity-badge.neutral {
+            background: #fff3cd;
+            color: #856404;
         }
         
         /* Loading spinner */
@@ -199,6 +277,22 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pairwise-items table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
     </style>
 </head>
 <body>
@@ -207,7 +301,7 @@
         <header class="wrapper">
             <h1>
                 SFacts - Enhanced Analytic Hierarchy Process (AHP) Tool
-                <span class="enhanced-features">Enhanced v2.0</span>
+                <span class="enhanced-features">Enhanced v2.1</span>
             </h1>
             <div class="system-status" id="system-status">
                 Loading enhanced features...
@@ -309,6 +403,13 @@
                 </table>
             </section>
 
+            <!-- Alternative Pairwise Comparisons (Dynamic Section) -->
+            <section id="pairwise_alternatives_section" class="pairwise_items pairwisetable" style="display: none;">
+                <h1>📊 Pairwise Comparisons For Alternatives With Respect To Each Criterion</h1>
+                <p>Compare alternatives for each criterion (use values 1-9)</p>
+                <div id="alternative-comparisons-container"></div>
+            </section>
+
             <!-- Enhanced Calculation Button -->
             <section>
                 <div style="text-align: center; margin: 30px 0; padding: 30px; background: linear-gradient(135deg, #667eea0d 0%, #764ba20d 100%); border-radius: 10px; border: 2px dashed #dee2e6;">
@@ -362,10 +463,27 @@
                 </div>
             </div>
             
+            <!-- Consistency Analysis -->
+            <div class="chart-container" id="consistency-container" style="display: none;">
+                <h3>📊 Consistency Analysis</h3>
+                <div id="consistency-content"></div>
+            </div>
+            
             <!-- Recommendations -->
             <div class="chart-container" id="recommendations-container" style="display: none;">
                 <h3>💡 Recommendations</h3>
                 <div id="recommendations-content"></div>
+            </div>
+            
+            <!-- Sensitivity Analysis -->
+            <div class="chart-container" id="sensitivity-container" style="display: none;">
+                <h3>📈 Sensitivity Analysis</h3>
+                <div id="sensitivity-content">
+                    <p>Analyzing how changes in criteria weights affect final rankings...</p>
+                </div>
+                <button id="run-sensitivity" style="margin-top: 15px; padding: 10px 15px; background: #9b59b6; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                    Run Sensitivity Analysis
+                </button>
             </div>
             
             <!-- Export Options -->
@@ -394,7 +512,7 @@
                 Enhanced with SFacts 2.0 featuring sensitivity analysis, form validation, and advanced export options.
             </p>
             <p style="font-size: 12px; color: #666; margin-top: 10px;">
-                SFacts Enhanced v2.0 | Chart visualization enabled | Built with modern JavaScript (ES6 Modules)
+                SFacts Enhanced v2.1 | Chart visualization enabled | Built with modern JavaScript (ES6 Modules)
             </p>
         </footer>
     </div>
@@ -445,6 +563,10 @@
             }
         }
         
+        // ============================================
+        // FUNCTIONS FOR PAIRWISE COMPARISONS
+        // ============================================
+        
         function setupPairwiseTable() {
             const tbody = document.querySelector('#pairwise_criteria tbody');
             if (!tbody) return;
@@ -482,6 +604,9 @@
                         input.placeholder = '1-9';
                         input.min = '1';
                         input.max = '9';
+                        input.addEventListener('input', function() {
+                            updateReciprocalValue(i, j, this.value);
+                        });
                     } else {
                         input.readOnly = true;
                         input.style.background = '#f8f9fa';
@@ -494,6 +619,146 @@
                 
                 tbody.appendChild(row);
             }
+        }
+        
+        function updateReciprocalValue(i, j, value) {
+            if (!value || isNaN(parseFloat(value))) return;
+            
+            const reciprocalInput = document.getElementById(`criteria${j}v${i}`);
+            if (reciprocalInput) {
+                const numValue = parseFloat(value);
+                if (numValue > 0) {
+                    reciprocalInput.value = (1 / numValue).toFixed(3);
+                }
+            }
+        }
+        
+        function setupAlternativePairwiseTables() {
+            const criteriaCount = getValidCriteriaCount();
+            const itemsCount = getValidItemsCount();
+            
+            if (criteriaCount === 0 || itemsCount === 0) {
+                return;
+            }
+            
+            const section = document.getElementById('pairwise_alternatives_section');
+            if (!section) return;
+            
+            section.style.display = 'block';
+            const container = document.getElementById('alternative-comparisons-container');
+            container.innerHTML = '';
+            
+            // Create tables for each criterion
+            for (let c = 0; c < criteriaCount; c++) {
+                const criterionName = document.getElementById(`criteria${c}`).value || `Criterion ${c + 1}`;
+                const criterionId = c;
+                
+                const tableSection = document.createElement('div');
+                tableSection.className = 'criterion-comparison';
+                tableSection.innerHTML = `
+                    <h3>${criterionName}</h3>
+                    <p>Compare alternatives with respect to: <strong>${criterionName}</strong></p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                ${Array.from({length: itemsCount}, (_, i) => 
+                                    `<th>${document.getElementById(`item${i}`).value || `Alternative ${i+1}`}</th>`
+                                ).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${Array.from({length: itemsCount}, (_, i) => `
+                                <tr>
+                                    <th>${document.getElementById(`item${i}`).value || `Alternative ${i+1}`}</th>
+                                    ${Array.from({length: itemsCount}, (_, j) => {
+                                        const inputId = `c${criterionId}_item${i}v${j}`;
+                                        if (i === j) {
+                                            return `
+                                                <td>
+                                                    <input type="number" 
+                                                           id="${inputId}"
+                                                           value="1"
+                                                           readonly
+                                                           style="background:#f5f5f5">
+                                                </td>
+                                            `;
+                                        } else if (j > i) {
+                                            return `
+                                                <td>
+                                                    <input type="number" 
+                                                           min="1" 
+                                                           max="9" 
+                                                           step="0.1"
+                                                           id="${inputId}"
+                                                           placeholder="1-9"
+                                                           oninput="updateAlternativeReciprocal(${criterionId}, ${i}, ${j}, this.value)">
+                                                </td>
+                                            `;
+                                        } else {
+                                            return `
+                                                <td>
+                                                    <input type="number" 
+                                                           id="${inputId}"
+                                                           readonly
+                                                           style="background:#f5f5f5">
+                                                </td>
+                                            `;
+                                        }
+                                    }).join('')}
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                
+                container.appendChild(tableSection);
+            }
+        }
+        
+        function updateAlternativeReciprocal(criterionId, i, j, value) {
+            if (!value || isNaN(parseFloat(value))) return;
+            
+            const reciprocalInput = document.getElementById(`c${criterionId}_item${j}v${i}`);
+            if (reciprocalInput) {
+                const numValue = parseFloat(value);
+                if (numValue > 0) {
+                    reciprocalInput.value = (1 / numValue).toFixed(3);
+                }
+            }
+        }
+        
+        // ============================================
+        // HELPER FUNCTIONS
+        // ============================================
+        
+        function getValidCriteriaCount() {
+            let count = 0;
+            for (let i = 0; i < 8; i++) {
+                const input = document.getElementById(`criteria${i}`);
+                if (input && input.value && input.value.trim()) {
+                    count++;
+                }
+            }
+            return count;
+        }
+        
+        function getValidItemsCount() {
+            let count = 0;
+            for (let i = 0; i < 8; i++) {
+                const input = document.getElementById(`item${i}`);
+                if (input && input.value && input.value.trim()) {
+                    count++;
+                }
+            }
+            return count;
+        }
+        
+        function getRankings(scores, labels) {
+            return labels
+                .map((label, index) => ({ label, score: scores[index] }))
+                .sort((a, b) => b.score - a.score)
+                .map((item, index) => `${index + 1}. ${item.label} (${(item.score * 100).toFixed(1)}%)`);
         }
         
         function setupEnhancedEventListeners() {
@@ -540,6 +805,42 @@
             document.getElementById('export-json')?.addEventListener('click', exportAsJSON);
             document.getElementById('export-csv')?.addEventListener('click', exportAsCSV);
             document.getElementById('export-pdf')?.addEventListener('click', exportAsPDF);
+            
+            // Sensitivity analysis button
+            document.getElementById('run-sensitivity')?.addEventListener('click', function() {
+                const results = window.lastCalculationResults;
+                if (results) {
+                    performSensitivityAnalysis(results);
+                }
+            });
+            
+            // Monitor criteria and items inputs to update pairwise tables
+            for (let i = 0; i < 8; i++) {
+                const criteriaInput = document.getElementById(`criteria${i}`);
+                const itemInput = document.getElementById(`item${i}`);
+                
+                if (criteriaInput) {
+                    criteriaInput.addEventListener('input', function() {
+                        setTimeout(updateCriteriaHeaders, 100);
+                    });
+                }
+                
+                if (itemInput) {
+                    itemInput.addEventListener('input', function() {
+                        setTimeout(updateAlternativePairwiseTables, 100);
+                    });
+                }
+            }
+        }
+        
+        function updateCriteriaHeaders() {
+            for (let i = 0; i < 8; i++) {
+                const header = document.querySelector(`.criteria${i}`);
+                const input = document.getElementById(`criteria${i}`);
+                if (header && input) {
+                    header.textContent = input.value || `Criterion ${i + 1}`;
+                }
+            }
         }
         
         function initializeEnhancedUI() {
@@ -636,6 +937,12 @@
                     if (input) input.value = criterion;
                 });
                 
+                // Clear remaining criteria
+                for (let i = testCriteria.length; i < 8; i++) {
+                    const input = document.getElementById('criteria' + i);
+                    if (input) input.value = '';
+                }
+                
                 // Alternatives
                 const testAlternatives = [
                     'Software A',
@@ -649,7 +956,16 @@
                     if (input) input.value = alternative;
                 });
                 
-                // Fill pairwise comparison values
+                // Clear remaining alternatives
+                for (let i = testAlternatives.length; i < 8; i++) {
+                    const input = document.getElementById('item' + i);
+                    if (input) input.value = '';
+                }
+                
+                // Update headers
+                updateCriteriaHeaders();
+                
+                // Fill pairwise comparison values for criteria
                 const testValues = {
                     'criteria0v1': '3',
                     'criteria0v2': '5',
@@ -678,15 +994,16 @@
                         if (parts) {
                             const i = parseInt(parts[1]);
                             const j = parseInt(parts[2]);
-                            const reciprocalId = `criteria${j}v${i}`;
-                            const reciprocalInput = document.getElementById(reciprocalId);
-                            if (reciprocalInput) {
-                                const value = parseFloat(testValues[id]);
-                                reciprocalInput.value = (1 / value).toFixed(3);
-                            }
+                            updateReciprocalValue(i, j, input.value);
                         }
                     }
                 });
+                
+                // Setup alternative pairwise tables
+                setupAlternativePairwiseTables();
+                
+                // Fill alternative pairwise comparisons with sample data
+                fillAlternativeTestData();
                 
                 updateEnhancedStatus('✓ Test data loaded successfully');
                 updateResultsStatus('✓ Test data loaded! Click "Calculate Enhanced Results" to analyze.', 'success');
@@ -696,6 +1013,35 @@
             } catch (error) {
                 console.error('❌ Error loading test data:', error);
                 updateEnhancedStatus('Error loading test data');
+            }
+        }
+        
+        function fillAlternativeTestData() {
+            const criteriaCount = getValidCriteriaCount();
+            const itemsCount = getValidItemsCount();
+            
+            // Sample comparison values for alternatives
+            const sampleValues = [
+                [1, 3, 2, 4],  // For criterion 0
+                [1/3, 1, 1/2, 2], // For criterion 1
+                [1/2, 2, 1, 3],   // For criterion 2
+                [1/4, 1/2, 1/3, 1], // For criterion 3
+                [1, 2, 3, 4],  // For criterion 4
+                [1, 1/2, 1/3, 1/4] // For criterion 5
+            ];
+            
+            for (let c = 0; c < Math.min(criteriaCount, sampleValues.length); c++) {
+                for (let i = 0; i < itemsCount; i++) {
+                    for (let j = i + 1; j < itemsCount; j++) {
+                        const inputId = `c${c}_item${i}v${j}`;
+                        const input = document.getElementById(inputId);
+                        if (input && sampleValues[c] && sampleValues[c][i] && sampleValues[c][j]) {
+                            const value = sampleValues[c][i] / sampleValues[c][j];
+                            input.value = value.toFixed(3);
+                            updateAlternativeReciprocal(c, i, j, input.value);
+                        }
+                    }
+                }
             }
         }
         
@@ -713,6 +1059,12 @@
                 
                 // Reset pairwise comparison table
                 setupPairwiseTable();
+                
+                // Hide alternative comparisons section
+                const altSection = document.getElementById('pairwise_alternatives_section');
+                if (altSection) {
+                    altSection.style.display = 'none';
+                }
                 
                 // Clear enhanced results
                 clearEnhancedResults();
@@ -747,11 +1099,19 @@
             
             document.getElementById('criteria-table').innerHTML = '';
             document.getElementById('rankings-table').innerHTML = '';
+            document.getElementById('consistency-content').innerHTML = '';
+            document.getElementById('recommendations-content').innerHTML = '';
+            document.getElementById('sensitivity-content').innerHTML = '<p>Analyzing how changes in criteria weights affect final rankings...</p>';
             
-            const recommendations = document.getElementById('recommendations-container');
-            if (recommendations) {
-                recommendations.style.display = 'none';
-            }
+            const containers = ['consistency-container', 'recommendations-container', 'sensitivity-container'];
+            containers.forEach(id => {
+                const container = document.getElementById(id);
+                if (container) {
+                    container.style.display = 'none';
+                }
+            });
+            
+            window.lastCalculationResults = null;
         }
         
         // ============================================
@@ -786,6 +1146,9 @@
                     throw new Error(validation.message);
                 }
                 
+                // Setup alternative pairwise tables if not already done
+                setupAlternativePairwiseTables();
+                
                 // Show results section
                 const resultsSection = document.getElementById('enhanced-results');
                 if (resultsSection) {
@@ -806,8 +1169,11 @@
                 // Perform calculation
                 const results = await performCalculation(validation.data);
                 
+                // Store results for sensitivity analysis
+                window.lastCalculationResults = results;
+                
                 // Display results
-                displayResults(results);
+                displayEnhancedResults(results);
                 
                 // Update status
                 updateEnhancedStatus('✓ Calculation complete');
@@ -911,8 +1277,8 @@
                 const criteriaMatrix = createCriteriaMatrix(data.criteria.length);
                 const alternativeMatrices = createAlternativeMatrices(data.criteria.length, data.items.length);
                 
-                // Perform AHP calculation
-                const results = calculateAHP(data.items, data.criteria, alternativeMatrices, criteriaMatrix);
+                // Perform enhanced AHP calculation
+                const results = calculateEnhancedAHP(data.items, data.criteria, alternativeMatrices, criteriaMatrix);
                 
                 return results;
                 
@@ -931,7 +1297,7 @@
                         matrix[i][j] = 1;
                     } else {
                         const input = document.getElementById(`criteria${i}v${j}`);
-                        if (input && input.value) {
+                        if (input && input.value && !isNaN(parseFloat(input.value))) {
                             const value = parseFloat(input.value);
                             matrix[i][j] = isNaN(value) ? 1 : value;
                         } else {
@@ -947,8 +1313,6 @@
         function createAlternativeMatrices(criteriaCount, itemsCount) {
             const matrices = [];
             
-            // For simplicity, create default matrices
-            // In a real implementation, you would collect these from the form
             for (let c = 0; c < criteriaCount; c++) {
                 matrices[c] = [];
                 for (let i = 0; i < itemsCount; i++) {
@@ -957,8 +1321,14 @@
                         if (i === j) {
                             matrices[c][i][j] = 1;
                         } else {
-                            // Create some variation
-                            matrices[c][i][j] = 1 + Math.random() * 2;
+                            const input = document.getElementById(`c${c}_item${i}v${j}`);
+                            if (input && input.value && !isNaN(parseFloat(input.value))) {
+                                const value = parseFloat(input.value);
+                                matrices[c][i][j] = isNaN(value) ? 1 : value;
+                            } else {
+                                // Default value based on position
+                                matrices[c][i][j] = 1 + Math.abs(i - j) * 0.1;
+                            }
                         }
                     }
                 }
@@ -967,108 +1337,179 @@
             return matrices;
         }
         
-        function calculateAHP(items, criteria, alternativeMatrices, criteriaMatrix) {
-            console.log('🔢 Performing AHP calculation...');
+        // ============================================
+        // ENHANCED AHP ALGORITHM
+        // ============================================
+        
+        function calculateEnhancedAHP(items, criteria, alternativeMatrices, criteriaMatrix) {
+            console.log('🔢 Performing Enhanced AHP calculation...');
             
-            // 1. Normalize criteria matrix and get criteria weights
-            const criteriaWeights = calculateWeights(criteriaMatrix);
+            // 1. التحقق من صحة المصفوفات
+            validateMatrices(criteriaMatrix, alternativeMatrices);
             
-            // 2. Calculate alternative scores for each criterion
-            const alternativeScoresByCriterion = [];
+            // 2. حساب أوزان المعايير مع معامل الاتساق
+            const criteriaResult = calculatePriorityVector(criteriaMatrix);
+            const criteriaWeights = criteriaResult.weights;
+            const criteriaCR = criteriaResult.consistencyRatio;
+            
+            // 3. حساب أولويات البدائل لكل معيار
+            const alternativePriorities = [];
+            const alternativeCRs = [];
+            
             for (let c = 0; c < criteria.length; c++) {
-                const scores = calculateWeights(alternativeMatrices[c]);
-                alternativeScoresByCriterion.push(scores);
+                const altResult = calculatePriorityVector(alternativeMatrices[c]);
+                alternativePriorities.push(altResult.weights);
+                alternativeCRs.push(altResult.consistencyRatio);
             }
             
-            // 3. Calculate final scores
+            // 4. حساب الدرجات النهائية
             const finalScores = [];
             for (let i = 0; i < items.length; i++) {
                 let score = 0;
                 for (let c = 0; c < criteria.length; c++) {
-                    score += criteriaWeights[c] * alternativeScoresByCriterion[c][i];
+                    score += criteriaWeights[c] * alternativePriorities[c][i];
                 }
                 finalScores.push(score);
             }
             
-            // 4. Normalize final scores
+            // 5. تطبيع النتائج
             const totalScore = finalScores.reduce((sum, s) => sum + s, 0);
             const normalizedScores = finalScores.map(s => s / totalScore);
             
-            // 5. Normalize criteria weights
-            const totalCriteriaWeight = criteriaWeights.reduce((sum, w) => sum + w, 0);
-            const normalizedCriteriaWeights = criteriaWeights.map(w => w / totalCriteriaWeight);
+            // 6. حساب معامل الاتساق الكلي
+            const overallCR = calculateOverallConsistency(criteriaCR, alternativeCRs, criteriaWeights);
             
             return {
                 criteria: {
                     labels: criteria,
                     weights: criteriaWeights,
-                    normalizedWeights: normalizedCriteriaWeights
+                    normalizedWeights: criteriaWeights.map(w => w / criteriaWeights.reduce((a, b) => a + b, 0)),
+                    consistencyRatio: criteriaCR
                 },
                 alternatives: {
                     labels: items,
                     scores: normalizedScores,
-                    rawScores: finalScores
+                    rawScores: finalScores,
+                    prioritiesByCriterion: alternativePriorities
+                },
+                consistency: {
+                    criteriaCR: criteriaCR,
+                    alternativeCRs: alternativeCRs,
+                    overallCR: overallCR
                 },
                 metadata: {
-                    calculationMethod: 'enhanced',
+                    calculationMethod: 'enhanced-ahp',
                     timestamp: new Date().toISOString(),
-                    consistency: calculateConsistency(criteriaMatrix, criteriaWeights),
+                    algorithm: 'Eigenvector Method with Consistency Check',
                     sensitivity: 'available'
                 }
             };
         }
         
-        function calculateWeights(matrix) {
+        function calculatePriorityVector(matrix) {
             const n = matrix.length;
-            const weights = new Array(n).fill(0);
             
-            // Calculate geometric mean for each row
+            // 1. حساب المتوسط الهندسي لكل صف
+            const geometricMeans = [];
             for (let i = 0; i < n; i++) {
                 let product = 1;
                 for (let j = 0; j < n; j++) {
                     product *= matrix[i][j];
                 }
-                weights[i] = Math.pow(product, 1 / n);
+                geometricMeans.push(Math.pow(product, 1 / n));
             }
             
-            // Normalize weights
-            const sum = weights.reduce((s, w) => s + w, 0);
-            return weights.map(w => w / sum);
+            // 2. تطبيع المتوسطات الهندسية للحصول على متجه الأولوية
+            const sumGM = geometricMeans.reduce((s, gm) => s + gm, 0);
+            const priorityVector = geometricMeans.map(gm => gm / sumGM);
+            
+            // 3. حساب معامل الاتساق
+            const consistency = calculateConsistencyRatio(matrix, priorityVector);
+            
+            return {
+                weights: priorityVector,
+                consistencyRatio: consistency
+            };
         }
         
-        function calculateConsistency(matrix, weights) {
+        function calculateConsistencyRatio(matrix, weights) {
             const n = matrix.length;
-            let consistencyIndex = 0;
+            if (n <= 1) return 0;
             
-            // Calculate consistency ratio (simplified)
+            // 1. حساب lambda max
+            let lambdaMax = 0;
             for (let i = 0; i < n; i++) {
                 let rowSum = 0;
                 for (let j = 0; j < n; j++) {
                     rowSum += matrix[i][j] * weights[j];
                 }
-                consistencyIndex += rowSum / weights[i];
+                lambdaMax += rowSum / weights[i];
             }
+            lambdaMax /= n;
             
-            consistencyIndex = (consistencyIndex / n - n) / (n - 1);
+            // 2. حساب معامل الاتساق CI
+            const CI = (lambdaMax - n) / (n - 1);
             
-            // Return as a percentage (lower is better)
-            return Math.max(0, Math.min(1, consistencyIndex * 10));
+            // 3. قيم RI العشوائية (Random Index)
+            const RI = [0, 0, 0.58, 0.90, 1.12, 1.24, 1.32, 1.41, 1.45, 1.49];
+            
+            // 4. حساب معامل الاتساق CR
+            const CR = CI / (RI[n] || 1.49);
+            
+            return CR;
         }
         
-        function displayResults(results) {
-            console.log('📊 Displaying results...');
+        function calculateOverallConsistency(criteriaCR, alternativeCRs, criteriaWeights) {
+            if (alternativeCRs.length === 0) return criteriaCR;
+            
+            let weightedSum = criteriaCR;
+            for (let i = 0; i < alternativeCRs.length; i++) {
+                weightedSum += alternativeCRs[i] * (criteriaWeights[i] || 0);
+            }
+            
+            return weightedSum / (1 + criteriaWeights.reduce((a, b) => a + b, 0));
+        }
+        
+        function validateMatrices(criteriaMatrix, alternativeMatrices) {
+            // التحقق من أن جميع القيم موجبة
+            const allMatrices = [criteriaMatrix, ...alternativeMatrices];
+            
+            allMatrices.forEach((matrix, idx) => {
+                for (let i = 0; i < matrix.length; i++) {
+                    for (let j = 0; j < matrix[i].length; j++) {
+                        if (matrix[i][j] <= 0) {
+                            console.warn(`Matrix ${idx} has non-positive value at [${i}][${j}]`);
+                            matrix[i][j] = 1; // تعيين قيمة افتراضية
+                        }
+                    }
+                }
+            });
+        }
+        
+        // ============================================
+        // RESULTS DISPLAY FUNCTIONS
+        // ============================================
+        
+        function displayEnhancedResults(results) {
+            console.log('📊 Displaying enhanced results...');
             
             try {
                 updateResultsStatus('Creating visualizations...', 'loading');
                 
-                // Create charts
-                createCharts(results);
+                // 1. عرض معامل الاتساق
+                displayConsistencyInfo(results.consistency);
                 
-                // Create tables
-                createTables(results);
+                // 2. إنشاء المخططات
+                createEnhancedCharts(results);
                 
-                // Show recommendations
-                showRecommendations(results);
+                // 3. إنشاء الجداول
+                createEnhancedTables(results);
+                
+                // 4. عرض التوصيات
+                showEnhancedRecommendations(results);
+                
+                // 5. إعداد تحليل الحساسية
+                setupSensitivityAnalysis(results);
                 
                 updateResultsStatus('✓ Results displayed successfully!', 'success');
                 
@@ -1078,7 +1519,48 @@
             }
         }
         
-        function createCharts(results) {
+        function displayConsistencyInfo(consistency) {
+            const container = document.getElementById('consistency-container');
+            const content = document.getElementById('consistency-content');
+            
+            if (!container || !content) return;
+            
+            const criteriaCR = consistency.criteriaCR || 0;
+            const overallCR = consistency.overallCR || 0;
+            
+            let consistencyHTML = `
+                <div style="margin: 15px 0; padding: 15px; background: ${overallCR < 0.1 ? '#d4edda' : '#fff3cd'}; border-radius: 5px;">
+                    <strong>Consistency Analysis:</strong>
+                    <div style="margin-top: 10px;">
+                        <div>Criteria Consistency Ratio: <strong>${(criteriaCR * 100).toFixed(2)}%</strong> 
+                            ${criteriaCR < 0.1 ? '<span style="color: #28a745;">✅ Good</span>' : '<span style="color: #dc3545;">⚠️ Needs review</span>'}</div>
+            `;
+            
+            if (consistency.alternativeCRs && consistency.alternativeCRs.length > 0) {
+                const avgAltCR = consistency.alternativeCRs.reduce((a, b) => a + b, 0) / consistency.alternativeCRs.length;
+                consistencyHTML += `
+                        <div>Average Alternative Consistency: <strong>${(avgAltCR * 100).toFixed(2)}%</strong></div>
+                `;
+            }
+            
+            consistencyHTML += `
+                        <div>Overall Consistency Ratio: <strong>${(overallCR * 100).toFixed(2)}%</strong> 
+                            ${overallCR < 0.1 ? '<span style="color: #28a745;">✅ Acceptable</span>' : '<span style="color: #dc3545;">⚠️ Review comparisons</span>'}</div>
+                    </div>
+                </div>
+                
+                <p style="font-size: 14px; color: #666;">
+                    <strong>Interpretation:</strong><br>
+                    • CR &lt; 0.10: Good consistency<br>
+                    • CR &ge; 0.10: Consider reviewing your pairwise comparisons
+                </p>
+            `;
+            
+            content.innerHTML = consistencyHTML;
+            container.style.display = 'block';
+        }
+        
+        function createEnhancedCharts(results) {
             try {
                 // Criteria chart
                 const criteriaData = {
@@ -1095,7 +1577,7 @@
                             return value.toFixed(1) + '%';
                         }
                     },
-                    high: 100,
+                    high: Math.max(...results.criteria.normalizedWeights.map(w => w * 100)) * 1.2,
                     low: 0
                 };
                 
@@ -1128,7 +1610,7 @@
                             return value.toFixed(1) + '%';
                         }
                     },
-                    high: 100,
+                    high: Math.max(...results.alternatives.scores.map(s => s * 100)) * 1.2,
                     low: 0
                 };
                 
@@ -1143,17 +1625,21 @@
                     }
                 } else if (rankingsContainer) {
                     createHTMLChart(rankingsContainer, results.alternatives.labels, 
-                        results.alternatives.scores, 'Alternative Scores');
+                            results.alternatives.scores, 'Alternative Scores');
                 }
                 
             } catch (error) {
                 console.error('❌ Error creating charts:', error);
-                throw error;
+                // Fallback to HTML charts
+                createHTMLChart(document.getElementById('criteria-chart'), 
+                    results.criteria.labels, results.criteria.normalizedWeights, 'Criteria Weights');
+                createHTMLChart(document.getElementById('rankings-chart'), 
+                    results.alternatives.labels, results.alternatives.scores, 'Alternative Scores');
             }
         }
         
         function createHTMLChart(container, labels, values, title) {
-            if (!labels || labels.length === 0) {
+            if (!container || !labels || labels.length === 0) {
                 container.innerHTML = '<div style="text-align: center; padding: 40px; color: #95a5a6;">No data available</div>';
                 return;
             }
@@ -1184,7 +1670,7 @@
             container.innerHTML = html;
         }
         
-        function createTables(results) {
+        function createEnhancedTables(results) {
             try {
                 // Criteria table
                 const criteriaTable = document.getElementById('criteria-table');
@@ -1208,7 +1694,6 @@
                 
             } catch (error) {
                 console.error('❌ Error creating tables:', error);
-                throw error;
             }
         }
         
@@ -1220,8 +1705,9 @@
             const items = labels.map((label, index) => ({
                 label,
                 value: values[index] || 0,
-                percentage: ((values[index] || 0) * 100).toFixed(2) + '%'
-            })).sort((a, b) => b.value - a.value);
+                percentage: ((values[index] || 0) * 100).toFixed(2) + '%',
+                rawValue: values[index] || 0
+            })).sort((a, b) => b.rawValue - a.rawValue);
             
             let html = `
             <div style="overflow-x: auto;">
@@ -1245,7 +1731,7 @@
                 <tr style="border-bottom: 1px solid #eee;">
                     <td style="padding: 12px; text-align: center; font-weight: bold; color: ${rankColor};">${rank}${rankSymbol}</td>
                     <td style="padding: 12px;">${item.label}</td>
-                    <td style="padding: 12px; font-family: monospace;">${item.value.toFixed(4)}</td>
+                    <td style="padding: 12px; font-family: monospace;">${item.rawValue.toFixed(4)}</td>
                     <td style="padding: 12px; font-weight: bold; color: ${rankColor};">${item.percentage}</td>
                 </tr>`;
             });
@@ -1254,7 +1740,7 @@
             return html;
         }
         
-        function showRecommendations(results) {
+        function showEnhancedRecommendations(results) {
             const container = document.getElementById('recommendations-container');
             const content = document.getElementById('recommendations-content');
             
@@ -1274,6 +1760,7 @@
                 if (alternatives.length > 0 && criteria.length > 0) {
                     const topAlternative = alternatives[0];
                     const topCriteria = criteria[0];
+                    const consistency = results.consistency.overallCR || 0;
                     
                     content.innerHTML = `
                         <div style="background: #d4edda; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
@@ -1300,16 +1787,17 @@
                             <strong style="color: #2c3e50; font-size: 16px;">📈 Key Insights:</strong>
                             <ul style="margin-top: 10px; padding-left: 20px;">
                                 <li>Most important criterion: <strong>${topCriteria.label}</strong> (${(topCriteria.weight * 100).toFixed(1)}%)</li>
-                                <li>Calculation method: <strong>${results.metadata.calculationMethod}</strong></li>
-                                <li>Consistency ratio: <strong>${(results.metadata.consistency * 100).toFixed(1)}%</strong></li>
-                                <li>Sensitivity analysis: <strong>${results.metadata.sensitivity}</strong></li>
+                                <li>Calculation method: <strong>${results.metadata.algorithm}</strong></li>
+                                <li>Consistency ratio: <strong>${(consistency * 100).toFixed(1)}%</strong> 
+                                    ${consistency < 0.1 ? '<span class="sensitivity-badge positive">Good</span>' : '<span class="sensitivity-badge negative">Review needed</span>'}</li>
                             </ul>
                         </div>
                         
                         <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 5px;">
                             <strong style="color: #856404;">💡 Next Steps:</strong>
                             <p style="margin: 10px 0 0 0; color: #856404;">
-                                Consider using sensitivity analysis to see how changes in criteria weights affect your results.
+                                Consider running sensitivity analysis to see how changes in criteria weights affect your results.
+                                ${consistency >= 0.1 ? ' Also review your pairwise comparisons to improve consistency.' : ''}
                             </p>
                         </div>
                     `;
@@ -1320,6 +1808,171 @@
             } catch (error) {
                 console.error('❌ Error showing recommendations:', error);
             }
+        }
+        
+        // ============================================
+        // SENSITIVITY ANALYSIS
+        // ============================================
+        
+        function setupSensitivityAnalysis(results) {
+            const container = document.getElementById('sensitivity-container');
+            if (container) {
+                container.style.display = 'block';
+            }
+        }
+        
+        function performSensitivityAnalysis(results) {
+            const sensitivityContent = document.getElementById('sensitivity-content');
+            const runButton = document.getElementById('run-sensitivity');
+            
+            if (!sensitivityContent || !runButton) return;
+            
+            // Disable button and show loading
+            runButton.disabled = true;
+            runButton.innerHTML = '<span class="spinner"></span> Analyzing...';
+            
+            sensitivityContent.innerHTML = `
+                <div style="text-align: center; padding: 30px;">
+                    <div class="spinner" style="width: 40px; height: 40px; margin: 0 auto 15px auto;"></div>
+                    <p>Running sensitivity analysis...</p>
+                    <p style="font-size: 14px; color: #666;">Analyzing how ±20% changes in criteria weights affect rankings</p>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                try {
+                    const { criteria, alternatives } = results;
+                    const scenarios = [];
+                    
+                    // Analyze sensitivity for each criterion
+                    for (let i = 0; i < criteria.labels.length; i++) {
+                        const criterionName = criteria.labels[i];
+                        
+                        // Scenario 1: Increase weight by 20%
+                        const increasedWeights = [...criteria.normalizedWeights];
+                        increasedWeights[i] *= 1.2;
+                        const sumIncreased = increasedWeights.reduce((a, b) => a + b, 0);
+                        const normalizedIncreased = increasedWeights.map(w => w / sumIncreased);
+                        const newScoresIncreased = calculateNewScores(normalizedIncreased, results);
+                        const topIncreased = alternatives.labels[newScoresIncreased.indexOf(Math.max(...newScoresIncreased))];
+                        
+                        // Scenario 2: Decrease weight by 20%
+                        const decreasedWeights = [...criteria.normalizedWeights];
+                        decreasedWeights[i] *= 0.8;
+                        const sumDecreased = decreasedWeights.reduce((a, b) => a + b, 0);
+                        const normalizedDecreased = decreasedWeights.map(w => w / sumDecreased);
+                        const newScoresDecreased = calculateNewScores(normalizedDecreased, results);
+                        const topDecreased = alternatives.labels[newScoresDecreased.indexOf(Math.max(...newScoresDecreased))];
+                        
+                        // Check if ranking changes
+                        const originalTop = alternatives.labels[alternatives.scores.indexOf(Math.max(...alternatives.scores))];
+                        const rankingChanged = (topIncreased !== originalTop) || (topDecreased !== originalTop);
+                        
+                        scenarios.push({
+                            criterion: criterionName,
+                            originalWeight: (criteria.normalizedWeights[i] * 100).toFixed(1) + '%',
+                            increasedTop: topIncreased,
+                            decreasedTop: topDecreased,
+                            rankingChanged: rankingChanged,
+                            sensitivity: rankingChanged ? 'High' : 'Low'
+                        });
+                    }
+                    
+                    displaySensitivityResults(scenarios, results);
+                    
+                } catch (error) {
+                    console.error('❌ Sensitivity analysis error:', error);
+                    sensitivityContent.innerHTML = `
+                        <div style="color: #dc3545; padding: 20px; text-align: center;">
+                            <p>❌ Error in sensitivity analysis: ${error.message}</p>
+                        </div>
+                    `;
+                } finally {
+                    // Restore button
+                    runButton.disabled = false;
+                    runButton.innerHTML = 'Run Sensitivity Analysis';
+                }
+            }, 1500);
+        }
+        
+        function calculateNewScores(newWeights, results) {
+            const scores = [];
+            const { alternatives } = results;
+            
+            for (let i = 0; i < alternatives.labels.length; i++) {
+                let score = 0;
+                for (let c = 0; c < newWeights.length; c++) {
+                    score += newWeights[c] * (alternatives.prioritiesByCriterion?.[c]?.[i] || 0);
+                }
+                scores.push(score);
+            }
+            
+            // تطبيع
+            const total = scores.reduce((a, b) => a + b, 0);
+            return scores.map(s => total > 0 ? s / total : 0);
+        }
+        
+        function displaySensitivityResults(scenarios, results) {
+            const sensitivityContent = document.getElementById('sensitivity-content');
+            const { alternatives } = results;
+            const originalTop = alternatives.labels[alternatives.scores.indexOf(Math.max(...alternatives.scores))];
+            
+            let html = `
+                <div style="margin-bottom: 20px;">
+                    <p><strong>Original Top Alternative:</strong> <span style="color: #e74c3c; font-weight: bold;">${originalTop}</span></p>
+                    <p style="font-size: 14px; color: #666;">Analysis shows how ±20% changes in each criterion's weight affect the top alternative.</p>
+                </div>
+                
+                <div style="overflow-x: auto;">
+                    <table class="sensitivity-table">
+                        <thead>
+                            <tr>
+                                <th>Criterion</th>
+                                <th>Original Weight</th>
+                                <th>+20% Weight<br>Top Alternative</th>
+                                <th>-20% Weight<br>Top Alternative</th>
+                                <th>Sensitivity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            scenarios.forEach(scenario => {
+                const increasedColor = scenario.increasedTop === originalTop ? '#28a745' : '#e74c3c';
+                const decreasedColor = scenario.decreasedTop === originalTop ? '#28a745' : '#e74c3c';
+                const sensitivityBadge = scenario.sensitivity === 'High' ? 
+                    '<span class="sensitivity-badge negative">High</span>' : 
+                    '<span class="sensitivity-badge positive">Low</span>';
+                
+                html += `
+                    <tr>
+                        <td><strong>${scenario.criterion}</strong></td>
+                        <td>${scenario.originalWeight}</td>
+                        <td style="color: ${increasedColor}; font-weight: bold;">${scenario.increasedTop}</td>
+                        <td style="color: ${decreasedColor}; font-weight: bold;">${scenario.decreasedTop}</td>
+                        <td>${sensitivityBadge}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background: #e7f3ff; border-radius: 5px;">
+                    <strong>📊 Interpretation:</strong>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li><strong>High Sensitivity:</strong> Changing this criterion's weight changes the top alternative</li>
+                        <li><strong>Low Sensitivity:</strong> The top alternative remains the same despite weight changes</li>
+                    </ul>
+                    <p style="margin-top: 10px; font-size: 14px;">
+                        <strong>Recommendation:</strong> Pay special attention to high-sensitivity criteria in your decision-making process.
+                    </p>
+                </div>
+            `;
+            
+            sensitivityContent.innerHTML = html;
         }
         
         function showCalculationError(message) {
@@ -1383,8 +2036,8 @@
                 rows.forEach(row => {
                     const cells = row.querySelectorAll('td');
                     if (cells.length >= 3) {
-                        const criterion = cells[0].textContent;
-                        const weight = cells[2].textContent;
+                        const criterion = cells[1].textContent;
+                        const weight = cells[3].textContent;
                         csv += `"${criterion}",${weight.replace('%', '')}\n`;
                     }
                 });
