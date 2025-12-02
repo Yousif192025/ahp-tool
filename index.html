@@ -379,7 +379,7 @@
                 </div>
             </section>
 
-            <!-- Pairwise Comparisons Table -->
+            <!-- Pairwise Comparisons Table for Criteria -->
             <section id="pairwise_criteria" class="pairwise_criteria pairwisetable">
                 <h1>📈 Pairwise Comparisons For Your Criteria</h1>
                 <p>Compare the relative importance of each criterion (use values 1-9)</p>
@@ -404,10 +404,14 @@
             </section>
 
             <!-- Alternative Pairwise Comparisons (Dynamic Section) -->
-            <section id="pairwise_alternatives_section" class="pairwise_items pairwisetable" style="display: none;">
+            <section id="pairwise_alternatives_section" class="pairwise_items pairwisetable">
                 <h1>📊 Pairwise Comparisons For Alternatives With Respect To Each Criterion</h1>
-                <p>Compare alternatives for each criterion (use values 1-9)</p>
-                <div id="alternative-comparisons-container"></div>
+                <p>Compare alternatives for each criterion (use values 1-9). Values will auto-update reciprocally.</p>
+                <div id="alternative-comparisons-container">
+                    <p style="text-align: center; padding: 40px; color: #95a5a6;">
+                        Enter your criteria and alternatives above to generate comparison tables
+                    </p>
+                </div>
             </section>
 
             <!-- Enhanced Calculation Button -->
@@ -543,8 +547,8 @@
             console.log('🔄 Setting up enhanced system...');
             
             try {
-                // 1. Set up pairwise comparison table
-                setupPairwiseTable();
+                // 1. Set up pairwise comparison table for criteria
+                setupCriteriaPairwiseTable();
                 
                 // 2. Set up enhanced event listeners
                 setupEnhancedEventListeners();
@@ -567,7 +571,7 @@
         // FUNCTIONS FOR PAIRWISE COMPARISONS
         // ============================================
         
-        function setupPairwiseTable() {
+        function setupCriteriaPairwiseTable() {
             const tbody = document.querySelector('#pairwise_criteria tbody');
             if (!tbody) return;
             
@@ -591,7 +595,10 @@
                     td.className = 'crit' + j;
                     
                     const input = document.createElement('input');
-                    input.type = 'text';
+                    input.type = 'number';
+                    input.step = '0.1';
+                    input.min = '1';
+                    input.max = '9';
                     input.id = `criteria${i}v${j}`;
                     input.name = `criteria${i}v${j}`;
                     
@@ -602,8 +609,6 @@
                         input.style.cursor = 'not-allowed';
                     } else if (j > i) {
                         input.placeholder = '1-9';
-                        input.min = '1';
-                        input.max = '9';
                         input.addEventListener('input', function() {
                             updateReciprocalValue(i, j, this.value);
                         });
@@ -619,6 +624,9 @@
                 
                 tbody.appendChild(row);
             }
+            
+            // Update column headers
+            updateCriteriaHeaders();
         }
         
         function updateReciprocalValue(i, j, value) {
@@ -637,15 +645,19 @@
             const criteriaCount = getValidCriteriaCount();
             const itemsCount = getValidItemsCount();
             
-            if (criteriaCount === 0 || itemsCount === 0) {
+            const container = document.getElementById('alternative-comparisons-container');
+            if (!container) return;
+            
+            if (criteriaCount < 2 || itemsCount < 2) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #95a5a6;">
+                        <p>Please enter at least 2 criteria and 2 alternatives to generate comparison tables.</p>
+                        <p>Current: ${criteriaCount} criteria, ${itemsCount} alternatives</p>
+                    </div>
+                `;
                 return;
             }
             
-            const section = document.getElementById('pairwise_alternatives_section');
-            if (!section) return;
-            
-            section.style.display = 'block';
-            const container = document.getElementById('alternative-comparisons-container');
             container.innerHTML = '';
             
             // Create tables for each criterion
@@ -658,65 +670,79 @@
                 tableSection.innerHTML = `
                     <h3>${criterionName}</h3>
                     <p>Compare alternatives with respect to: <strong>${criterionName}</strong></p>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                ${Array.from({length: itemsCount}, (_, i) => 
-                                    `<th>${document.getElementById(`item${i}`).value || `Alternative ${i+1}`}</th>`
-                                ).join('')}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${Array.from({length: itemsCount}, (_, i) => `
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
                                 <tr>
-                                    <th>${document.getElementById(`item${i}`).value || `Alternative ${i+1}`}</th>
-                                    ${Array.from({length: itemsCount}, (_, j) => {
-                                        const inputId = `c${criterionId}_item${i}v${j}`;
-                                        if (i === j) {
-                                            return `
-                                                <td>
-                                                    <input type="number" 
-                                                           id="${inputId}"
-                                                           value="1"
-                                                           readonly
-                                                           style="background:#f5f5f5">
-                                                </td>
-                                            `;
-                                        } else if (j > i) {
-                                            return `
-                                                <td>
-                                                    <input type="number" 
-                                                           min="1" 
-                                                           max="9" 
-                                                           step="0.1"
-                                                           id="${inputId}"
-                                                           placeholder="1-9"
-                                                           oninput="updateAlternativeReciprocal(${criterionId}, ${i}, ${j}, this.value)">
-                                                </td>
-                                            `;
-                                        } else {
-                                            return `
-                                                <td>
-                                                    <input type="number" 
-                                                           id="${inputId}"
-                                                           readonly
-                                                           style="background:#f5f5f5">
-                                                </td>
-                                            `;
-                                        }
+                                    <th></th>
+                                    ${Array.from({length: itemsCount}, (_, i) => {
+                                        const altName = document.getElementById(`item${i}`).value || `Alternative ${i+1}`;
+                                        return `<th title="${altName}">${altName.length > 15 ? altName.substring(0, 12) + '...' : altName}</th>`;
                                     }).join('')}
                                 </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                ${Array.from({length: itemsCount}, (_, i) => {
+                                    const altName = document.getElementById(`item${i}`).value || `Alternative ${i+1}`;
+                                    return `
+                                        <tr>
+                                            <th title="${altName}">${altName.length > 15 ? altName.substring(0, 12) + '...' : altName}</th>
+                                            ${Array.from({length: itemsCount}, (_, j) => {
+                                                const inputId = `c${criterionId}_item${i}v${j}`;
+                                                if (i === j) {
+                                                    return `
+                                                        <td>
+                                                            <input type="number" 
+                                                                   step="0.1"
+                                                                   min="0.111" 
+                                                                   max="9"
+                                                                   id="${inputId}"
+                                                                   value="1"
+                                                                   readonly
+                                                                   style="background:#f5f5f5">
+                                                        </td>
+                                                    `;
+                                                } else if (j > i) {
+                                                    return `
+                                                        <td>
+                                                            <input type="number" 
+                                                                   step="0.1"
+                                                                   min="0.111" 
+                                                                   max="9"
+                                                                   id="${inputId}"
+                                                                   placeholder="1-9"
+                                                                   oninput="updateAlternativeReciprocal(${criterionId}, ${i}, ${j}, this.value)">
+                                                        </td>
+                                                    `;
+                                                } else {
+                                                    return `
+                                                        <td>
+                                                            <input type="number" 
+                                                                   step="0.1"
+                                                                   id="${inputId}"
+                                                                   readonly
+                                                                   style="background:#f5f5f5">
+                                                        </td>
+                                                    `;
+                                                }
+                                            }).join('')}
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                        <p><strong>Instructions:</strong> Enter values 1-9 where 1 = equal importance, 9 = extreme importance</p>
+                        <p>Reciprocal values (1/x) will be calculated automatically</p>
+                    </div>
                 `;
                 
                 container.appendChild(tableSection);
             }
         }
         
-        function updateAlternativeReciprocal(criterionId, i, j, value) {
+        window.updateAlternativeReciprocal = function(criterionId, i, j, value) {
             if (!value || isNaN(parseFloat(value))) return;
             
             const reciprocalInput = document.getElementById(`c${criterionId}_item${j}v${i}`);
@@ -726,7 +752,7 @@
                     reciprocalInput.value = (1 / numValue).toFixed(3);
                 }
             }
-        }
+        };
         
         // ============================================
         // HELPER FUNCTIONS
@@ -821,16 +847,28 @@
                 
                 if (criteriaInput) {
                     criteriaInput.addEventListener('input', function() {
-                        setTimeout(updateCriteriaHeaders, 100);
+                        setTimeout(() => {
+                            updateCriteriaHeaders();
+                            setupAlternativePairwiseTables();
+                        }, 100);
                     });
                 }
                 
                 if (itemInput) {
                     itemInput.addEventListener('input', function() {
-                        setTimeout(updateAlternativePairwiseTables, 100);
+                        setTimeout(() => {
+                            setupAlternativePairwiseTables();
+                        }, 100);
                     });
                 }
             }
+            
+            // Monitor criteria pairwise inputs for validation
+            document.querySelectorAll('#pairwise_criteria input').forEach(input => {
+                if (!input.readOnly) {
+                    input.addEventListener('blur', validatePairwiseInput);
+                }
+            });
         }
         
         function updateCriteriaHeaders() {
@@ -838,8 +876,28 @@
                 const header = document.querySelector(`.criteria${i}`);
                 const input = document.getElementById(`criteria${i}`);
                 if (header && input) {
-                    header.textContent = input.value || `Criterion ${i + 1}`;
+                    const value = input.value || `Criterion ${i + 1}`;
+                    header.textContent = value.length > 15 ? value.substring(0, 12) + '...' : value;
+                    header.title = value;
                 }
+            }
+        }
+        
+        function validatePairwiseInput(event) {
+            const input = event.target;
+            const value = parseFloat(input.value);
+            
+            if (isNaN(value)) {
+                input.style.borderColor = '#dc3545';
+                return;
+            }
+            
+            if (value < 1 || value > 9) {
+                input.style.borderColor = '#ffc107';
+                input.title = 'Value should be between 1 and 9';
+            } else {
+                input.style.borderColor = '#ddd';
+                input.title = '';
             }
         }
         
@@ -945,10 +1003,10 @@
                 
                 // Alternatives
                 const testAlternatives = [
-                    'Software A',
-                    'Software B', 
-                    'Software C',
-                    'Software D'
+                    'Software A (Expensive but feature-rich)',
+                    'Software B (Balanced cost & features)', 
+                    'Software C (Affordable basic option)',
+                    'Software D (New innovative solution)'
                 ];
                 
                 testAlternatives.forEach((alternative, index) => {
@@ -966,29 +1024,29 @@
                 updateCriteriaHeaders();
                 
                 // Fill pairwise comparison values for criteria
-                const testValues = {
-                    'criteria0v1': '3',
-                    'criteria0v2': '5',
-                    'criteria0v3': '2',
-                    'criteria0v4': '4',
-                    'criteria0v5': '6',
-                    'criteria1v2': '2',
-                    'criteria1v3': '4',
-                    'criteria1v4': '3',
-                    'criteria1v5': '5',
-                    'criteria2v3': '3',
-                    'criteria2v4': '2',
-                    'criteria2v5': '4',
-                    'criteria3v4': '2',
-                    'criteria3v5': '3',
-                    'criteria4v5': '2'
+                const testCriteriaValues = {
+                    'criteria0v1': '3',   // Cost vs Features
+                    'criteria0v2': '5',   // Cost vs Ease of Use
+                    'criteria0v3': '2',   // Cost vs Support
+                    'criteria0v4': '4',   // Cost vs Integration
+                    'criteria0v5': '6',   // Cost vs Scalability
+                    'criteria1v2': '2',   // Features vs Ease of Use
+                    'criteria1v3': '4',   // Features vs Support
+                    'criteria1v4': '3',   // Features vs Integration
+                    'criteria1v5': '5',   // Features vs Scalability
+                    'criteria2v3': '3',   // Ease of Use vs Support
+                    'criteria2v4': '2',   // Ease of Use vs Integration
+                    'criteria2v5': '4',   // Ease of Use vs Scalability
+                    'criteria3v4': '2',   // Support vs Integration
+                    'criteria3v5': '3',   // Support vs Scalability
+                    'criteria4v5': '2'    // Integration vs Scalability
                 };
                 
                 // Fill the values
-                Object.keys(testValues).forEach(id => {
+                Object.keys(testCriteriaValues).forEach(id => {
                     const input = document.getElementById(id);
                     if (input) {
-                        input.value = testValues[id];
+                        input.value = testCriteriaValues[id];
                         // Update reciprocal values
                         const parts = id.match(/criteria(\d+)v(\d+)/);
                         if (parts) {
@@ -1002,7 +1060,7 @@
                 // Setup alternative pairwise tables
                 setupAlternativePairwiseTables();
                 
-                // Fill alternative pairwise comparisons with sample data
+                // Fill alternative pairwise comparisons with comprehensive test data
                 fillAlternativeTestData();
                 
                 updateEnhancedStatus('✓ Test data loaded successfully');
@@ -1020,25 +1078,66 @@
             const criteriaCount = getValidCriteriaCount();
             const itemsCount = getValidItemsCount();
             
-            // Sample comparison values for alternatives
-            const sampleValues = [
-                [1, 3, 2, 4],  // For criterion 0
-                [1/3, 1, 1/2, 2], // For criterion 1
-                [1/2, 2, 1, 3],   // For criterion 2
-                [1/4, 1/2, 1/3, 1], // For criterion 3
-                [1, 2, 3, 4],  // For criterion 4
-                [1, 1/2, 1/3, 1/4] // For criterion 5
-            ];
+            if (criteriaCount < 2 || itemsCount < 2) return;
             
-            for (let c = 0; c < Math.min(criteriaCount, sampleValues.length); c++) {
-                for (let i = 0; i < itemsCount; i++) {
-                    for (let j = i + 1; j < itemsCount; j++) {
-                        const inputId = `c${c}_item${i}v${j}`;
-                        const input = document.getElementById(inputId);
-                        if (input && sampleValues[c] && sampleValues[c][i] && sampleValues[c][j]) {
-                            const value = sampleValues[c][i] / sampleValues[c][j];
-                            input.value = value.toFixed(3);
-                            updateAlternativeReciprocal(c, i, j, input.value);
+            // Sample comparison matrices for each criterion
+            const sampleMatrices = {
+                // For Cost Effectiveness (Criterion 0)
+                0: [
+                    [1, 1/3, 1/5, 1/7],   // A vs others
+                    [3, 1, 1/3, 1/5],     // B vs others
+                    [5, 3, 1, 1/3],       // C vs others
+                    [7, 5, 3, 1]          // D vs others
+                ],
+                // For Feature Set (Criterion 1)
+                1: [
+                    [1, 5, 7, 3],
+                    [1/5, 1, 3, 1/3],
+                    [1/7, 1/3, 1, 1/5],
+                    [1/3, 3, 5, 1]
+                ],
+                // For Ease of Use (Criterion 2)
+                2: [
+                    [1, 2, 3, 5],
+                    [1/2, 1, 2, 3],
+                    [1/3, 1/2, 1, 2],
+                    [1/5, 1/3, 1/2, 1]
+                ],
+                // For Customer Support (Criterion 3)
+                3: [
+                    [1, 3, 5, 2],
+                    [1/3, 1, 3, 1/2],
+                    [1/5, 1/3, 1, 1/3],
+                    [1/2, 2, 3, 1]
+                ],
+                // For Integration Options (Criterion 4)
+                4: [
+                    [1, 1/2, 1/3, 1/5],
+                    [2, 1, 1/2, 1/3],
+                    [3, 2, 1, 1/2],
+                    [5, 3, 2, 1]
+                ],
+                // For Scalability (Criterion 5)
+                5: [
+                    [1, 2, 4, 3],
+                    [1/2, 1, 3, 2],
+                    [1/4, 1/3, 1, 1/2],
+                    [1/3, 1/2, 2, 1]
+                ]
+            };
+            
+            // Fill the matrices
+            for (let c = 0; c < Math.min(criteriaCount, 6); c++) {
+                if (sampleMatrices[c]) {
+                    for (let i = 0; i < Math.min(itemsCount, 4); i++) {
+                        for (let j = i + 1; j < Math.min(itemsCount, 4); j++) {
+                            const inputId = `c${c}_item${i}v${j}`;
+                            const input = document.getElementById(inputId);
+                            if (input && sampleMatrices[c][i] && sampleMatrices[c][i][j]) {
+                                const value = sampleMatrices[c][i][j];
+                                input.value = value.toFixed(3);
+                                updateAlternativeReciprocal(c, i, j, input.value);
+                            }
                         }
                     }
                 }
@@ -1050,20 +1149,20 @@
             
             try {
                 // Clear all form inputs except read-only ones
-                const inputs = document.querySelectorAll('#ahpdata input[type="text"], #ahpdata textarea');
+                const inputs = document.querySelectorAll('#ahpdata input[type="number"], #ahpdata input[type="text"], #ahpdata textarea');
                 inputs.forEach(input => {
                     if (!input.readOnly) {
                         input.value = '';
                     }
                 });
                 
-                // Reset pairwise comparison table
-                setupPairwiseTable();
+                // Reset pairwise comparison table for criteria
+                setupCriteriaPairwiseTable();
                 
-                // Hide alternative comparisons section
-                const altSection = document.getElementById('pairwise_alternatives_section');
-                if (altSection) {
-                    altSection.style.display = 'none';
+                // Reset alternative pairwise tables
+                const container = document.getElementById('alternative-comparisons-container');
+                if (container) {
+                    container.innerHTML = '<p style="text-align: center; padding: 40px; color: #95a5a6;">Enter your criteria and alternatives above to generate comparison tables</p>';
                 }
                 
                 // Clear enhanced results
@@ -1146,8 +1245,14 @@
                     throw new Error(validation.message);
                 }
                 
-                // Setup alternative pairwise tables if not already done
+                // Setup alternative pairwise tables if needed
                 setupAlternativePairwiseTables();
+                
+                // Validate that alternative pairwise tables are filled
+                const altValidation = validateAlternativeComparisons();
+                if (!altValidation.valid) {
+                    console.warn('Alternative comparisons not fully filled, using defaults where needed');
+                }
                 
                 // Show results section
                 const resultsSection = document.getElementById('enhanced-results');
@@ -1269,6 +1374,34 @@
             }
         }
         
+        function validateAlternativeComparisons() {
+            const criteriaCount = getValidCriteriaCount();
+            const itemsCount = getValidItemsCount();
+            let filledCount = 0;
+            let totalCount = 0;
+            
+            for (let c = 0; c < criteriaCount; c++) {
+                for (let i = 0; i < itemsCount; i++) {
+                    for (let j = i + 1; j < itemsCount; j++) {
+                        totalCount++;
+                        const input = document.getElementById(`c${c}_item${i}v${j}`);
+                        if (input && input.value && !isNaN(parseFloat(input.value))) {
+                            filledCount++;
+                        }
+                    }
+                }
+            }
+            
+            const percentage = totalCount > 0 ? (filledCount / totalCount * 100) : 0;
+            
+            return {
+                valid: percentage >= 50, // At least 50% filled
+                percentage: percentage,
+                filled: filledCount,
+                total: totalCount
+            };
+        }
+        
         async function performCalculation(data) {
             console.log('🧮 Performing calculation...');
             
@@ -1299,7 +1432,7 @@
                         const input = document.getElementById(`criteria${i}v${j}`);
                         if (input && input.value && !isNaN(parseFloat(input.value))) {
                             const value = parseFloat(input.value);
-                            matrix[i][j] = isNaN(value) ? 1 : value;
+                            matrix[i][j] = isNaN(value) ? 1 : Math.max(0.111, Math.min(9, value));
                         } else {
                             // Default to equal importance
                             matrix[i][j] = 1;
@@ -1324,10 +1457,11 @@
                             const input = document.getElementById(`c${c}_item${i}v${j}`);
                             if (input && input.value && !isNaN(parseFloat(input.value))) {
                                 const value = parseFloat(input.value);
-                                matrices[c][i][j] = isNaN(value) ? 1 : value;
+                                matrices[c][i][j] = isNaN(value) ? 1 : Math.max(0.111, Math.min(9, value));
                             } else {
-                                // Default value based on position
-                                matrices[c][i][j] = 1 + Math.abs(i - j) * 0.1;
+                                // Default value based on position (more sophisticated than before)
+                                const defaultVal = 1 + Math.abs(i - j) * 0.5;
+                                matrices[c][i][j] = defaultVal;
                             }
                         }
                     }
@@ -1456,7 +1590,7 @@
             // 4. حساب معامل الاتساق CR
             const CR = CI / (RI[n] || 1.49);
             
-            return CR;
+            return Math.max(0, CR); // Ensure non-negative
         }
         
         function calculateOverallConsistency(criteriaCR, alternativeCRs, criteriaWeights) {
@@ -1467,7 +1601,8 @@
                 weightedSum += alternativeCRs[i] * (criteriaWeights[i] || 0);
             }
             
-            return weightedSum / (1 + criteriaWeights.reduce((a, b) => a + b, 0));
+            const totalWeight = 1 + criteriaWeights.reduce((a, b) => a + b, 0);
+            return weightedSum / totalWeight;
         }
         
         function validateMatrices(criteriaMatrix, alternativeMatrices) {
@@ -1479,7 +1614,7 @@
                     for (let j = 0; j < matrix[i].length; j++) {
                         if (matrix[i][j] <= 0) {
                             console.warn(`Matrix ${idx} has non-positive value at [${i}][${j}]`);
-                            matrix[i][j] = 1; // تعيين قيمة افتراضية
+                            matrix[i][j] = 0.001; // Small positive value
                         }
                     }
                 }
