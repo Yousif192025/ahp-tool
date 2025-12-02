@@ -254,6 +254,120 @@
             color: #856404;
         }
         
+        /* إضافة أنماط جديدة لتحسين قابلية التعديل */
+        .editable-cell {
+            position: relative;
+        }
+        
+        .editable-cell input {
+            width: 70px;
+            padding: 8px;
+            border: 2px solid #3498db;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .editable-cell input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+            border-color: #2980b9;
+            background: #f8f9fa;
+        }
+        
+        .editable-cell input.valid {
+            border-color: #2ecc71;
+            background: #f0fff4;
+        }
+        
+        .editable-cell input.invalid {
+            border-color: #e74c3c;
+            background: #fff5f5;
+        }
+        
+        .comparison-help {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2c3e50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .comparison-help::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: #2c3e50 transparent transparent transparent;
+        }
+        
+        .editable-cell:hover .comparison-help {
+            display: block;
+        }
+        
+        .quick-buttons {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+            justify-content: center;
+        }
+        
+        .quick-btn {
+            padding: 3px 8px;
+            font-size: 11px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .quick-btn:hover {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        .comparison-guide {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+        }
+        
+        .comparison-guide h4 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        
+        .guide-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        .guide-table td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .guide-table tr:hover {
+            background: #f8f9fa;
+        }
+        
         /* Loading spinner */
         .spinner {
             display: inline-block;
@@ -284,6 +398,15 @@
                 display: block;
                 overflow-x: auto;
             }
+            
+            .quick-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .quick-btn {
+                flex: 1;
+                min-width: 35px;
+            }
         }
     </style>
 </head>
@@ -293,7 +416,7 @@
         <header class="wrapper">
             <h1>
                 SFacts - Enhanced Analytic Hierarchy Process (AHP) Tool
-                <span class="enhanced-features">Enhanced v2.1</span>
+                <span class="enhanced-features">Enhanced v2.2</span>
             </h1>
             <div class="system-status" id="system-status">
                 Loading enhanced features...
@@ -322,6 +445,9 @@
                 </button>
                 <button id="enhanced-clear-data" style="width: 100%; padding: 10px; margin-bottom: 5px;">
                     🗑️ Clear Form
+                </button>
+                <button id="set-all-equal" style="width: 100%; padding: 10px; margin-bottom: 5px; background: #f8f9fa; border: 1px solid #ddd;">
+                    ⚖️ Set All Equal
                 </button>
                 <button id="enhanced-calculate" style="width: 100%; padding: 10px; background: #667eea; color: white; font-weight: bold;">
                     🚀 Calculate Results
@@ -375,6 +501,29 @@
             <section id="pairwise_criteria" class="pairwise_criteria pairwisetable">
                 <h1>📈 Pairwise Comparisons For Your Criteria</h1>
                 <p>Compare the relative importance of each criterion (use values 1-9)</p>
+                
+                <div class="comparison-guide">
+                    <h4>📋 How to Compare:</h4>
+                    <table class="guide-table">
+                        <tr>
+                            <td><strong>1</strong> = Equal importance</td>
+                            <td><strong>3</strong> = Moderate importance</td>
+                        </tr>
+                        <tr>
+                            <td><strong>5</strong> = Strong importance</td>
+                            <td><strong>7</strong> = Very strong importance</td>
+                        </tr>
+                        <tr>
+                            <td><strong>9</strong> = Extreme importance</td>
+                            <td><strong>2,4,6,8</strong> = Intermediate values</td>
+                        </tr>
+                    </table>
+                    <p style="margin-top: 10px; font-size: 13px;">
+                        <strong>Example:</strong> If "Cost" is 3 times more important than "Features", enter 3. 
+                        The reciprocal value (0.333) will be calculated automatically.
+                    </p>
+                </div>
+                
                 <table>
                     <thead>
                         <tr>
@@ -508,7 +657,7 @@
                 Enhanced with SFacts 2.0 featuring sensitivity analysis, form validation, and advanced export options.
             </p>
             <p style="font-size: 12px; color: #666; margin-top: 10px;">
-                SFacts Enhanced v2.1 | Chart visualization enabled | Built with modern JavaScript (ES6 Modules)
+                SFacts Enhanced v2.2 | Chart visualization enabled | Built with modern JavaScript (ES6 Modules)
             </p>
         </footer>
     </div>
@@ -571,7 +720,7 @@
                 
                 for (let j = 0; j < 8; j++) {
                     const td = document.createElement('td');
-                    td.className = 'crit' + j;
+                    td.className = 'crit' + j + ' editable-cell';
                     
                     const input = document.createElement('input');
                     input.type = 'number';
@@ -587,13 +736,25 @@
                         input.style.background = '#f8f9fa';
                         input.style.cursor = 'not-allowed';
                     } else if (j > i) {
-                        input.placeholder = '1-9';
+                        input.value = '1';
                         input.addEventListener('input', function() {
+                            validateInput(this);
                             updateReciprocalValue(i, j, this.value);
                         });
+                        input.addEventListener('focus', function() {
+                            showComparisonHelp(this, i, j);
+                        });
+                        input.addEventListener('blur', function() {
+                            hideComparisonHelp(this);
+                        });
+                        
+                        // إضافة أزرار سريعة
+                        const quickButtons = createQuickButtons(i, j, input);
+                        td.appendChild(quickButtons);
                     } else {
+                        input.value = '1';
                         input.readOnly = true;
-                        input.style.background = '#f8f9fa';
+                        input.style.background = '#f5f5f5';
                         input.style.cursor = 'not-allowed';
                     }
                     
@@ -605,6 +766,88 @@
             }
             
             updateCriteriaHeaders();
+        }
+        
+        function createQuickButtons(i, j, input) {
+            const quickDiv = document.createElement('div');
+            quickDiv.className = 'quick-buttons';
+            
+            const values = [1, 3, 5, 7, 9];
+            const labels = ['1', '3', '5', '7', '9'];
+            
+            values.forEach((value, index) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'quick-btn';
+                button.textContent = labels[index];
+                button.title = getImportanceLabel(value);
+                
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    input.value = value;
+                    validateInput(input);
+                    updateReciprocalValue(i, j, value);
+                });
+                
+                quickDiv.appendChild(button);
+            });
+            
+            return quickDiv;
+        }
+        
+        function getImportanceLabel(value) {
+            const labels = {
+                1: 'Equal importance',
+                2: 'Between equal and moderate',
+                3: 'Moderate importance',
+                4: 'Between moderate and strong',
+                5: 'Strong importance',
+                6: 'Between strong and very strong',
+                7: 'Very strong importance',
+                8: 'Between very strong and extreme',
+                9: 'Extreme importance'
+            };
+            return labels[value] || 'Enter value';
+        }
+        
+        function showComparisonHelp(input, i, j) {
+            const criterionI = document.querySelector(`.criteria${i}`)?.textContent || `Criterion ${i + 1}`;
+            const criterionJ = document.querySelector(`.criteria${j}`)?.textContent || `Criterion ${j + 1}`;
+            
+            const helpDiv = document.createElement('div');
+            helpDiv.className = 'comparison-help';
+            helpDiv.textContent = `Compare: ${criterionI} vs ${criterionJ}`;
+            helpDiv.id = `help-${i}-${j}`;
+            
+            input.parentNode.appendChild(helpDiv);
+            helpDiv.style.display = 'block';
+        }
+        
+        function hideComparisonHelp(input) {
+            const helpDiv = input.parentNode.querySelector('.comparison-help');
+            if (helpDiv) {
+                helpDiv.style.display = 'none';
+            }
+        }
+        
+        function validateInput(input) {
+            const value = parseFloat(input.value);
+            
+            if (isNaN(value)) {
+                input.className = 'invalid';
+                input.title = 'Please enter a valid number';
+                return false;
+            }
+            
+            if (value < 1 || value > 9) {
+                input.className = 'invalid';
+                input.title = 'Value must be between 1 and 9';
+                return false;
+            }
+            
+            input.className = 'valid';
+            input.title = getImportanceLabel(Math.round(value));
+            return true;
         }
         
         function updateReciprocalValue(i, j, value) {
@@ -647,6 +890,17 @@
                 tableSection.innerHTML = `
                     <h3>${criterionName}</h3>
                     <p>Compare alternatives with respect to: <strong>${criterionName}</strong></p>
+                    
+                    <div class="comparison-guide" style="margin-bottom: 20px;">
+                        <h4>💡 Tips for comparing alternatives:</h4>
+                        <p style="margin: 5px 0; font-size: 13px;">
+                            • <strong>Question to ask:</strong> "For ${criterionName}, how much more important is Alternative X compared to Alternative Y?"
+                        </p>
+                        <p style="margin: 5px 0; font-size: 13px;">
+                            • <strong>Example:</strong> If "Software A" is 5 times better than "Software B" in terms of ${criterionName}, enter 5
+                        </p>
+                    </div>
+                    
                     <div style="overflow-x: auto;">
                         <table>
                             <thead>
@@ -668,7 +922,7 @@
                                                 const inputId = `c${criterionId}_item${i}v${j}`;
                                                 if (i === j) {
                                                     return `
-                                                        <td>
+                                                        <td class="editable-cell">
                                                             <input type="number" 
                                                                    step="0.1"
                                                                    min="0.111" 
@@ -680,21 +934,20 @@
                                                         </td>
                                                     `;
                                                 } else if (j > i) {
-                                                    // وضع قيمة افتراضية 1 (متساوية الأهمية)
                                                     return `
-                                                        <td>
+                                                        <td class="editable-cell">
                                                             <input type="number" 
                                                                    step="0.1"
                                                                    min="0.111" 
                                                                    max="9"
                                                                    id="${inputId}"
                                                                    value="1"
-                                                                   oninput="updateAlternativeReciprocal(${criterionId}, ${i}, ${j}, this.value)">
+                                                                   oninput="validateAlternativeInput(this); updateAlternativeReciprocal(${criterionId}, ${i}, ${j}, this.value)">
                                                         </td>
                                                     `;
                                                 } else {
                                                     return `
-                                                        <td>
+                                                        <td class="editable-cell">
                                                             <input type="number" 
                                                                    step="0.1"
                                                                    id="${inputId}"
@@ -720,9 +973,49 @@
                 container.appendChild(tableSection);
             }
             
-            // بعد إنشاء الجداول، نقوم بتعبئة القيم المتبادلة
             updateAllAlternativeReciprocalValues(criteriaCount, itemsCount);
         }
+        
+        // جعل الدوال متاحة عالمياً للاستخدام في HTML
+        window.validateAlternativeInput = function(input) {
+            const value = parseFloat(input.value);
+            
+            if (isNaN(value)) {
+                input.className = 'invalid';
+                input.title = 'Please enter a valid number';
+                return false;
+            }
+            
+            if (value < 0.111 || value > 9) {
+                input.className = 'invalid';
+                input.title = 'Value must be between 0.111 and 9';
+                return false;
+            }
+            
+            input.className = 'valid';
+            
+            // تحديد تسمية الأهمية
+            const roundedValue = Math.round(value);
+            const importanceLabels = {
+                1: 'Equal importance',
+                2: 'Between equal and moderate',
+                3: 'Moderate importance',
+                4: 'Between moderate and strong',
+                5: 'Strong importance',
+                6: 'Between strong and very strong',
+                7: 'Very strong importance',
+                8: 'Between very strong and extreme',
+                9: 'Extreme importance'
+            };
+            
+            if (value < 1) {
+                input.title = `Reciprocal of ${(1/value).toFixed(1)} (${(1/value).toFixed(1)} times less important)`;
+            } else {
+                input.title = importanceLabels[roundedValue] || `${value.toFixed(1)} times more important`;
+            }
+            
+            return true;
+        };
         
         window.updateAlternativeReciprocal = function(criterionId, i, j, value) {
             if (!value || isNaN(parseFloat(value))) return;
@@ -732,6 +1025,7 @@
                 const numValue = parseFloat(value);
                 if (numValue > 0) {
                     reciprocalInput.value = (1 / numValue).toFixed(3);
+                    validateAlternativeInput(reciprocalInput);
                 }
             }
         };
@@ -786,6 +1080,15 @@
                 clearBtn.addEventListener('click', function() {
                     if (confirm('Are you sure you want to clear all form data?')) {
                         clearFormData();
+                    }
+                });
+            }
+            
+            const setEqualBtn = document.getElementById('set-all-equal');
+            if (setEqualBtn) {
+                setEqualBtn.addEventListener('click', function() {
+                    if (confirm('Set all pairwise comparisons to equal importance (value = 1)?')) {
+                        setAllComparisonsToEqual();
                     }
                 });
             }
@@ -845,9 +1148,51 @@
             
             document.querySelectorAll('#pairwise_criteria input').forEach(input => {
                 if (!input.readOnly) {
-                    input.addEventListener('blur', validatePairwiseInput);
+                    input.addEventListener('blur', function() {
+                        validateInput(this);
+                    });
                 }
             });
+        }
+        
+        function setAllComparisonsToEqual() {
+            // تعيين جميع مقارنات المعايير إلى 1
+            document.querySelectorAll('#pairwise_criteria input:not([readonly])').forEach(input => {
+                input.value = '1';
+                validateInput(input);
+                
+                // تحديث القيم المتبادلة
+                const id = input.id;
+                const match = id.match(/criteria(\d+)v(\d+)/);
+                if (match) {
+                    const i = parseInt(match[1]);
+                    const j = parseInt(match[2]);
+                    updateReciprocalValue(i, j, '1');
+                }
+            });
+            
+            // تعيين جميع مقارنات البدائل إلى 1
+            const criteriaCount = getValidCriteriaCount();
+            const itemsCount = getValidItemsCount();
+            
+            for (let c = 0; c < criteriaCount; c++) {
+                for (let i = 0; i < itemsCount; i++) {
+                    for (let j = i + 1; j < itemsCount; j++) {
+                        const input = document.getElementById(`c${c}_item${i}v${j}`);
+                        if (input) {
+                            input.value = '1';
+                            if (window.validateAlternativeInput) {
+                                window.validateAlternativeInput(input);
+                            }
+                            if (window.updateAlternativeReciprocal) {
+                                window.updateAlternativeReciprocal(c, i, j, '1');
+                            }
+                        }
+                    }
+                }
+            }
+            
+            alert('All comparisons have been set to equal importance (value = 1)');
         }
         
         function updateCriteriaHeaders() {
@@ -859,24 +1204,6 @@
                     header.textContent = value.length > 15 ? value.substring(0, 12) + '...' : value;
                     header.title = value;
                 }
-            }
-        }
-        
-        function validatePairwiseInput(event) {
-            const input = event.target;
-            const value = parseFloat(input.value);
-            
-            if (isNaN(value)) {
-                input.style.borderColor = '#dc3545';
-                return;
-            }
-            
-            if (value < 1 || value > 9) {
-                input.style.borderColor = '#ffc107';
-                input.title = 'Value should be between 1 and 9';
-            } else {
-                input.style.borderColor = '#ddd';
-                input.title = '';
             }
         }
         
@@ -1094,7 +1421,9 @@
                             if (input && sampleMatrices[c][i] && sampleMatrices[c][i][j]) {
                                 const value = sampleMatrices[c][i][j];
                                 input.value = value.toFixed(3);
-                                updateAlternativeReciprocal(c, i, j, input.value);
+                                if (window.updateAlternativeReciprocal) {
+                                    window.updateAlternativeReciprocal(c, i, j, input.value);
+                                }
                             }
                         }
                     }
