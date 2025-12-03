@@ -3128,6 +3128,613 @@ window.enhancedAHPTool = {
 };
 
 console.log('✅ All enhanced features integrated successfully');
+
+
+        // ============================================
+// FIX: ALTERNATIVE TABLES GENERATION
+// ============================================
+
+// دالة موحدة لإنشاء جداول البدائل
+function createAlternativeTables() {
+    console.log('📊 Creating alternative comparison tables...');
+    
+    const container = document.getElementById('alternative-comparisons-container');
+    if (!container) {
+        console.error('❌ Container not found');
+        return;
+    }
+    
+    const criteriaCount = getValidCriteriaCount();
+    const itemsCount = getValidItemsCount();
+    
+    console.log(`📈 Criteria: ${criteriaCount}, Alternatives: ${itemsCount}`);
+    
+    if (criteriaCount < 1 || itemsCount < 2) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #95a5a6; background: #f8f9fa; border-radius: 10px; border: 2px dashed #dee2e6;">
+                <div style="font-size: 48px; margin-bottom: 20px;">📋</div>
+                <h3 style="color: #6c757d; margin-bottom: 15px;">Comparison Tables Ready</h3>
+                <p>Enter your criteria and alternatives above to generate comparison tables.</p>
+                <p style="margin-top: 10px; font-size: 14px;">
+                    <strong>Current:</strong> ${criteriaCount} criteria, ${itemsCount} alternatives
+                </p>
+                <div style="margin-top: 20px;">
+                    <button onclick="loadTestData()" style="
+                        padding: 10px 20px;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-weight: bold;
+                    ">
+                        📊 Load Test Data to Get Started
+                    </button>
+                </div>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = '';
+    
+    for (let c = 0; c < criteriaCount; c++) {
+        const criterionName = document.getElementById(`criteria${c}`).value || `Criterion ${c + 1}`;
+        const criterionId = c;
+        
+        const tableSection = document.createElement('div');
+        tableSection.className = 'criterion-comparison';
+        tableSection.innerHTML = `
+            <div style="
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                border-radius: 10px;
+                padding: 20px;
+                margin-bottom: 25px;
+                border: 1px solid #dee2e6;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            ">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <div style="
+                        background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+                        color: white;
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-weight: bold;
+                        font-size: 18px;
+                        margin-right: 15px;
+                    ">
+                        ${c + 1}
+                    </div>
+                    <div>
+                        <h3 style="margin: 0; color: #2c3e50; font-size: 20px;">${criterionName}</h3>
+                        <p style="margin: 5px 0 0 0; color: #7f8c8d; font-size: 14px;">
+                            Compare alternatives with respect to this criterion
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="comparison-guide" style="
+                    background: #e7f3ff;
+                    padding: 15px;
+                    border-radius: 8px;
+                    margin-bottom: 20px;
+                    border-left: 4px solid #3498db;
+                ">
+                    <h4 style="color: #2c3e50; margin-top: 0; display: flex; align-items: center;">
+                        <span style="margin-right: 8px;">💡</span> How to Compare
+                    </h4>
+                    <p style="margin: 5px 0; font-size: 13px;">
+                        <strong>Question:</strong> "For <strong>${criterionName}</strong>, how much more important is Alternative X compared to Alternative Y?"
+                    </p>
+                    <p style="margin: 5px 0; font-size: 13px;">
+                        <strong>Example:</strong> If "Software A" is 5 times better than "Software B", enter 5
+                    </p>
+                </div>
+                
+                <div style="overflow-x: auto; border: 1px solid #e0e0e0; border-radius: 8px; background: white;">
+                    <table style="width: 100%; border-collapse: separate; border-spacing: 0;">
+                        <thead>
+                            <tr style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+                                <th style="
+                                    padding: 15px;
+                                    text-align: center;
+                                    font-weight: bold;
+                                    color: #2c3e50;
+                                    border-bottom: 2px solid #dee2e6;
+                                    position: sticky;
+                                    left: 0;
+                                    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                                    min-width: 150px;
+                                "></th>
+                                ${Array.from({length: itemsCount}, (_, i) => {
+                                    const altName = document.getElementById(`item${i}`).value || `Alternative ${i+1}`;
+                                    const displayName = altName.length > 20 ? altName.substring(0, 17) + '...' : altName;
+                                    return `
+                                        <th style="
+                                            padding: 15px;
+                                            text-align: center;
+                                            font-weight: bold;
+                                            color: #2c3e50;
+                                            border-bottom: 2px solid #dee2e6;
+                                            border-left: 1px solid #e0e0e0;
+                                            min-width: 120px;
+                                            position: relative;
+                                        " title="${altName}">
+                                            <div style="font-size: 13px; color: #3498db;">Alt ${i+1}</div>
+                                            <div style="font-weight: bold; font-size: 14px; margin-top: 3px;">${displayName}</div>
+                                        </th>
+                                    `;
+                                }).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${Array.from({length: itemsCount}, (_, i) => {
+                                const altName = document.getElementById(`item${i}`).value || `Alternative ${i+1}`;
+                                const displayName = altName.length > 20 ? altName.substring(0, 17) + '...' : altName;
+                                return `
+                                    <tr style="${i === itemsCount - 1 ? '' : 'border-bottom: 1px solid #e0e0e0;'}">
+                                        <th style="
+                                            padding: 15px;
+                                            text-align: center;
+                                            font-weight: bold;
+                                            color: #2c3e50;
+                                            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                                            position: sticky;
+                                            left: 0;
+                                            border-right: 1px solid #e0e0e0;
+                                            min-width: 150px;
+                                        " title="${altName}">
+                                            <div style="font-size: 13px; color: #3498db;">Alt ${i+1}</div>
+                                            <div style="font-weight: bold; font-size: 14px; margin-top: 3px;">${displayName}</div>
+                                        </th>
+                                        ${Array.from({length: itemsCount}, (_, j) => {
+                                            const inputId = `c${criterionId}_item${i}v${j}`;
+                                            
+                                            // الخلايا القطرية (i === j)
+                                            if (i === j) {
+                                                return `
+                                                    <td style="
+                                                        padding: 10px;
+                                                        text-align: center;
+                                                        background: #f8f9fa;
+                                                        border-left: 1px solid #e0e0e0;
+                                                        min-width: 100px;
+                                                    ">
+                                                        <div style="
+                                                            width: 60px;
+                                                            height: 60px;
+                                                            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+                                                            color: white;
+                                                            border-radius: 50%;
+                                                            display: flex;
+                                                            align-items: center;
+                                                            justify-content: center;
+                                                            margin: 0 auto;
+                                                            font-weight: bold;
+                                                            font-size: 18px;
+                                                        ">
+                                                            1
+                                                        </div>
+                                                    </td>
+                                                `;
+                                            }
+                                            // الخلايا فوق القطر (j > i)
+                                            else if (j > i) {
+                                                return `
+                                                    <td style="
+                                                        padding: 10px;
+                                                        text-align: center;
+                                                        background: white;
+                                                        border-left: 1px solid #e0e0e0;
+                                                        position: relative;
+                                                        min-width: 100px;
+                                                    ">
+                                                        <div class="editable-cell" style="position: relative;">
+                                                            <input type="number" 
+                                                                   step="0.1"
+                                                                   min="0.111" 
+                                                                   max="9"
+                                                                   id="${inputId}"
+                                                                   value="1"
+                                                                   style="
+                                                                        width: 70px;
+                                                                        padding: 10px;
+                                                                        border: 2px solid #3498db;
+                                                                        border-radius: 6px;
+                                                                        text-align: center;
+                                                                        font-weight: bold;
+                                                                        font-size: 16px;
+                                                                        background: white;
+                                                                        box-shadow: 0 2px 5px rgba(52, 152, 219, 0.1);
+                                                                        transition: all 0.3s ease;
+                                                                   "
+                                                                   oninput="handleAlternativeInput(this, ${criterionId}, ${i}, ${j})"
+                                                                   onfocus="showAltHelp(this, ${criterionId}, ${i}, ${j})"
+                                                                   onblur="hideAltHelp(this)">
+                                                            <div class="quick-buttons" style="
+                                                                display: flex;
+                                                                gap: 3px;
+                                                                margin-top: 8px;
+                                                                justify-content: center;
+                                                                flex-wrap: wrap;
+                                                            ">
+                                                                ${[1, 3, 5, 7, 9].map(val => `
+                                                                    <button type="button" 
+                                                                            class="quick-btn" 
+                                                                            onclick="setQuickValue(this, ${criterionId}, ${i}, ${j}, ${val})"
+                                                                            style="
+                                                                                padding: 4px 8px;
+                                                                                font-size: 12px;
+                                                                                border: 1px solid #dee2e6;
+                                                                                border-radius: 4px;
+                                                                                background: white;
+                                                                                cursor: pointer;
+                                                                                min-width: 30px;
+                                                                                transition: all 0.2s ease;
+                                                                            "
+                                                                            onmouseover="this.style.background='#3498db';this.style.color='white';this.style.borderColor='#3498db'"
+                                                                            onmouseout="this.style.background='white';this.style.color='#2c3e50';this.style.borderColor='#dee2e6'">
+                                                                        ${val}
+                                                                    </button>
+                                                                `).join('')}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                `;
+                                            }
+                                            // الخلايا تحت القطر (j < i) - قيم متبادلة
+                                            else {
+                                                return `
+                                                    <td style="
+                                                        padding: 10px;
+                                                        text-align: center;
+                                                        background: #f5f7fa;
+                                                        border-left: 1px solid #e0e0e0;
+                                                        min-width: 100px;
+                                                    ">
+                                                        <input type="number" 
+                                                               id="${inputId}"
+                                                               value="1"
+                                                               readonly
+                                                               style="
+                                                                    width: 70px;
+                                                                    padding: 10px;
+                                                                    border: 1px solid #dee2e6;
+                                                                    border-radius: 6px;
+                                                                    text-align: center;
+                                                                    background: #f8f9fa;
+                                                                    color: #6c757d;
+                                                                    font-weight: bold;
+                                                                    font-size: 16px;
+                                                                    cursor: not-allowed;
+                                                               ">
+                                                    </td>
+                                                `;
+                                            }
+                                        }).join('')}
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div style="
+                    margin-top: 15px;
+                    padding: 12px;
+                    background: #f8f9fa;
+                    border-radius: 6px;
+                    border-left: 3px solid #3498db;
+                ">
+                    <div style="font-size: 13px; color: #666; display: flex; align-items: center;">
+                        <span style="margin-right: 8px;">📝</span>
+                        <div>
+                            <strong>Instructions:</strong> Enter values 1-9 where:
+                            <ul style="margin: 5px 0 0 15px; padding: 0;">
+                                <li>1 = Equal importance</li>
+                                <li>9 = Extreme importance</li>
+                                <li>Reciprocal values calculated automatically</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                ${itemsCount > 0 ? `
+                <div style="margin-top: 15px; text-align: center;">
+                    <button onclick="setAllEqualForCriterion(${criterionId}, ${itemsCount})" 
+                            style="
+                                padding: 8px 16px;
+                                background: #f8f9fa;
+                                border: 1px solid #dee2e6;
+                                border-radius: 4px;
+                                cursor: pointer;
+                                font-size: 13px;
+                                color: #6c757d;
+                                transition: all 0.2s ease;
+                            "
+                            onmouseover="this.style.background='#e9ecef';this.style.color='#495057'"
+                            onmouseout="this.style.background='#f8f9fa';this.style.color='#6c757d'">
+                        ⚖️ Set All Equal for This Criterion
+                    </button>
+                </div>
+                ` : ''}
+            </div>
+        `;
+        
+        container.appendChild(tableSection);
+    }
+    
+    // إضافة تذييل
+    const footer = document.createElement('div');
+    footer.style.cssText = `
+        text-align: center;
+        padding: 20px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 10px;
+        margin-top: 20px;
+        border: 1px solid #dee2e6;
+    `;
+    footer.innerHTML = `
+        <div style="color: #6c757d; font-size: 14px;">
+            <strong>${criteriaCount}</strong> criterion comparison tables generated for <strong>${itemsCount}</strong> alternatives
+        </div>
+        <div style="margin-top: 10px; font-size: 12px; color: #95a5a6;">
+            Click the quick buttons (1, 3, 5, 7, 9) or enter values manually
+        </div>
+    `;
+    container.appendChild(footer);
+    
+    // تحديث جميع القيم المتبادلة
+    updateAllAlternativeReciprocalValues(criteriaCount, itemsCount);
+    
+    console.log('✅ Alternative tables created successfully');
+}
+
+// جعل الدوال متاحة عالمياً
+window.handleAlternativeInput = function(input, criterionId, i, j) {
+    const value = parseFloat(input.value);
+    
+    // التحقق من المدى
+    if (isNaN(value) || value < 0.111 || value > 9) {
+        input.style.borderColor = '#e74c3c';
+        input.style.background = '#fff5f5';
+        input.style.boxShadow = '0 0 0 3px rgba(231, 76, 60, 0.1)';
+        return;
+    }
+    
+    // نجاح التحقق
+    input.style.borderColor = '#2ecc71';
+    input.style.background = '#f0fff4';
+    input.style.boxShadow = '0 0 0 3px rgba(46, 204, 113, 0.1)';
+    
+    // تحديث القيمة المتبادلة
+    const reciprocalInput = document.getElementById(`c${criterionId}_item${j}v${i}`);
+    if (reciprocalInput && value > 0) {
+        reciprocalInput.value = (1 / value).toFixed(3);
+        reciprocalInput.style.borderColor = '#2ecc71';
+        reciprocalInput.style.background = '#f0fff4';
+    }
+};
+
+window.setQuickValue = function(button, criterionId, i, j, value) {
+    const input = document.getElementById(`c${criterionId}_item${i}v${j}`);
+    if (input) {
+        input.value = value;
+        window.handleAlternativeInput(input, criterionId, i, j);
+        
+        // تأثير مؤقت على الزر
+        button.style.background = '#2ecc71';
+        button.style.color = 'white';
+        button.style.borderColor = '#2ecc71';
+        setTimeout(() => {
+            button.style.background = '#3498db';
+            button.style.color = 'white';
+            button.style.borderColor = '#3498db';
+        }, 300);
+    }
+};
+
+window.showAltHelp = function(input, criterionId, i, j) {
+    const criterion = document.getElementById(`criteria${criterionId}`).value || `Criterion ${criterionId+1}`;
+    const altI = document.getElementById(`item${i}`).value || `Alternative ${i+1}`;
+    const altJ = document.getElementById(`item${j}`).value || `Alternative ${j+1}`;
+    
+    // إنشاء تلميحة
+    const tooltip = document.createElement('div');
+    tooltip.className = 'alt-comparison-help';
+    tooltip.textContent = `For ${criterion}: ${altI} vs ${altJ}`;
+    tooltip.style.cssText = `
+        position: absolute;
+        top: -35px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #2c3e50;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        white-space: nowrap;
+        z-index: 1000;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    `;
+    
+    input.parentNode.style.position = 'relative';
+    input.parentNode.appendChild(tooltip);
+};
+
+window.hideAltHelp = function(input) {
+    const tooltip = input.parentNode.querySelector('.alt-comparison-help');
+    if (tooltip) {
+        tooltip.remove();
+    }
+};
+
+window.setAllEqualForCriterion = function(criterionId, itemsCount) {
+    for (let i = 0; i < itemsCount; i++) {
+        for (let j = i + 1; j < itemsCount; j++) {
+            const input = document.getElementById(`c${criterionId}_item${i}v${j}`);
+            if (input) {
+                input.value = '1';
+                window.handleAlternativeInput(input, criterionId, i, j);
+            }
+        }
+    }
+    
+    alert(`All comparisons for this criterion set to equal importance (value = 1)`);
+};
+
+// ============================================
+// AUTO-GENERATION ON INPUT CHANGE
+// ============================================
+
+// استبدال دالة setupAlternativePairwiseTables القديمة
+window.setupAlternativePairwiseTables = createAlternativeTables;
+
+// تحديث الجداول عند أي تغيير
+document.addEventListener('input', function(e) {
+    if (e.target && 
+        (e.target.id.startsWith('criteria') || e.target.id.startsWith('item')) &&
+        !e.target.id.includes('v')) {
+        
+        setTimeout(() => {
+            console.log('🔄 Updating tables due to input change');
+            createAlternativeTables();
+        }, 500);
+    }
+});
+
+// ============================================
+// INITIAL GENERATION
+// ============================================
+
+// توليد الجداول عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        createAlternativeTables();
+    }, 1000);
+});
+
+// زر لتوليد الجداول يدوياً
+function generateTablesNow() {
+    console.log('🔧 Manually generating tables...');
+    createAlternativeTables();
+    
+    // إشعار
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        z-index: 9999;
+        animation: slideInUp 0.3s ease;
+    `;
+    notification.innerHTML = '✅ Comparison tables generated successfully!';
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOutDown 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// إضافة زر توليد يدوي في واجهة المستخدم
+setTimeout(() => {
+    const button = document.createElement('button');
+    button.id = 'manual-generate-btn';
+    button.innerHTML = '🔄 Generate Tables';
+    button.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        padding: 12px 20px;
+        background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        z-index: 9998;
+        transition: all 0.3s ease;
+    `;
+    button.onmouseover = function() {
+        this.style.transform = 'translateY(-2px)';
+        this.style.boxShadow = '0 6px 20px rgba(52, 152, 219, 0.4)';
+    };
+    button.onmouseout = function() {
+        this.style.transform = 'translateY(0)';
+        this.style.boxShadow = '0 4px 15px rgba(52, 152, 219, 0.3)';
+    };
+    button.onclick = generateTablesNow;
+    
+    document.body.appendChild(button);
+}, 2000);
+
+// ============================================
+// STYLES FOR ALTERNATIVE TABLES
+// ============================================
+
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideInUp {
+        from { transform: translateY(100%); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    
+    @keyframes slideOutDown {
+        from { transform: translateY(0); opacity: 1; }
+        to { transform: translateY(100%); opacity: 0; }
+    }
+    
+    .criterion-comparison {
+        animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* تحسين التمرير */
+    .comparison-table-container {
+        max-height: 600px;
+        overflow-y: auto;
+    }
+    
+    /* تحسين تجربة المستخدم على الأجهزة المحمولة */
+    @media (max-width: 768px) {
+        .criterion-comparison {
+            padding: 10px;
+        }
+        
+        .comparison-guide {
+            padding: 10px !important;
+        }
+        
+        .quick-buttons button {
+            min-width: 25px !important;
+            padding: 3px 6px !important;
+            font-size: 11px !important;
+        }
+        
+        input[type="number"] {
+            width: 60px !important;
+            padding: 8px !important;
+        }
+    }
+`;
+document.head.appendChild(style);
+
+console.log('✅ Alternative tables fix applied');
     </script>
 </body>
 </html>
