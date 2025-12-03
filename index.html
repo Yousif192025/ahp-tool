@@ -2525,6 +2525,609 @@
                 }
             }
         }, true);
+        // ============================================
+// INTEGRATION: MERGE ENHANCED FEATURES
+// ============================================
+
+// تأخير التهيئة النهائية
+setTimeout(function() {
+    console.log('🔗 Merging enhanced features...');
+    
+    // 1. ضمان تحميل البيانات الاختبارية
+    ensureTestDataLoaded();
+    
+    // 2. تحديث جميع الجداول
+    refreshAllTables();
+    
+    // 3. إضافة إشعارات متقدمة
+    addAdvancedNotifications();
+    
+    // 4. تحديث حالة النظام
+    updateSystemStatus();
+    updateEnhancedStatus('✅ System fully loaded with enhanced features');
+    
+    console.log('✅ Enhanced features merged successfully');
+}, 1000);
+
+function ensureTestDataLoaded() {
+    // التحقق من وجود بيانات، وإلا تحميل بيانات الاختبار
+    const criteriaCount = getValidCriteriaCount();
+    const itemsCount = getValidItemsCount();
+    
+    if (criteriaCount < 2 || itemsCount < 2) {
+        console.log('🔄 Loading test data automatically...');
+        loadTestData();
+    }
+}
+
+function refreshAllTables() {
+    // تحديث جميع الجداول
+    setupCriteriaPairwiseTable();
+    updateCriteriaHeaders();
+    setupAlternativePairwiseTables();
+    
+    // إضافة تأثير بسيط للجداول
+    const tables = document.querySelectorAll('table');
+    tables.forEach(table => {
+        table.style.opacity = '0';
+        setTimeout(() => {
+            table.style.transition = 'opacity 0.5s ease';
+            table.style.opacity = '1';
+        }, 100);
+    });
+}
+
+function addAdvancedNotifications() {
+    // إنشاء حاوية للإشعارات المتقدمة
+    if (!document.getElementById('advanced-notifications')) {
+        const notificationContainer = document.createElement('div');
+        notificationContainer.id = 'advanced-notifications';
+        notificationContainer.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 350px;
+            z-index: 99999;
+            max-height: 80vh;
+            overflow-y: auto;
+        `;
+        
+        // إضافة أنيميشن
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            
+            .advanced-notification {
+                animation: slideInRight 0.3s ease forwards;
+                margin-bottom: 10px;
+                border-radius: 8px;
+                padding: 15px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+                display: flex;
+                align-items: center;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .advanced-notification::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                width: 4px;
+            }
+            
+            .notification-success {
+                background: linear-gradient(135deg, #d4edda, #c3e6cb);
+                color: #155724;
+                border: 1px solid #b1dfbb;
+            }
+            
+            .notification-success::before {
+                background: #28a745;
+            }
+            
+            .notification-error {
+                background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+                color: #721c24;
+                border: 1px solid #f1b0b7;
+            }
+            
+            .notification-error::before {
+                background: #dc3545;
+            }
+            
+            .notification-warning {
+                background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+                color: #856404;
+                border: 1px solid #ffeaa7;
+            }
+            
+            .notification-warning::before {
+                background: #ffc107;
+            }
+            
+            .notification-info {
+                background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+                color: #0c5460;
+                border: 1px solid #abdde5;
+            }
+            
+            .notification-info::before {
+                background: #17a2b8;
+            }
+            
+            .notification-icon {
+                font-size: 24px;
+                margin-right: 12px;
+                flex-shrink: 0;
+            }
+            
+            .notification-content {
+                flex-grow: 1;
+            }
+            
+            .notification-title {
+                font-weight: bold;
+                margin-bottom: 5px;
+                font-size: 14px;
+            }
+            
+            .notification-message {
+                font-size: 13px;
+                line-height: 1.4;
+            }
+            
+            .notification-close {
+                background: none;
+                border: none;
+                font-size: 20px;
+                color: inherit;
+                opacity: 0.7;
+                cursor: pointer;
+                padding: 0;
+                margin-left: 10px;
+                flex-shrink: 0;
+                transition: opacity 0.2s;
+            }
+            
+            .notification-close:hover {
+                opacity: 1;
+            }
+        `;
+        
+        document.head.appendChild(style);
+        document.body.appendChild(notificationContainer);
+    }
+}
+
+// ============================================
+// ADVANCED NOTIFICATION SYSTEM
+// ============================================
+
+function showAdvancedNotification(title, message, type = 'info', duration = 5000) {
+    const container = document.getElementById('advanced-notifications');
+    if (!container) return;
+    
+    const notification = document.createElement('div');
+    notification.className = `advanced-notification notification-${type}`;
+    
+    const icons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+    };
+    
+    notification.innerHTML = `
+        <span class="notification-icon">${icons[type] || 'ℹ️'}</span>
+        <div class="notification-content">
+            <div class="notification-title">${title}</div>
+            <div class="notification-message">${message}</div>
+        </div>
+        <button class="notification-close" onclick="this.parentElement.remove()">×</button>
+    `;
+    
+    container.appendChild(notification);
+    
+    // إزالة تلقائية بعد المدة المحددة
+    if (duration > 0) {
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.style.animation = 'slideOutRight 0.3s ease forwards';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }
+        }, duration);
+    }
+}
+
+// ============================================
+// ENHANCED SENSITIVITY ANALYSIS (من integration.js)
+// ============================================
+
+function performAdvancedSensitivityAnalysis(results) {
+    console.log('📈 Running advanced sensitivity analysis...');
+    
+    showAdvancedNotification('Sensitivity Analysis', 'Analyzing model stability...', 'info');
+    
+    try {
+        const { criteria, alternatives } = results;
+        const scenarios = [];
+        
+        // تحليل حساسية أكثر تفصيلاً
+        for (let i = 0; i < criteria.labels.length; i++) {
+            const scenario = {
+                criterion: criteria.labels[i],
+                originalWeight: (criteria.normalizedWeights[i] * 100).toFixed(1) + '%',
+                variations: []
+            };
+            
+            // تحليل تغييرات متعددة (±10%, ±20%, ±30%)
+            const variations = [0.7, 0.8, 0.9, 1.1, 1.2, 1.3];
+            
+            variations.forEach(variation => {
+                const newWeights = [...criteria.normalizedWeights];
+                newWeights[i] *= variation;
+                
+                // إعادة تطبيع الأوزان
+                const sum = newWeights.reduce((a, b) => a + b, 0);
+                const normalized = newWeights.map(w => w / sum);
+                
+                const newScores = calculateNewScores(normalized, results);
+                const newRankings = getRankings(newScores, alternatives.labels);
+                
+                scenario.variations.push({
+                    change: ((variation - 1) * 100).toFixed(0) + '%',
+                    topAlternative: newRankings[0].alternative,
+                    scoreChange: ((newRankings[0].score - alternatives.scores[alternatives.labels.indexOf(newRankings[0].alternative)]) * 100).toFixed(1) + '%',
+                    rankingChanged: newRankings[0].alternative !== alternatives.labels[alternatives.scores.indexOf(Math.max(...alternatives.scores))]
+                });
+            });
+            
+            scenarios.push(scenario);
+        }
+        
+        displayAdvancedSensitivityResults(scenarios, results);
+        
+    } catch (error) {
+        console.error('Advanced sensitivity analysis error:', error);
+        showAdvancedNotification('Analysis Error', error.message, 'error');
+    }
+}
+
+function getRankings(scores, labels) {
+    return labels.map((label, index) => ({
+        alternative: label,
+        score: scores[index],
+        rank: 0
+    }))
+    .sort((a, b) => b.score - a.score)
+    .map((item, index) => ({
+        ...item,
+        rank: index + 1
+    }));
+}
+
+function displayAdvancedSensitivityResults(scenarios, results) {
+    const container = document.getElementById('sensitivity-container');
+    if (!container) return;
+    
+    container.style.display = 'block';
+    
+    const { alternatives } = results;
+    const originalTop = alternatives.labels[alternatives.scores.indexOf(Math.max(...alternatives.scores))];
+    
+    let html = `
+        <div style="margin-bottom: 25px;">
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <span style="font-size: 24px; margin-right: 10px;">📈</span>
+                <div>
+                    <h4 style="margin: 0; color: #2c3e50;">Advanced Sensitivity Analysis</h4>
+                    <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">
+                        Original top alternative: <strong style="color: #e74c3c;">${originalTop}</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sensitivity-scenarios" style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        ">
+    `;
+    
+    scenarios.forEach(scenario => {
+        const hasRankingChange = scenario.variations.some(v => v.rankingChanged);
+        
+        html += `
+            <div style="
+                background: ${hasRankingChange ? '#fff5f5' : '#f8f9fa'};
+                border: 2px solid ${hasRankingChange ? '#f8d7da' : '#e9ecef'};
+                border-radius: 8px;
+                padding: 15px;
+                transition: transform 0.3s ease;
+            ">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h5 style="margin: 0; color: #2c3e50; font-size: 15px;">${scenario.criterion}</h5>
+                    <span style="
+                        font-size: 12px;
+                        padding: 3px 8px;
+                        background: ${hasRankingChange ? '#f8d7da' : '#d4edda'};
+                        color: ${hasRankingChange ? '#721c24' : '#155724'};
+                        border-radius: 4px;
+                        font-weight: bold;
+                    ">
+                        ${scenario.originalWeight}
+                    </span>
+                </div>
+                
+                <div style="font-size: 13px; color: #666;">
+                    <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: rgba(0,0,0,0.03);">
+                                <th style="padding: 5px; text-align: left;">Change</th>
+                                <th style="padding: 5px; text-align: left;">Top Alternative</th>
+                                <th style="padding: 5px; text-align: left;">Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        `;
+        
+        scenario.variations.forEach(variation => {
+            const isPositive = parseFloat(variation.change) > 0;
+            
+            html += `
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 5px; color: ${isPositive ? '#28a745' : '#dc3545'}; font-weight: bold;">
+                        ${isPositive ? '+' : ''}${variation.change}
+                    </td>
+                    <td style="padding: 5px; color: ${variation.rankingChanged ? '#e74c3c' : '#2c3e50'};">
+                        ${variation.topAlternative}
+                        ${variation.rankingChanged ? ' <span style="color: #e74c3c;">(Changed)</span>' : ''}
+                    </td>
+                    <td style="padding: 5px; color: #666;">
+                        ${variation.scoreChange}
+                    </td>
+                </tr>
+            `;
+        });
+        
+        html += `
+                        </tbody>
+                    </table>
+                </div>
+                
+                ${hasRankingChange ? `
+                <div style="
+                    margin-top: 10px;
+                    padding: 8px;
+                    background: #fff3cd;
+                    border-radius: 4px;
+                    font-size: 11px;
+                    color: #856404;
+                    text-align: center;
+                ">
+                    ⚠️ Ranking changes with weight variation
+                </div>
+                ` : ''}
+            </div>
+        `;
+    });
+    
+    html += `
+        </div>
+        
+        <div style="
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        ">
+            <h5 style="margin-top: 0; color: #2c3e50;">📊 Interpretation Guide</h5>
+            <ul style="margin: 10px 0 0 0; padding-left: 20px; font-size: 14px; color: #2c3e50;">
+                <li><strong>Red background:</strong> Criterion where ranking changes with weight variation</li>
+                <li><strong>Green/Red percentage:</strong> Weight increase/decrease</li>
+                <li><strong>Red alternative name:</strong> Ranking changed from original</li>
+            </ul>
+            
+            <div style="margin-top: 15px; padding: 12px; background: white; border-radius: 6px;">
+                <strong style="color: #2c3e50;">💡 Recommendation:</strong>
+                <p style="margin: 8px 0 0 0; color: #666; font-size: 14px;">
+                    Focus on high-sensitivity criteria in your decision-making process. 
+                    Consider collecting more data or expert opinions for these criteria.
+                </p>
+            </div>
+        </div>
+        
+        <div style="margin-top: 25px; text-align: center;">
+            <button id="export-sensitivity" style="
+                padding: 12px 25px;
+                background: linear-gradient(135deg, #9b59b6, #8e44ad);
+                color: white;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 14px;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3);
+            ">
+                📥 Export Sensitivity Report
+            </button>
+        </div>
+    `;
+    
+    const content = document.getElementById('sensitivity-content');
+    if (content) {
+        content.innerHTML = html;
+        
+        // إضافة حدث التصدير
+        document.getElementById('export-sensitivity')?.addEventListener('click', function() {
+            exportSensitivityReport(scenarios, results);
+        });
+    }
+}
+
+function exportSensitivityReport(scenarios, results) {
+    let csv = 'Criterion,Original Weight,Variation,Top Alternative,Score Change,Ranking Changed\n';
+    
+    scenarios.forEach(scenario => {
+        scenario.variations.forEach(variation => {
+            csv += `"${scenario.criterion}",${scenario.originalWeight},${variation.change},"${variation.topAlternative}",${variation.scoreChange},${variation.rankingChanged}\n`;
+        });
+    });
+    
+    downloadFile(csv, 'sensitivity-analysis.csv', 'text/csv');
+    showAdvancedNotification('Export Complete', 'Sensitivity report exported as CSV', 'success');
+}
+
+// ============================================
+// ENHANCED CALCULATION (من integration.js)
+// ============================================
+
+function runAdvancedCalculation() {
+    console.log('🚀 Running advanced calculation...');
+    
+    showAdvancedNotification('Advanced Calculation', 'Starting enhanced AHP analysis...', 'info');
+    
+    // استخدام الدالة الموجودة مع إضافة ميزات متقدمة
+    runEnhancedCalculation();
+}
+
+// ============================================
+// QUICK ACTIONS PANEL (من integration.js)
+// ============================================
+
+function addQuickActionsPanel() {
+    const sidebar = document.querySelector('aside');
+    if (!sidebar) return;
+    
+    // التحقق إذا كانت اللوحة موجودة
+    if (document.getElementById('quick-actions-panel')) return;
+    
+    const panel = document.createElement('div');
+    panel.id = 'quick-actions-panel';
+    panel.style.cssText = `
+        margin-top: 20px;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 10px;
+        color: white;
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+    `;
+    
+    panel.innerHTML = `
+        <h4 style="margin-top: 0; color: white; font-size: 16px; display: flex; align-items: center;">
+            <span style="margin-right: 8px;">⚡</span> Quick Actions
+        </h4>
+        
+        <div style="display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 15px;">
+            <button id="quick-test" class="quick-action-btn" style="background: rgba(255,255,255,0.2);">
+                <span style="margin-right: 6px;">📊</span> Load Test Data
+            </button>
+            <button id="quick-calc" class="quick-action-btn" style="background: rgba(255,255,255,0.2);">
+                <span style="margin-right: 6px;">🚀</span> Quick Calculate
+            </button>
+            <button id="quick-reset" class="quick-action-btn" style="background: rgba(255,255,255,0.2);">
+                <span style="margin-right: 6px;">🔄</span> Reset Form
+            </button>
+        </div>
+        
+        <div style="font-size: 12px; opacity: 0.9; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px;">
+            <strong>Tip:</strong> Click "Set All Equal" for quick comparison setup
+        </div>
+        
+        <style>
+            .quick-action-btn {
+                padding: 10px;
+                border: none;
+                border-radius: 6px;
+                color: white;
+                cursor: pointer;
+                font-size: 14px;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .quick-action-btn:hover {
+                background: rgba(255,255,255,0.3) !important;
+                transform: translateY(-2px);
+                box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            }
+        </style>
+    `;
+    
+    sidebar.appendChild(panel);
+    
+    // إضافة الأحداث
+    document.getElementById('quick-test')?.addEventListener('click', loadTestData);
+    document.getElementById('quick-calc')?.addEventListener('click', runAdvancedCalculation);
+    document.getElementById('quick-reset')?.addEventListener('click', clearFormData);
+}
+
+// ============================================
+// FINAL INITIALIZATION
+// ============================================
+
+setTimeout(function() {
+    // إضافة لوحة الإجراءات السريعة
+    addQuickActionsPanel();
+    
+    // إرسال إشعار الترحيب
+    showAdvancedNotification(
+        'Enhanced AHP System Ready',
+        'All tables loaded. You can start comparing alternatives using the enhanced interface.',
+        'success',
+        3000
+    );
+    
+    // تحديث النص في الشريط الجانبي
+    const enhancedStatus = document.getElementById('enhanced-status');
+    if (enhancedStatus) {
+        enhancedStatus.innerHTML = `
+            <div style="color: #28a745; font-weight: bold;">
+                ✅ Enhanced system fully loaded
+            </div>
+            <div style="font-size: 11px; color: #666; margin-top: 5px;">
+                All tables ready • Test data loaded • Enhanced features active
+            </div>
+        `;
+    }
+}, 1500);
+
+// ============================================
+// EXPORT FUNCTIONS FOR GLOBAL USE
+// ============================================
+
+window.enhancedAHPTool = {
+    loadTestData: loadTestData,
+    runCalculation: runEnhancedCalculation,
+    runAdvancedCalc: runAdvancedCalculation,
+    clearForm: clearFormData,
+    setAllEqual: setAllComparisonsToEqual,
+    showNotification: showAdvancedNotification,
+    exportResults: exportAsJSON,
+    runSensitivity: performAdvancedSensitivityAnalysis
+};
+
+console.log('✅ All enhanced features integrated successfully');
     </script>
 </body>
 </html>
