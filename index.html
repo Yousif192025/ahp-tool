@@ -169,8 +169,12 @@
         /* Table styles for pairwise comparisons */
         .pairwise-items table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
             margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
         }
         
         .pairwise-items th, .pairwise-items td {
@@ -180,8 +184,20 @@
         }
         
         .pairwise-items th {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             font-weight: bold;
+            border: none;
+            position: sticky;
+            top: 0;
+        }
+        
+        .pairwise-items tr:nth-child(even) td {
+            background: #f9f9f9;
+        }
+        
+        .pairwise-items tr:hover td {
+            background: #f0f7ff;
         }
         
         .pairwise-items input {
@@ -257,24 +273,32 @@
         /* إضافة أنماط جديدة لتحسين قابلية التعديل */
         .editable-cell {
             position: relative;
+            min-height: 80px;
         }
         
         .editable-cell input {
             width: 70px;
-            padding: 8px;
+            padding: 10px;
             border: 2px solid #3498db;
-            border-radius: 4px;
+            border-radius: 6px;
             text-align: center;
             font-weight: bold;
+            font-size: 14px;
             transition: all 0.3s ease;
             background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .editable-cell input:hover {
+            border-color: #2980b9;
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.2);
         }
         
         .editable-cell input:focus {
             outline: none;
+            border-color: #1a5276;
             box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
-            border-color: #2980b9;
-            background: #f8f9fa;
+            transform: scale(1.05);
         }
         
         .editable-cell input.valid {
@@ -289,17 +313,19 @@
         
         .comparison-help {
             position: absolute;
-            top: -30px;
+            top: -35px;
             left: 50%;
             transform: translateX(-50%);
-            background: #2c3e50;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
+            padding: 6px 12px;
+            border-radius: 6px;
             font-size: 12px;
             white-space: nowrap;
             z-index: 1000;
             display: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border: 1px solid #1a252f;
         }
         
         .comparison-help::after {
@@ -308,36 +334,52 @@
             top: 100%;
             left: 50%;
             transform: translateX(-50%);
-            border-width: 5px;
+            border-width: 6px;
             border-style: solid;
             border-color: #2c3e50 transparent transparent transparent;
         }
         
         .editable-cell:hover .comparison-help {
             display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
         
         .quick-buttons {
             display: flex;
-            gap: 5px;
-            margin-top: 5px;
+            gap: 4px;
+            margin-top: 8px;
             justify-content: center;
+            flex-wrap: wrap;
         }
         
         .quick-btn {
-            padding: 3px 8px;
-            font-size: 11px;
+            padding: 4px 8px;
+            font-size: 12px;
             border: 1px solid #ddd;
-            border-radius: 3px;
-            background: white;
+            border-radius: 4px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             cursor: pointer;
             transition: all 0.2s ease;
+            min-width: 30px;
+            font-weight: bold;
+            color: #2c3e50;
         }
         
         .quick-btn:hover {
-            background: #3498db;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
             color: white;
             border-color: #3498db;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
+        }
+        
+        .quick-btn:active {
+            transform: translateY(0);
         }
         
         .comparison-guide {
@@ -684,6 +726,11 @@
         function initializeEnhancedSystem() {
             console.log('🔄 Setting up enhanced system...');
             
+            // فوري: تحميل بيانات الاختبار تلقائياً
+            setTimeout(() => {
+                loadTestData();
+            }, 300);
+            
             try {
                 setupCriteriaPairwiseTable();
                 setupEnhancedEventListeners();
@@ -746,6 +793,7 @@
                         });
                         input.addEventListener('blur', function() {
                             hideComparisonHelp(this);
+                            validateInput(this);
                         });
                         
                         // إضافة أزرار سريعة
@@ -787,6 +835,7 @@
                     input.value = value;
                     validateInput(input);
                     updateReciprocalValue(i, j, value);
+                    input.focus();
                 });
                 
                 quickDiv.appendChild(button);
@@ -942,7 +991,9 @@
                                                                    max="9"
                                                                    id="${inputId}"
                                                                    value="1"
-                                                                   oninput="validateAlternativeInput(this); updateAlternativeReciprocal(${criterionId}, ${i}, ${j}, this.value)">
+                                                                   oninput="validateAlternativeInput(this); updateAlternativeReciprocal(${criterionId}, ${i}, ${j}, this.value)"
+                                                                   onfocus="showAlternativeComparisonHelp(this, ${criterionId}, ${i}, ${j})"
+                                                                   onblur="hideAlternativeComparisonHelp(this)">
                                                         </td>
                                                     `;
                                                 } else {
@@ -1027,6 +1078,27 @@
                     reciprocalInput.value = (1 / numValue).toFixed(3);
                     validateAlternativeInput(reciprocalInput);
                 }
+            }
+        };
+        
+        window.showAlternativeComparisonHelp = function(input, criterionId, i, j) {
+            const altI = document.getElementById(`item${i}`)?.value || `Alternative ${i+1}`;
+            const altJ = document.getElementById(`item${j}`)?.value || `Alternative ${j+1}`;
+            const criterion = document.getElementById(`criteria${criterionId}`)?.value || `Criterion ${criterionId+1}`;
+            
+            const helpDiv = document.createElement('div');
+            helpDiv.className = 'comparison-help';
+            helpDiv.textContent = `For ${criterion}: ${altI} vs ${altJ}`;
+            helpDiv.id = `help-alt-${criterionId}-${i}-${j}`;
+            
+            input.parentNode.appendChild(helpDiv);
+            helpDiv.style.display = 'block';
+        };
+        
+        window.hideAlternativeComparisonHelp = function(input) {
+            const helpDiv = input.parentNode.querySelector('.comparison-help');
+            if (helpDiv) {
+                helpDiv.style.display = 'none';
             }
         };
         
@@ -2404,6 +2476,55 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
+        
+        // ============================================
+        // FIX: INITIALIZE TABLES ON PAGE LOAD
+        // ============================================
+        
+        // تأخير التنفيذ قليلاً لضمان تحميل DOM كاملاً
+        setTimeout(function() {
+            console.log('🔄 Initializing tables on page load...');
+            
+            // 1. تهيئة جدول مقارنات المعايير
+            setupCriteriaPairwiseTable();
+            
+            // 2. تحديث رؤوس الجدول
+            updateCriteriaHeaders();
+            
+            // 3. تهيئة جداول مقارنات البدائل
+            setupAlternativePairwiseTables();
+            
+            // 4. تحديث حالة النظام
+            updateEnhancedStatus('Tables initialized successfully');
+            updateSystemStatus();
+            
+            console.log('✅ Tables initialized');
+        }, 500);
+        
+        // ============================================
+        // FIX: ENSURE ALTERNATIVE TABLES UPDATE WHEN INPUTS CHANGE
+        // ============================================
+        
+        // تحديث جداول البدائل عند تغيير أي إدخال
+        document.addEventListener('input', function(e) {
+            if (e.target.id && (e.target.id.startsWith('criteria') || e.target.id.startsWith('item'))) {
+                setTimeout(() => {
+                    setupAlternativePairwiseTables();
+                }, 300);
+            }
+        });
+        
+        // ============================================
+        // FIX: VALIDATE ALL INPUTS ON BLUR
+        // ============================================
+        
+        document.addEventListener('blur', function(e) {
+            if (e.target.type === 'number' && !e.target.readOnly) {
+                if (e.target.id && e.target.id.startsWith('criteria')) {
+                    validateInput(e.target);
+                }
+            }
+        }, true);
     </script>
 </body>
 </html>
