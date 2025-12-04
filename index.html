@@ -3656,29 +3656,29 @@ setTimeout(() => {
         bottom: 20px;
         left: 20px;
         // padding: 12px 20px;
-        padding: 6px 12px; /* تم تصغير الحشوة */
+        padding: 9px 15px; /* تم تصغير الحشوة */
         background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
         color: white;
         border: none;
         // border-radius: 8px;
-        border-radius: 6px; /* تصغير بسيط للحواف */
+        border-radius: 7px; /* تصغير بسيط للحواف */
         cursor: pointer;
         // font-weight: bold;
         font-size: 12px; /* تصغير الخط */
         // box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-        box-shadow: 0 2px 8px rgba(52, 152, 219, 0.25); /* تصغير الظل */
+        box-shadow: 0 3px 10px rgba(52, 152, 219, 0.27); /* تصغير الظل */
         z-index: 9998;
         transition: all 0.3s ease;
     `;
     button.onmouseover = function() {
         this.style.transform = 'translateY(-1px)';
         // this.style.boxShadow = '0 6px 20px rgba(52, 152, 219, 0.4)';
-        this.style.boxShadow = '0 3px 12px rgba(52, 152, 219, 0.35)';
+        this.style.boxShadow = '0 4px 15px rgba(52, 152, 219, 0.35)';
     };
     button.onmouseout = function() {
         this.style.transform = 'translateY(0)';
         // this.style.boxShadow = '0 4px 15px rgba(52, 152, 219, 0.3)';
-        this.style.boxShadow = '0 2px 8px rgba(52, 152, 219, 0.25)';
+        this.style.boxShadow = '0 3px 10px rgba(52, 152, 219, 0.27)';
     };
     button.onclick = generateTablesNow;
     
